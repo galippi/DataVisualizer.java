@@ -4,14 +4,91 @@ import javax.swing.JFileChooser;
 
 import utils.dbg;
 
+class DataFile
+{
+    DataFile(String _filename)
+    {
+        
+    }
+
+    boolean isValid()
+    {
+        return true;
+    }
+}
+
 public class DataVisualizerUI extends javax.swing.JFrame
 {
     public DataVisualizerUI()
     {
         initComponents();
+
+        int nextRecentFile = 0;
+        for (int i = 0; i < 10; i++)
+        {
+          String val = DataVisualizerPrefs.getRecentFile(i, "");
+          if (!val.isEmpty())
+          {
+            javax.swing.JMenuItem jMenuItem = new javax.swing.JMenuItem();
+            jMenuItem.setText(nextRecentFile + ": " + val);
+            nextRecentFile++;
+            jMenuItem.addActionListener(new java.awt.event.ActionListener() {
+              public void actionPerformed(java.awt.event.ActionEvent evt) {
+                m_RecentFileActionPerformed(evt);
+              }
+            });
+            jMenu3.add(jMenuItem);
+          }
+        }
+
         setLocation(DataVisualizerPrefs.get("MainWindowX", 0), DataVisualizerPrefs.get("MainWindowY", 0));
         setSize(DataVisualizerPrefs.get("MainWindowW", 600), DataVisualizerPrefs.get("MainWindowH", 400));
         setExtendedState(DataVisualizerPrefs.get("MainWindowState", NORMAL));
+    }
+
+    private void m_RecentFileActionPerformed(java.awt.event.ActionEvent evt) {
+        dbg.println(9, "m_RecentFileActionPerformed " + evt.toString());
+        String val = evt.getActionCommand();
+        dbg.dprintf(9, "  val=%s\n", val);
+        if (val.charAt(1) == ':')
+        {
+          int idx = val.charAt(0) - '0';
+          String file = val.substring(3);
+          dbg.dprintf(9, "  idx=%d file=%s\n", idx, file);
+          openDataFile(file);
+        }
+      }
+
+    DataFile dataFile;
+    private void openDataFile(String fileName)
+    {
+        dataFile = null;
+        DataFile dataFileTemp = new DataFile(fileName);
+        if (!dataFileTemp.isValid())
+        { /* error message */
+            javax.swing.JOptionPane.showMessageDialog(this, "Unable to load file " + fileName);
+        }else
+        { /* file is loaded -> add it to the list */
+            dataFile = dataFileTemp;
+            // init cursors
+            // init graph drawing - repaintMap();
+            int i;
+            for (i = 0; i < 10; i++)
+            { /* check the existence of the file on the recent list */
+                if (fileName.equals(DataVisualizerPrefs.getRecentFile(i, "")))
+                { // the file is already on the recent list -> move it to the first position
+                    break;
+                }
+            }
+            if (i != 0)
+            {
+                for (; i > 0; i--)
+                { /* move recent file lower */
+                    DataVisualizerPrefs.putRecentFile(i, DataVisualizerPrefs.getRecentFile(i - 1, ""));
+                }
+                DataVisualizerPrefs.putRecentFile(0, fileName);
+            }
+        }
     }
 
     /**
@@ -96,10 +173,19 @@ public class DataVisualizerUI extends javax.swing.JFrame
         dbg.println(9, "m_FileOpenActionPerformed");
         //Create a file chooser
         final JFileChooser fc = new JFileChooser();
-        javax.swing.filechooser.FileNameExtensionFilter filter =
+
+        fc.setFileFilter(
                 new javax.swing.filechooser.FileNameExtensionFilter(
-            "IGC file", "igc");
-        fc.setFileFilter(filter);
+                    "Diadem DAT file", "dat"));
+
+        fc.setFileFilter(
+                new javax.swing.filechooser.FileNameExtensionFilter(
+                    "Vector ASC", "asc"));
+
+        fc.setFileFilter(
+                new javax.swing.filechooser.FileNameExtensionFilter(
+                    "CSV table file", "csv"));
+
         //In response to a button click:
         int returnVal = fc.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION)
@@ -107,7 +193,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
           java.io.File file = fc.getSelectedFile();
           //This is where a real application would open the file.
           dbg.println(9, "Opening: " + file.getName() + ".");
-          //openIgcFile(file.getPath());
+          openDataFile(file.getPath());
         } else
         {
           dbg.println(9, "Open command cancelled by user.");
@@ -140,4 +226,9 @@ public class DataVisualizerUI extends javax.swing.JFrame
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane1;
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4985856149217047613L;
 }
