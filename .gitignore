@@ -4,3 +4,4 @@ bin/*
 javafiles
 _t.bat
 build.bat
+*.bak
