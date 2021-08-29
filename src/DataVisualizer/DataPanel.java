@@ -132,10 +132,17 @@ public class DataPanel extends javax.swing.JPanel
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
 
+        boolean repaintNeeded = false;
         dbg.println(9, "DataPanel - paintComponent");
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLUE);
         g.fillRect(0, 0, getWidth(), getHeight());
         ctr++;
+        if (dataImage.setImage(getWidth(), getHeight()))
+        {
+            repaintNeeded = true;
+        }
+        if (repaintNeeded)
+            dataImage.repaint();
         if (dataImage.isReady())
         {
           dbg.dprintf(21, "dataPanel - paintComponent(%d, %d)\n", 0, 0);
@@ -148,6 +155,7 @@ public class DataPanel extends javax.swing.JPanel
     int ctr = 0;
 
     DataImage dataImage;
+    boolean repaintNeeded;
 
     /**
      * 
