@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import javax.swing.BoxLayout;
 
+import DataCache.DataCache_File;
 import utils.dbg;
 
 public class DataPanelMain extends javax.swing.JPanel {
@@ -19,17 +20,23 @@ public class DataPanelMain extends javax.swing.JPanel {
         updateLayout();
     }
 
-    public void loadFile(String _filename)
+    public void loadFile(String filename)
     {
-        dbg.println(9, "DataPanelMain.loadFile " + _filename);
+        dbg.println(9, "DataPanelMain.loadFile " + filename);
         reinit();
         dataPanels.clear();
-        DataPanel dataPanel = new DataPanel();
+        file = new DataCache_File(filename);
+        DataPanel dataPanel = new DataPanel(this);
         dataPanels.add(dataPanel);
 //        setLayout(new java.awt.BorderLayout());
         //removeAll();
         //add(dataPanel);
         updateLayout();
+    }
+
+    public DataCache_File getDataFile()
+    {
+        return file;
     }
 
     void updateLayout()
@@ -48,6 +55,7 @@ public class DataPanelMain extends javax.swing.JPanel {
         }
         //pack();
         //doLayout();
+        repaint();
     }
 
     @Override
@@ -63,10 +71,17 @@ public class DataPanelMain extends javax.swing.JPanel {
         // cursor drawing
         g.setColor(Color.BLACK);
         g.drawString("DataPanelMain ctr=" + ctr, 5, 10);
+        String state;
+        if (file == null)
+            state = "No file is selected!";
+        else
+            state = file.getStateString();
+        g.drawString(state, 5, getHeight() / 2);
     }
     int ctr = 0;
 
     Vector<DataPanel> dataPanels = new Vector<>();
+    DataCache_File file;
 
     /**
      * 

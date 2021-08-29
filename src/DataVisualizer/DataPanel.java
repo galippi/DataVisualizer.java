@@ -7,6 +7,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
+import DataCache.DataCache_File;
 import utils.dbg;
 
 //class EventHandler<T>
@@ -21,8 +22,10 @@ import utils.dbg;
 
 public class DataPanel extends javax.swing.JPanel
 {
-    public DataPanel()
+    public DataPanel(DataPanelMain _parent)
     {
+        parent = _parent;
+        dataFile = parent.getDataFile();
         dataImage = new DataImage(this);
 
         //Register for mouse-wheel events on the map area.
@@ -143,6 +146,9 @@ public class DataPanel extends javax.swing.JPanel
         }
         if (repaintNeeded)
             dataImage.repaint();
+        String state = dataFile.getStateString();
+        g.setColor(Color.BLACK);
+        g.drawString(state, 5, getHeight() / 2);
         if (dataImage.isReady())
         {
           dbg.dprintf(21, "dataPanel - paintComponent(%d, %d)\n", 0, 0);
@@ -154,8 +160,10 @@ public class DataPanel extends javax.swing.JPanel
     }
     int ctr = 0;
 
+    DataPanelMain parent;
     DataImage dataImage;
     boolean repaintNeeded;
+    DataCache_File dataFile;
 
     /**
      * 
