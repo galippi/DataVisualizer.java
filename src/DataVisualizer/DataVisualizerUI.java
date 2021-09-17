@@ -143,12 +143,30 @@ public class DataVisualizerUI extends javax.swing.JFrame
         });
         jMenu1.add(m_FileExit);
 
+        jMenuView = new javax.swing.JMenu();
+        jMenuView.setText("View");
+        javax.swing.JMenuItem m_ViewChannel = new javax.swing.JMenuItem();
+        m_ViewChannel.setText("Channels");
+        m_ViewChannel.addActionListener(new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            m_ViewChannelActionPerformed(evt);
+          }
+        });
+        jMenuView.add(m_ViewChannel);
+
         jMenuBar1.add(jMenu1);
+        jMenuBar1.add(jMenuView);
 
         setJMenuBar(jMenuBar1);
 
         add(dataPanelMain);
+    }
 
+    private void m_ViewChannelActionPerformed(java.awt.event.ActionEvent evt)
+    {
+        dbg.println(9, "m_ViewChannelActionPerformed");
+        ChannelSelectorDialog csd = new ChannelSelectorDialog(this, dataPanelMain.file, new DataChannelList(dataPanelMain.file));
+        csd.setVisible(true);
     }
 
     private void m_FileOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_m_FileOpenActionPerformed
@@ -203,6 +221,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenuView;
     private javax.swing.JMenuItem m_FileExit;
     private javax.swing.JMenuItem m_FileOpen;
     private javax.swing.JPopupMenu.Separator jSeparator1;

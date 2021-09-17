@@ -96,7 +96,7 @@ public class ChannelSelectorDialog extends JDialog {
         if (file.getChannel(i) == colArray.get(i).ch)
           break;
       }
-      if (j == file.getChannelNumber())
+      if (j == colArray.size())
         lmDeselected.addElement(file.getChannel(i).getName());
     }
     lbDeselected = new JList(lmDeselected);
