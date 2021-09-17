@@ -1,11 +1,9 @@
-package DataVisualizer;
+package dataVisualizer;
 
 import java.awt.Color;
 import java.util.Vector;
 
-import javax.swing.BoxLayout;
-
-import DataCache.DataCache_File;
+import dataCache.DataCache_File;
 import utils.dbg;
 
 public class DataPanelMain extends javax.swing.JPanel {
@@ -26,7 +24,7 @@ public class DataPanelMain extends javax.swing.JPanel {
         reinit();
         dataPanels.clear();
         file = new DataCache_File(filename);
-        DataPanel dataPanel = new DataPanel(this);
+        DataPanel dataPanel = new DataPanel(this, file);
         dataPanels.add(dataPanel);
 //        setLayout(new java.awt.BorderLayout());
         //removeAll();

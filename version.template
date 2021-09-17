@@ -1,4 +1,4 @@
-package Version;
+package version;
 
 public class VersionInfo
 {

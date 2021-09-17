@@ -1,4 +1,4 @@
-package DataVisualizer;
+package dataVisualizer;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -7,7 +7,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import DataCache.DataCache_File;
+import dataCache.DataCache_File;
 import utils.dbg;
 
 //class EventHandler<T>
@@ -22,11 +22,11 @@ import utils.dbg;
 
 public class DataPanel extends javax.swing.JPanel
 {
-    public DataPanel(DataPanelMain _parent)
+    public DataPanel(DataPanelMain _parent, DataCache_File _file)
     {
         parent = _parent;
-        dataFile = parent.getDataFile();
-        dataImage = new DataImage(this);
+        dataFile = _file;
+        dataImage = new DataImage(this, dataFile);
 
         //Register for mouse-wheel events on the map area.
         addMouseWheelListener(new MouseWheelListener() {

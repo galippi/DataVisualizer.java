@@ -1,4 +1,4 @@
-package DataVisualizer;
+package dataVisualizer;
 
 import utils.dbg;
 
