@@ -1,6 +1,7 @@
 package dataVisualizer;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -9,6 +10,22 @@ import java.awt.event.MouseWheelListener;
 
 import dataCache.DataCache_File;
 import utils.dbg;
+
+class MyPopupMenu extends java.awt.PopupMenu
+{
+  MyPopupMenu(String label)
+  {
+    super(label);
+  }
+  @Override
+  public void show(Component origin, int x, int y)
+  {
+    this.x = x; this.y = y;
+    super.show(origin, x, y);
+  }
+  int x;
+  int y;
+}
 
 //class EventHandler<T>
 //{
@@ -69,6 +86,31 @@ public class DataPanel extends javax.swing.JPanel
 //              zoomHandler(e);
 //          }
 //        });
+        popup = new MyPopupMenu("demo");
+        java.awt.MenuItem item;
+        java.awt.event.ActionListener popupMenuListener;
+        popupMenuListener = new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent event) {
+            dbg.println(9, "Popup menu item ["
+                + event.getActionCommand() + "] was pressed.");
+            popupMenuHandler(event);
+          }
+        };
+        popup.add(item = new java.awt.MenuItem("File properties"));
+        item.addActionListener(popupMenuListener);
+        popup.add(item = new java.awt.MenuItem("Change color"));
+        item.addActionListener(popupMenuListener);
+        popup.add(item = new java.awt.MenuItem("Close file"));
+        item.addActionListener(popupMenuListener);
+        popup.add(item = new java.awt.MenuItem("Close all file"));
+        item.addActionListener(popupMenuListener);
+        popup.add(item = new java.awt.MenuItem("Add column"));
+        item.addActionListener(popupMenuListener);
+        popup.add(item = new java.awt.MenuItem("Remove column"));
+        item.addActionListener(popupMenuListener);
+        popup.add(item = new java.awt.MenuItem("About"));
+        item.addActionListener(popupMenuListener);
+        add(popup);
     }
 
     public void mouseWheelMovedHandler(MouseWheelEvent e) {
@@ -87,50 +129,53 @@ public class DataPanel extends javax.swing.JPanel
 //  }
 
     public void mouseHandler(MouseEvent e) {
-        dbg.println(19, "mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
+        dbg.println(19, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
         if (e.getID() == MouseEvent.MOUSE_PRESSED)
         {
-            if ((!m_capture) && (e.getButton() == MouseEvent.BUTTON1))
-            {
-                m_capture = true;
-                //CaptureMouse();
-                x_start = e.getX();
-                y_start = e.getY();
-            }
+            dbg.println(9, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
+            if (e.getButton() == MouseEvent.BUTTON3)
+                popup.show(this, e.getX(), e.getY());
         }else
         if ((e.getID() == MouseEvent.MOUSE_MOVED) || (e.getID() == MouseEvent.MOUSE_DRAGGED))
         {
-            if (m_capture)
-            {
-                int dx, dy;
-                dx = e.getX() - x_start;
-                dy = e.getY() - y_start;
-                if ((dx != 0) || (dy != 0))
-                {
-                    //x_pos += dx;
-                    //y_pos += dy;
-                    x_start = e.getX();
-                    y_start = e.getY();
-                    //AutoPos = false;
-                    repaint();
-                }
-                dbg.dprintf(9, "DataPanel::OnMouse(EVT_MOTION x_pos=%d y_pos=%d)\n", 0, 0);
-            }
+                //dx = e.getX() - x_start;
+                //dy = e.getY() - y_start;
         }else
         if (e.getID() == MouseEvent.MOUSE_RELEASED)
         {
-              if (m_capture)
-              {
-                //ReleaseMouse();
-                m_capture = false;
-                repaint();
-              }
         }else
         { // not used event
         }
     }
     boolean m_capture = false;
     int x_start, y_start;
+
+    void popupMenuHandler(java.awt.event.ActionEvent event)
+    {
+      dbg.println(9, "popupMenuHandler event="+event.toString());
+      java.awt.Point pt = new java.awt.Point(popup.x, popup.y);
+      //int colAtPoint = columnAtPoint(pt);
+      //int rowAtPoint = rowAtPoint(pt);
+      dbg.println(9, "popupMenuHandler event.getActionCommand="+event.getActionCommand());
+      switch(event.getActionCommand())
+      {
+        case "Add column":
+          ChannelSelectorDialog csd = new ChannelSelectorDialog(getMainFrame(), dataFile, dataChannelList);
+          csd.setVisible(true);
+          break;
+//        case "File properties":
+//          FilePropertiesDialog fpd = new FilePropertiesDialog(IgeViewerUI.mainWindow, igcCursor.get(rowAtPoint));
+//          fpd.setVisible(true);
+//          break;
+        default:
+           dbg.println(1, "popupMenuHandler invalid event="+event.toString());
+          break;
+      }
+    }
+
+    private DataVisualizerUI getMainFrame() {
+        return parent.getMainFrame();
+    }
 
     @Override
     public void paintComponent(java.awt.Graphics g) {
@@ -166,6 +211,7 @@ public class DataPanel extends javax.swing.JPanel
     boolean repaintNeeded;
     DataCache_File dataFile;
     public DataChannelList dataChannelList;
+    MyPopupMenu popup;
 
     /**
      * 
