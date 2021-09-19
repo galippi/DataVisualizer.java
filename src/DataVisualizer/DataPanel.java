@@ -26,6 +26,7 @@ public class DataPanel extends javax.swing.JPanel
     {
         parent = _parent;
         dataFile = _file;
+        dataChannelList = new DataChannelList(dataFile);
         dataImage = new DataImage(this, dataFile);
 
         //Register for mouse-wheel events on the map area.
@@ -164,6 +165,7 @@ public class DataPanel extends javax.swing.JPanel
     DataImage dataImage;
     boolean repaintNeeded;
     DataCache_File dataFile;
+    public DataChannelList dataChannelList;
 
     /**
      * 
