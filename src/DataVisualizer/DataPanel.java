@@ -96,17 +96,7 @@ public class DataPanel extends javax.swing.JPanel
             popupMenuHandler(event);
           }
         };
-        popup.add(item = new java.awt.MenuItem("File properties"));
-        item.addActionListener(popupMenuListener);
-        popup.add(item = new java.awt.MenuItem("Change color"));
-        item.addActionListener(popupMenuListener);
-        popup.add(item = new java.awt.MenuItem("Close file"));
-        item.addActionListener(popupMenuListener);
-        popup.add(item = new java.awt.MenuItem("Close all file"));
-        item.addActionListener(popupMenuListener);
-        popup.add(item = new java.awt.MenuItem("Add column"));
-        item.addActionListener(popupMenuListener);
-        popup.add(item = new java.awt.MenuItem("Remove column"));
+        popup.add(item = new java.awt.MenuItem("Manage signals"));
         item.addActionListener(popupMenuListener);
         popup.add(item = new java.awt.MenuItem("About"));
         item.addActionListener(popupMenuListener);
@@ -159,7 +149,7 @@ public class DataPanel extends javax.swing.JPanel
       dbg.println(9, "popupMenuHandler event.getActionCommand="+event.getActionCommand());
       switch(event.getActionCommand())
       {
-        case "Add column":
+        case "Manage signals":
           ChannelSelectorDialog csd = new ChannelSelectorDialog(getMainFrame(), dataFile, dataChannelList);
           csd.setVisible(true);
           break;
