@@ -93,7 +93,7 @@ public class ChannelSelectorDialog extends JDialog {
       int j;
       for(j = 0; j < colArray.size(); j++)
       {
-        if (file.getChannel(i) == colArray.get(i).ch)
+        if (file.getChannel(i) == colArray.get(j).ch)
           break;
       }
       if (j == colArray.size())
