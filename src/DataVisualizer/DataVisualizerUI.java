@@ -101,7 +101,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dataPanelMain = new DataPanelMain();
+        dataPanelMain = new DataPanelMain(this);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 

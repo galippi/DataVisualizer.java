@@ -7,10 +7,12 @@ import dataCache.DataCache_File;
 import utils.dbg;
 
 public class DataPanelMain extends javax.swing.JPanel {
-    public DataPanelMain()
+    public DataPanelMain(DataVisualizerUI _parent)
     {
+        parent = _parent;
         reinit();
     }
+    DataVisualizerUI parent;
 
     public void reinit()
     {
@@ -85,4 +87,8 @@ public class DataPanelMain extends javax.swing.JPanel {
      * 
      */
     private static final long serialVersionUID = -1520781722850105662L;
+
+    public DataVisualizerUI getMainFrame() {
+        return parent;
+    }
 }
