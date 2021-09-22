@@ -1,0 +1,6 @@
+[submodule "src/dataCache"]
+	path = src/dataCache
+	url = s:\\git\\DataCache.java.git
+[submodule "src/diaDat"]
+	path = src/diaDat
+	url = s:\\git\\DiaDat.java.git
