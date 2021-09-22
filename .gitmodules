@@ -4,3 +4,6 @@
 [submodule "src/diaDat"]
 	path = src/diaDat
 	url = s:\\git\\DiaDat.java.git
+[submodule "utils"]
+	path = src/utils
+	url = s:\\git\\utils.java
