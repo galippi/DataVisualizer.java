@@ -41,7 +41,7 @@ public class ChannelListEditorTable extends JPanel {
     public ChannelListEditorTable()
     {
         super();
-        setLayout(new GridLayout(3,1));
+        setLayout(new GridLayout(2,1));
         javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel();
         model.setColumnCount(3);
         model.setNumRows(3);
