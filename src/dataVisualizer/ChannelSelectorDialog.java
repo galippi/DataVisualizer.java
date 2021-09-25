@@ -51,6 +51,8 @@ public class ChannelSelectorDialog extends JDialog {
     file = _file;
     colArray = _colArray;
     this.setTitle("Select signals to be displayed");
+    
+    ChannelListEditorTable myTable = new ChannelListEditorTable();
 
     JLabel l2 = new JLabel("Select signals to be displayed");
     l2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -112,7 +114,8 @@ public class ChannelSelectorDialog extends JDialog {
     Container cp2 = getContentPane();
     // add label, text field and button one after another into a single column
     cp2.setLayout(new BorderLayout());
-    cp2.add(l2, BorderLayout.NORTH);
+    cp2.add(myTable, BorderLayout.NORTH);
+    //cp2.add(l2, BorderLayout.NORTH);
     JPanel p2 = new JPanel();
     //Container cp3 = p2.getContentPane();
     p2.setLayout(new FlowLayout());
