@@ -50,7 +50,6 @@ public class ChannelListEditorTable extends JPanel {
         String[] columnNames = {"Signal name", "Signal color", "Group name"};
         for (int i = 0; i < columnNames.length; i++)
         {
-            //columnModel.addColumn(new TableColumn());
             TableColumn column = columnModel.getColumn(i);
             column.setMinWidth(10);
             column.setMaxWidth(200);
@@ -60,20 +59,16 @@ public class ChannelListEditorTable extends JPanel {
         }
 
         javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)table.getModel();
-        //model.setNumRows(3);
-        if (true)
+        String[][] data = {{"Signal 0", "red", "group 0"},{"Signal 1", "blue", "group 0"},{"Signal 2", "green", "group 1"}};
+        for (int i = 0; i < columnNames.length; i++)
         {
-            //tableModel.setNumRows(1);
-            String[][] data = {{"Signal 0", "red", "group 0"}};
-            for (int i = 0; i < columnNames.length; i++)
+            for (int j = 0; j < columnNames.length; j++)
             {
-                table.setValueAt(data[0][i], 0, i);
+                table.setValueAt(data[i][j], i, j);
             }
-            //columnModel.addColumn(new javax.swing.table.TableColumn());
-            //columnModel.addColumn(new javax.swing.table.TableColumn());
-            //columnModel.addColumn(new javax.swing.table.TableColumn());
         }
-        add(table.getTableHeader());
+
+            add(table.getTableHeader());
         add(table);
     }
 
