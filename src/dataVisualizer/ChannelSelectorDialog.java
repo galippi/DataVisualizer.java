@@ -25,6 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import dataCache.DataCache_File;
 import utils.dbg;
@@ -114,8 +115,19 @@ public class ChannelSelectorDialog extends JDialog {
     Container cp2 = getContentPane();
     // add label, text field and button one after another into a single column
     cp2.setLayout(new BorderLayout());
-    cp2.add(myTable, BorderLayout.NORTH);
+    JPanel jpanel = new JPanel();
+    jpanel.setLayout(new GridLayout(3,1));
+    jpanel.add(l2);
+    //jpanel.add(myTable.getTableHeader());
+    jpanel.add(myTable);
+    cp2.add(jpanel, BorderLayout.NORTH);
     //cp2.add(l2, BorderLayout.NORTH);
+    //DefaultTableModel model = (DefaultTableModel) myTable.getModel();
+    //model.setNumRows(1);
+    //model.addRow(new Object[]{"Column 1", "Column 2", "Column 3"});
+    //model.insertRow(0, new Object[]{"Column 1", "Column 2", "Column 3"});
+    //model.setNumRows(3);
+
     JPanel p2 = new JPanel();
     //Container cp3 = p2.getContentPane();
     p2.setLayout(new FlowLayout());
