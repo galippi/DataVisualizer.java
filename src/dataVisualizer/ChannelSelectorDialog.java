@@ -54,7 +54,7 @@ public class ChannelSelectorDialog extends JDialog {
     colArray = _colArray;
     this.setTitle("Select signals to be displayed");
     
-    ChannelListEditorTable myTable = new ChannelListEditorTable();
+    ChannelListEditorTable myTable = new ChannelListEditorTable(file, colArray);
 
     JLabel l2 = new JLabel("Select signals to be displayed");
     l2.setHorizontalAlignment(SwingConstants.CENTER);

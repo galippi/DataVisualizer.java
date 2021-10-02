@@ -8,6 +8,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 //javax.swing.table.DefaultTableModel
 
+import dataCache.DataCache_File;
+
 class MyTableModel extends javax.swing.table.DefaultTableModel {
     private String[] columnNames = {"Signal name", "Signal color", "Group name"};
     private String[][] data = {{"Signal 0", "red", "group 0"}};
@@ -38,7 +40,7 @@ class MyTableModel extends javax.swing.table.DefaultTableModel {
 
 public class ChannelListEditorTable extends JPanel {
     JTable table;
-    public ChannelListEditorTable()
+    public ChannelListEditorTable(DataCache_File file, DataChannelList colArray)
     {
         super();
         setLayout(new GridLayout(2,1));
@@ -60,9 +62,10 @@ public class ChannelListEditorTable extends JPanel {
 
         javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)table.getModel();
         String[][] data = {{"Signal 0", "red", "group 0"},{"Signal 1", "blue", "group 0"},{"Signal 2", "green", "group 1"}};
-        for (int i = 0; i < columnNames.length; i++)
+        for (int i = 0; i < file.getChannelNumber(); i++)
         {
-            for (int j = 0; j < columnNames.length; j++)
+            table.setValueAt(file.getChannel(i).getName(), i, 0);
+            for (int j = 1; j < columnNames.length; j++)
             {
                 table.setValueAt(data[i][j], i, j);
             }
