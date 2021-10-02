@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -182,6 +183,13 @@ public class ChannelSelectorDialog extends JDialog {
 
     p2.add(p3);
     p2.add(new JScrollPane(lbDeselected));
+
+    String s1[] = new String[file.getChannelNumber()];
+    for(int i = 0; i < file.getChannelNumber(); i++)
+        s1[i] = file.getChannel(i).getName();
+    JComboBox cb = new JComboBox(s1);
+    p2.add(cb);
+
     cp2.add(p2, BorderLayout.CENTER);
     JPanel bOkCancel = new JPanel();
     bOkCancel.add(b2);
