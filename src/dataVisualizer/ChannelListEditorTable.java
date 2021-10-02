@@ -1,5 +1,6 @@
 package dataVisualizer;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
@@ -40,6 +41,7 @@ class MyTableModel extends javax.swing.table.DefaultTableModel {
 
 public class ChannelListEditorTable extends JPanel {
     JTable table;
+    DataChannelGroup hidden = new DataChannelGroup("not visible");
     public ChannelListEditorTable(DataCache_File file, DataChannelList colArray)
     {
         super();
@@ -61,17 +63,27 @@ public class ChannelListEditorTable extends JPanel {
         }
 
         javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)table.getModel();
-        String[][] data = {{"Signal 0", "red", "group 0"},{"Signal 1", "blue", "group 0"},{"Signal 2", "green", "group 1"}};
         for (int i = 0; i < file.getChannelNumber(); i++)
         {
-            table.setValueAt(file.getChannel(i).getName(), i, 0);
-            for (int j = 1; j < columnNames.length; j++)
+            String chName = file.getChannel(i).getName();
+            table.setValueAt(chName, i, 0);
+            DataChannelListItem dcli = colArray.get(chName);
+            Color color;
+            DataChannelGroup dcg;
+            if (dcli != null)
             {
-                table.setValueAt(data[i][j], i, j);
+                color = dcli.color;
+                dcg = dcli.group;
+            }else
+            {
+                color = Color.WHITE;
+                dcg = hidden;
             }
+            table.setValueAt(color.toString(), i, 1);
+            table.setValueAt(dcg.name, i, 2);
         }
 
-            add(table.getTableHeader());
+        add(table.getTableHeader());
         add(table);
     }
 
