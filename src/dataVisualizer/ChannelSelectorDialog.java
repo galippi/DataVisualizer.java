@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 
 import dataCache.DataCache_File;
 import utils.dbg;
@@ -51,6 +53,8 @@ public class ChannelSelectorDialog extends JDialog {
     file = _file;
     colArray = _colArray;
     this.setTitle("Select signals to be displayed");
+    
+    ChannelListEditorTable myTable = new ChannelListEditorTable(file, colArray);
 
     JLabel l2 = new JLabel("Select signals to be displayed");
     l2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -112,7 +116,12 @@ public class ChannelSelectorDialog extends JDialog {
     Container cp2 = getContentPane();
     // add label, text field and button one after another into a single column
     cp2.setLayout(new BorderLayout());
-    cp2.add(l2, BorderLayout.NORTH);
+    JPanel jpanel = new JPanel();
+    jpanel.setLayout(new GridLayout(2,1));
+    jpanel.add(l2);
+    jpanel.add(myTable);
+    cp2.add(jpanel, BorderLayout.NORTH);
+
     JPanel p2 = new JPanel();
     //Container cp3 = p2.getContentPane();
     p2.setLayout(new FlowLayout());
@@ -174,6 +183,13 @@ public class ChannelSelectorDialog extends JDialog {
 
     p2.add(p3);
     p2.add(new JScrollPane(lbDeselected));
+
+    String s1[] = new String[file.getChannelNumber()];
+    for(int i = 0; i < file.getChannelNumber(); i++)
+        s1[i] = file.getChannel(i).getName();
+    JComboBox cb = new JComboBox(s1);
+    p2.add(cb);
+
     cp2.add(p2, BorderLayout.CENTER);
     JPanel bOkCancel = new JPanel();
     bOkCancel.add(b2);
