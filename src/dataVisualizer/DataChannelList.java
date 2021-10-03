@@ -17,6 +17,7 @@ public class DataChannelList {
     {
         file = _file;
         clear();
+        horizontalAxle = file.getIndexChannel();
     }
     public int size() {
         return dataChannels.size();

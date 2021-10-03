@@ -44,9 +44,11 @@ public class ChannelSelectorDialog extends JDialog {
   JButton bRemoveAll;
   JButton bUp;
   JButton bDown;
-  //IgcFileTable callBackParent;
+  JComboBox<String> cb;
+
   DataCache_File file;
   DataChannelList colArray;
+
   ChannelSelectorDialog(JFrame parent, DataCache_File _file, DataChannelList _colArray)
   {
     super(parent, Dialog.ModalityType.APPLICATION_MODAL);
@@ -185,9 +187,17 @@ public class ChannelSelectorDialog extends JDialog {
     p2.add(new JScrollPane(lbDeselected));
 
     String s1[] = new String[file.getChannelNumber()];
+    String horizontalAxleChName = colArray.horizontalAxle.getName();
+    int toBeSelected = -1;
     for(int i = 0; i < file.getChannelNumber(); i++)
-        s1[i] = file.getChannel(i).getName();
-    JComboBox cb = new JComboBox(s1);
+    {
+        String chName = file.getChannel(i).getName();
+        s1[i] = chName;
+        if (chName.contentEquals(horizontalAxleChName))
+            toBeSelected  = i;
+    }
+    cb = new JComboBox<String>(s1);
+    cb.setSelectedIndex(toBeSelected);
     p2.add(cb);
 
     cp2.add(p2, BorderLayout.CENTER);
@@ -254,7 +264,7 @@ public class ChannelSelectorDialog extends JDialog {
       colArray.addSignal(colName);
       dbg.println(11, "  colArray["+i+"]=" + colName + "!");
     }
-    colArray.setHorizontalAxle("__pointIndex");
+    colArray.setHorizontalAxle((String)cb.getSelectedItem());
     colArray.updateCallbacksExecute();
     //callBackParent.columnSelectorDialogOkHandler(colArray);
   }
