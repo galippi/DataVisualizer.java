@@ -1,12 +1,15 @@
 package dataVisualizer;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import dataCache.DataCache_File;
+import dataCache.DataCache_State;
 import utils.dbg;
 
-public class DataPanelMain extends javax.swing.JPanel {
+public class DataPanelMain extends javax.swing.JPanel implements ActionListener {
     public DataPanelMain(DataVisualizerUI _parent)
     {
         parent = _parent;
@@ -25,9 +28,11 @@ public class DataPanelMain extends javax.swing.JPanel {
         dbg.println(9, "DataPanelMain.loadFile " + filename);
         reinit();
         dataPanels.clear();
-        file = new DataCache_File(filename);
-        DataPanel dataPanel = new DataPanel(this, file);
-        dataPanels.add(dataPanel);
+        file = new DataCache_File();
+        file.addActionListener(this);
+        file.open(filename);
+        //DataPanel dataPanel = new DataPanel(this, file);
+        //dataPanels.add(dataPanel);
 //        setLayout(new java.awt.BorderLayout());
         //removeAll();
         //add(dataPanel);
@@ -90,5 +95,16 @@ public class DataPanelMain extends javax.swing.JPanel {
 
     public DataVisualizerUI getMainFrame() {
         return parent;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (file.getState() == DataCache_State.DataCache_Ready)
+        {
+            DataVisualizerLayoutFileLoader dvlf = new DataVisualizerLayoutFileLoader(file.getName());
+            DataPanel dataPanel = new DataPanel(this, file);
+            dataPanels.add(dataPanel);
+            updateLayout();
+        }
     }
 }
