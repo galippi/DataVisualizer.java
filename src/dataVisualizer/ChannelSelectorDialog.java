@@ -29,6 +29,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import dataCache.DataCache_File;
+import utils.FileNameExtension;
 import utils.dbg;
 
 /**
@@ -267,6 +268,7 @@ public class ChannelSelectorDialog extends JDialog {
     colArray.setHorizontalAxle((String)cb.getSelectedItem());
     colArray.updateCallbacksExecute();
     //callBackParent.columnSelectorDialogOkHandler(colArray);
+    DataVisualizerLayoutFileLoader.saveLayoutFile(FileNameExtension.set(file.getName(), "dvl"), colArray);
   }
 
   void upHandler()
