@@ -23,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -37,14 +38,6 @@ import utils.dbg;
  * @author liptakok
  */
 public class ChannelSelectorDialog extends JDialog {
-  JList lbSelected;
-  JList lbDeselected;
-  JButton bAddAll;
-  JButton bAdd;
-  JButton bRemove;
-  JButton bRemoveAll;
-  JButton bUp;
-  JButton bDown;
   JComboBox<String> cb;
 
   DataCache_File file;
@@ -62,9 +55,9 @@ public class ChannelSelectorDialog extends JDialog {
     JLabel l2 = new JLabel("Select signals to be displayed");
     l2.setHorizontalAlignment(SwingConstants.CENTER);
 
-    JButton b2 = new JButton("OK");
-    b2.setHorizontalAlignment(SwingConstants.LEFT);
-    b2.addActionListener(new ActionListener() {
+    JButton bOk = new JButton("OK");
+    bOk.setHorizontalAlignment(SwingConstants.LEFT);
+    bOk.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             okHandler();
@@ -79,94 +72,8 @@ public class ChannelSelectorDialog extends JDialog {
         }
     });
 
-    DefaultListModel lmSelected = new DefaultListModel();
-    for(int i = 0; i < colArray.size(); i++)
-    {
-      lmSelected.addElement(colArray.get(i).getSignalName());
-    }
-    lbSelected = new JList(lmSelected);
-    lbSelected.addListSelectionListener(new ListSelectionListener()
-    {
-      @Override
-      public void valueChanged(ListSelectionEvent e)
-      {
-        updateButtons();
-      }
-    });
-
-    DefaultListModel lmDeselected = new DefaultListModel();
-    for(int i = 0; i < file.getChannelNumber(); i++)
-    {
-      int j;
-      for(j = 0; j < colArray.size(); j++)
-      {
-        if (file.getChannel(i) == colArray.get(j).ch)
-          break;
-      }
-      if (j == colArray.size())
-        lmDeselected.addElement(file.getChannel(i).getName());
-    }
-    lbDeselected = new JList(lmDeselected);
-    lbDeselected.addListSelectionListener(new ListSelectionListener()
-    {
-      @Override
-      public void valueChanged(ListSelectionEvent e)
-      {
-        updateButtons();
-      }
-    });
-
     JPanel jpanel = new JPanel();
     JScrollPane scrollableTable = new JScrollPane(myTable);
-
-    JPanel p2 = new JPanel();
-
-    JPanel pUpDown = new JPanel();
-
-
-    bUp = new JButton("Up");
-    bUp.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          upHandler();
-        }
-    });
-    bDown = new JButton("Down");
-    bDown.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          downHandler();
-        }
-    });
-
-    JPanel p3 = new JPanel();
-
-    bAddAll = new JButton("<<");
-    bAddAll.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          addAllHandler();
-        }
-    });
-
-    bAdd = new JButton("<");
-    bAdd.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          addHandler();
-        }
-    });
-
-    bRemove = new JButton(">");
-    bRemove.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          removeHandler();
-        }
-    });
-
-    bRemoveAll = new JButton(">>");
-    bRemoveAll.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          removeAllHandler();
-        }
-    });
-
 
     String s1[] = new String[file.getChannelNumber()];
     String horizontalAxleChName = colArray.horizontalAxle.getName();
@@ -180,37 +87,30 @@ public class ChannelSelectorDialog extends JDialog {
     }
     cb = new JComboBox<String>(s1);
     cb.setSelectedIndex(toBeSelected);
-    p2.add(cb);
 
     JPanel bOkCancel = new JPanel();
-
-    //jpanel.setMaximumSize(new Dimension(200, 200));
-    jpanel.setLayout(new GridLayout(2,1));
-    jpanel.add(l2);
-    //scrollableTable.setSize(200, 200);
-    jpanel.add(scrollableTable);
-    p2.setLayout(new FlowLayout());
-    pUpDown.setLayout(new GridLayout(2, 1));
-    pUpDown.add(bUp);
-    pUpDown.add(bDown);
-    p2.add(pUpDown);
-    p2.add(new JScrollPane(lbSelected));
-    p3.setLayout(new GridLayout(4, 1));
-    p3.add(bAddAll);
-    p3.add(bAdd);
-    p3.add(bRemove);
-    p3.add(bRemoveAll);
-    p2.add(p3);
-    p2.add(new JScrollPane(lbDeselected));
-    bOkCancel.add(b2);
+    bOkCancel.add(bOk);
     bOkCancel.add(bCancel);
 
-    Container cp2 = getContentPane();
-    // add label, text field and button one after another into a single column
-    cp2.setLayout(new BorderLayout());
-    cp2.add(jpanel, BorderLayout.NORTH);
-    cp2.add(p2, BorderLayout.CENTER);
-    cp2.add(bOkCancel, BorderLayout.SOUTH);
+    Container cp = getContentPane();
+    SpringLayout layout = new SpringLayout();
+    cp.setLayout(layout);
+    cp.add(l2);
+    cp.add(scrollableTable);
+    cp.add(bOkCancel);
+
+    layout.putConstraint(SpringLayout.WEST,  l2, 5, SpringLayout.WEST,  cp);
+    layout.putConstraint(SpringLayout.NORTH, l2, 5, SpringLayout.NORTH, cp);
+
+    layout.putConstraint(SpringLayout.WEST,  scrollableTable, 5, SpringLayout.WEST,  cp);
+    layout.putConstraint(SpringLayout.EAST,  scrollableTable, 5, SpringLayout.EAST,  cp);
+    layout.putConstraint(SpringLayout.NORTH, scrollableTable, 5, SpringLayout.SOUTH, l2);
+    layout.putConstraint(SpringLayout.SOUTH, scrollableTable, 5, SpringLayout.NORTH, bOkCancel);
+
+    layout.putConstraint(SpringLayout.WEST,  bOkCancel, 5, SpringLayout.WEST,  cp);
+    layout.putConstraint(SpringLayout.SOUTH, bOkCancel, 5, SpringLayout.SOUTH, cp);
+
+    pack();
 
     Point pt = parent.getLocationOnScreen();
     int pw = parent.getWidth();
@@ -220,152 +120,27 @@ public class ChannelSelectorDialog extends JDialog {
   }
   final void updateButtons()
   {
-    if (lbSelected.getModel().getSize() == 0)
-    {
-      bRemoveAll.setEnabled(false);
-    }else
-    {
-      bRemoveAll.setEnabled(true);
-    }
-    int[] lbSelectedSelection = lbSelected.getSelectedIndices();
-    if (lbSelectedSelection.length == 0)
-    {
-      bRemove.setEnabled(false);
-    }else
-    {
-      bRemove.setEnabled(true);
-    }
-    if ((lbSelectedSelection.length > 0) && (lbSelectedSelection[0] != 0))
-      bUp.setEnabled(true);
-    else
-      bUp.setEnabled(false);
-    if ((lbSelectedSelection.length > 0) && (lbSelectedSelection[lbSelectedSelection.length - 1] < (lbSelected.getModel().getSize() - 1)))
-      bDown.setEnabled(true);
-    else
-      bDown.setEnabled(false);
-    if ((lbDeselected.getModel().getSize() == 0) || (lbSelectedSelection.length >= 2))
-    {
-      bAddAll.setEnabled(false);
-    }else
-    {
-      bAddAll.setEnabled(true);
-    }
-    int[] lbDeselectedSelection = lbDeselected.getSelectedIndices();
-    if ((lbDeselectedSelection.length == 0) || (lbSelectedSelection.length >= 2))
-    {
-      bAdd.setEnabled(false);
-    }else
-    {
-      bAdd.setEnabled(true);
-    }
   }
+
   void okHandler()
   {
     dbg.println(9, "ColumnSelectorDialog.okHandler");
     setVisible(false);
-    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
-    colArray.clear();
-    for (int i = 0; i < mSelected.size(); i++)
+    if (false)
     {
-      String colName = mSelected.getElementAt(i).toString();
-      colArray.addSignal(colName);
-      dbg.println(11, "  colArray["+i+"]=" + colName + "!");
+        javax.swing.JTable lbSelected = new javax.swing.JTable();
+        DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
+        colArray.clear();
+        for (int i = 0; i < mSelected.size(); i++)
+        {
+          String colName = mSelected.getElementAt(i).toString();
+          colArray.addSignal(colName);
+          dbg.println(11, "  colArray["+i+"]=" + colName + "!");
+        }
+        colArray.setHorizontalAxle((String)cb.getSelectedItem());
+        colArray.updateCallbacksExecute();
+        //callBackParent.columnSelectorDialogOkHandler(colArray);
+        DataVisualizerLayoutFileLoader.saveLayoutFile(FileNameExtension.set(file.getName(), "dvl"), colArray);
     }
-    colArray.setHorizontalAxle((String)cb.getSelectedItem());
-    colArray.updateCallbacksExecute();
-    //callBackParent.columnSelectorDialogOkHandler(colArray);
-    DataVisualizerLayoutFileLoader.saveLayoutFile(FileNameExtension.set(file.getName(), "dvl"), colArray);
-  }
-
-  void upHandler()
-  {
-    int[] sel = lbSelected.getSelectedIndices();
-    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
-    for(int i = 0; i < sel.length; i++)
-    {
-      Object selected = mSelected.getElementAt(sel[i]);
-      mSelected.setElementAt(mSelected.getElementAt(sel[i] - 1), sel[i]);
-      mSelected.setElementAt(selected, sel[i] - 1);
-      sel[i]--;
-    }
-    lbSelected.setSelectedIndices(sel);
-  }
-
-  void downHandler()
-  {
-    int[] sel = lbSelected.getSelectedIndices();
-    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
-    for(int i = sel.length - 1; i >= 0 ; i--)
-    {
-      Object selected = mSelected.getElementAt(sel[i]);
-      mSelected.setElementAt(mSelected.getElementAt(sel[i] + 1), sel[i]);
-      mSelected.setElementAt(selected, sel[i] + 1);
-      sel[i]++;
-    }
-    lbSelected.setSelectedIndices(sel);
-  }
-
-  void addHandler()
-  {
-    int[] sel = lbDeselected.getSelectedIndices();
-    addHandler(sel);
-  }
-  void addHandler(int[] sel)
-  {
-    DefaultListModel mDeselected = (DefaultListModel)lbDeselected.getModel();
-    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
-    Object[] objs = new Object[sel.length];
-    for(int i = 0; i < sel.length; i++)
-    {
-      objs[i] = mDeselected.getElementAt(sel[i]);
-      mSelected.addElement(objs[i]);
-    }
-    for(int i = sel.length - 1; i >= 0; i--)
-      mDeselected.removeElementAt(sel[i]);
-    int[] selectedList = lbSelected.getSelectedIndices();
-    if (selectedList.length == 1)
-    {
-      //moveUp(selectedList[0], );
-      int toIdx = selectedList[0];
-      for(int i = mSelected.getSize() - objs.length - 1; i >= toIdx; i--)
-      {
-        mSelected.setElementAt(mSelected.getElementAt(i), i + objs.length);
-      }
-      for(int i = 0; i < objs.length; i++)
-      {
-        mSelected.setElementAt(objs[i], toIdx + i);
-      }
-    }
-    updateButtons();
-  }
-  void addAllHandler()
-  {
-    int num = lbDeselected.getModel().getSize();
-    int[] sel = new int[num];
-    for(int i = 0; i < num; i++)
-    {
-      sel[i] = i;
-    }
-    addHandler(sel);
-  }
-  void removeHandler()
-  {
-    int[] sel = lbSelected.getSelectedIndices();
-    DefaultListModel mDeselected = (DefaultListModel)lbDeselected.getModel();
-    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
-    for(int i = 0; i < sel.length; i++)
-      mDeselected.addElement(mSelected.getElementAt(sel[i]));
-    for(int i = sel.length - 1; i >= 0; i--)
-      mSelected.removeElementAt(sel[i]);
-    updateButtons();
-  }
-  void removeAllHandler()
-  {
-    DefaultListModel mDeselected = (DefaultListModel)lbDeselected.getModel();
-    DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
-    for(int i = 0; i < mSelected.getSize(); i++)
-      mDeselected.addElement(mSelected.getElementAt(i));
-    mSelected.clear();
-    updateButtons();
   }
 }
