@@ -2,6 +2,8 @@ package dataVisualizer;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -37,7 +39,7 @@ class MyPopupMenu extends java.awt.PopupMenu
 //  
 //}
 
-public class DataPanel extends javax.swing.JPanel
+public class DataPanel extends javax.swing.JPanel implements ActionListener
 {
     public DataPanel(DataPanelMain _parent, DataCache_File _file)
     {
@@ -168,6 +170,12 @@ public class DataPanel extends javax.swing.JPanel
     }
 
     @Override
+    public void actionPerformed(ActionEvent arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
 
@@ -202,7 +210,6 @@ public class DataPanel extends javax.swing.JPanel
     DataCache_File dataFile;
     public DataChannelList dataChannelList;
     MyPopupMenu popup;
-
     /**
      * 
      */
