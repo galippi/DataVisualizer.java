@@ -117,19 +117,12 @@ public class ChannelSelectorDialog extends JDialog {
     });
 
     JPanel jpanel = new JPanel();
-    //jpanel.setMaximumSize(new Dimension(200, 200));
-    jpanel.setLayout(new GridLayout(2,1));
-    jpanel.add(l2);
     JScrollPane scrollableTable = new JScrollPane(myTable);
-    //scrollableTable.setSize(200, 200);
-    jpanel.add(scrollableTable);
 
     JPanel p2 = new JPanel();
-    //Container cp3 = p2.getContentPane();
-    p2.setLayout(new FlowLayout());
 
     JPanel pUpDown = new JPanel();
-    pUpDown.setLayout(new GridLayout(2, 1));
+
 
     bUp = new JButton("Up");
     bUp.addActionListener(new ActionListener() {
@@ -143,13 +136,8 @@ public class ChannelSelectorDialog extends JDialog {
           downHandler();
         }
     });
-    pUpDown.add(bUp);
-    pUpDown.add(bDown);
-    p2.add(pUpDown);
-    p2.add(new JScrollPane(lbSelected));
+
     JPanel p3 = new JPanel();
-    //p3.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-    p3.setLayout(new GridLayout(4, 1));
 
     bAddAll = new JButton("<<");
     bAddAll.addActionListener(new ActionListener() {
@@ -157,7 +145,6 @@ public class ChannelSelectorDialog extends JDialog {
           addAllHandler();
         }
     });
-    p3.add(bAddAll);
 
     bAdd = new JButton("<");
     bAdd.addActionListener(new ActionListener() {
@@ -165,7 +152,6 @@ public class ChannelSelectorDialog extends JDialog {
           addHandler();
         }
     });
-    p3.add(bAdd);
 
     bRemove = new JButton(">");
     bRemove.addActionListener(new ActionListener() {
@@ -173,7 +159,6 @@ public class ChannelSelectorDialog extends JDialog {
           removeHandler();
         }
     });
-    p3.add(bRemove);
 
     bRemoveAll = new JButton(">>");
     bRemoveAll.addActionListener(new ActionListener() {
@@ -181,10 +166,7 @@ public class ChannelSelectorDialog extends JDialog {
           removeAllHandler();
         }
     });
-    p3.add(bRemoveAll);
 
-    p2.add(p3);
-    p2.add(new JScrollPane(lbDeselected));
 
     String s1[] = new String[file.getChannelNumber()];
     String horizontalAxleChName = colArray.horizontalAxle.getName();
@@ -201,6 +183,25 @@ public class ChannelSelectorDialog extends JDialog {
     p2.add(cb);
 
     JPanel bOkCancel = new JPanel();
+
+    //jpanel.setMaximumSize(new Dimension(200, 200));
+    jpanel.setLayout(new GridLayout(2,1));
+    jpanel.add(l2);
+    //scrollableTable.setSize(200, 200);
+    jpanel.add(scrollableTable);
+    p2.setLayout(new FlowLayout());
+    pUpDown.setLayout(new GridLayout(2, 1));
+    pUpDown.add(bUp);
+    pUpDown.add(bDown);
+    p2.add(pUpDown);
+    p2.add(new JScrollPane(lbSelected));
+    p3.setLayout(new GridLayout(4, 1));
+    p3.add(bAddAll);
+    p3.add(bAdd);
+    p3.add(bRemove);
+    p3.add(bRemoveAll);
+    p2.add(p3);
+    p2.add(new JScrollPane(lbDeselected));
     bOkCancel.add(b2);
     bOkCancel.add(bCancel);
 
@@ -210,6 +211,7 @@ public class ChannelSelectorDialog extends JDialog {
     cp2.add(jpanel, BorderLayout.NORTH);
     cp2.add(p2, BorderLayout.CENTER);
     cp2.add(bOkCancel, BorderLayout.SOUTH);
+
     Point pt = parent.getLocationOnScreen();
     int pw = parent.getWidth();
     setBounds(pt.x + pw / 2 - 150, pt.y + 200, 400, 400);
