@@ -1,7 +1,8 @@
 TestData/*
 src/Version/*
-bin/*
 javafiles
 _t.bat
 build.bat
 *.bak
+_backup/
+/bin/
