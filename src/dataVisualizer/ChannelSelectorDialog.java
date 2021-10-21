@@ -116,14 +116,13 @@ public class ChannelSelectorDialog extends JDialog {
       }
     });
 
-    Container cp2 = getContentPane();
-    // add label, text field and button one after another into a single column
-    cp2.setLayout(new BorderLayout());
     JPanel jpanel = new JPanel();
+    //jpanel.setMaximumSize(new Dimension(200, 200));
     jpanel.setLayout(new GridLayout(2,1));
     jpanel.add(l2);
-    jpanel.add(myTable);
-    cp2.add(jpanel, BorderLayout.NORTH);
+    JScrollPane scrollableTable = new JScrollPane(myTable);
+    //scrollableTable.setSize(200, 200);
+    jpanel.add(scrollableTable);
 
     JPanel p2 = new JPanel();
     //Container cp3 = p2.getContentPane();
@@ -201,10 +200,15 @@ public class ChannelSelectorDialog extends JDialog {
     cb.setSelectedIndex(toBeSelected);
     p2.add(cb);
 
-    cp2.add(p2, BorderLayout.CENTER);
     JPanel bOkCancel = new JPanel();
     bOkCancel.add(b2);
     bOkCancel.add(bCancel);
+
+    Container cp2 = getContentPane();
+    // add label, text field and button one after another into a single column
+    cp2.setLayout(new BorderLayout());
+    cp2.add(jpanel, BorderLayout.NORTH);
+    cp2.add(p2, BorderLayout.CENTER);
     cp2.add(bOkCancel, BorderLayout.SOUTH);
     Point pt = parent.getLocationOnScreen();
     int pw = parent.getWidth();
