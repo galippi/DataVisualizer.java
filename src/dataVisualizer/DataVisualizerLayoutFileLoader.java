@@ -101,12 +101,12 @@ public class DataVisualizerLayoutFileLoader {
         }
     }
 
-    public static void saveLayoutFile(String filename, Vector<DataPanel> dataPanels)
+    public static void saveLayoutFile(String filename, Vector<DataChannelListProvider> dataPanels)
     {
         JSONObject json = new JSONObject();
         json.put("numOfWindows", dataPanels.size());
         JSONArray windows = new JSONArray();
-        for(DataPanel dataPanel: dataPanels)
+        for(DataChannelListProvider dataPanel: dataPanels)
         {
             DataChannelList dcl = dataPanel.getDataChannelList();
             JSONArray channels = new JSONArray();
