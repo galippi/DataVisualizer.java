@@ -19,6 +19,20 @@ public class DataChannelList {
         clear();
         horizontalAxle = file.getIndexChannel();
     }
+
+    public DataChannelList(DataCache_File _file, Vector<DataChannelListItem> dcl, String horizontalAxleChannelName)
+    {
+        file = _file;
+        clear();
+        dataChannels = dcl;
+        for (DataChannelListItem dcli: dcl)
+        {
+            String colName = dcli.getSignalName();
+            mapName.put(colName, dcli);
+        }
+        horizontalAxle = file.getChannel(horizontalAxleChannelName);
+    }
+
     public int size() {
         return dataChannels.size();
     }
