@@ -204,6 +204,11 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener
     }
     int ctr = 0;
 
+    public DataChannelList getDataChannelList()
+    {
+        return dataChannelList;
+    }
+
     DataPanelMain parent;
     DataImage dataImage;
     boolean repaintNeeded;
