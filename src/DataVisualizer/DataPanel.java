@@ -39,7 +39,7 @@ class MyPopupMenu extends java.awt.PopupMenu
 //  
 //}
 
-public class DataPanel extends javax.swing.JPanel implements ActionListener
+public class DataPanel extends javax.swing.JPanel implements ActionListener, DataChannelListProvider
 {
     public DataPanel(DataPanelMain _parent, DataCache_File _file)
     {
@@ -203,6 +203,11 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener
         g.drawString("dataPanel ctr=" + ctr, 5, 10);
     }
     int ctr = 0;
+
+    public DataChannelList getDataChannelList()
+    {
+        return dataChannelList;
+    }
 
     DataPanelMain parent;
     DataImage dataImage;
