@@ -14,6 +14,10 @@ public class DataChannelListItem {
         color = getNextColor();
     }
 
+    public DataChannelListItem(String chName, double factor, double offset, Color color2, String groupName) {
+        // TODO Auto-generated constructor stub
+    }
+
     public String getSignalName() {
         return ch.getName();
     }
