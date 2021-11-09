@@ -97,25 +97,29 @@ public class ChannelSelectorDialog extends JDialog {
     cp.setLayout(layout);
     cp.add(l2);
     cp.add(scrollableTable);
+    cp.add(cb);
     cp.add(bOkCancel);
 
     layout.putConstraint(SpringLayout.WEST,  l2, 5, SpringLayout.WEST,  cp);
     layout.putConstraint(SpringLayout.NORTH, l2, 5, SpringLayout.NORTH, cp);
 
     layout.putConstraint(SpringLayout.WEST,  scrollableTable, 5, SpringLayout.WEST,  cp);
-    layout.putConstraint(SpringLayout.EAST,  scrollableTable, 5, SpringLayout.EAST,  cp);
+    layout.putConstraint(SpringLayout.EAST,  scrollableTable, -5, SpringLayout.EAST,  cp);
     layout.putConstraint(SpringLayout.NORTH, scrollableTable, 5, SpringLayout.SOUTH, l2);
-    layout.putConstraint(SpringLayout.SOUTH, scrollableTable, 5, SpringLayout.NORTH, bOkCancel);
+    layout.putConstraint(SpringLayout.SOUTH, scrollableTable, -5, SpringLayout.NORTH, cb);
 
-    layout.putConstraint(SpringLayout.WEST,  bOkCancel, 5, SpringLayout.WEST,  cp);
-    layout.putConstraint(SpringLayout.SOUTH, bOkCancel, 5, SpringLayout.SOUTH, cp);
+    layout.putConstraint(SpringLayout.WEST,  cb,  5, SpringLayout.WEST,  cp);
+    layout.putConstraint(SpringLayout.SOUTH, cb, -5, SpringLayout.NORTH, bOkCancel);
+
+    layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,  bOkCancel,  0, SpringLayout.HORIZONTAL_CENTER,  cp);
+    layout.putConstraint(SpringLayout.SOUTH, bOkCancel, -5, SpringLayout.SOUTH, cp);
 
     pack();
 
     Point pt = parent.getLocationOnScreen();
     int pw = parent.getWidth();
     setBounds(pt.x + pw / 2 - 150, pt.y + 200, 400, 400);
-    this.setMinimumSize(new Dimension(350, 300));
+    this.setMinimumSize(new Dimension(350, 400));
     updateButtons();
   }
   final void updateButtons()
