@@ -74,6 +74,12 @@ public class ChannelSelectorDialog extends JDialog {
     JPanel jpanel = new JPanel();
     JScrollPane scrollableTable = new JScrollPane(myTable);
 
+    JPanel jpProperties = new JPanel();
+    jpProperties.setMinimumSize(new Dimension(200, 60));
+    JLabel l4 = new JLabel("Signal name:");
+    jpProperties.add(l4);
+    jpProperties.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.black));
+
     JLabel l3 = new JLabel("Signal of horizontal axle:");
 
     String s1[] = new String[file.getChannelNumber()];
@@ -98,6 +104,7 @@ public class ChannelSelectorDialog extends JDialog {
     cp.setLayout(layout);
     cp.add(l2);
     cp.add(scrollableTable);
+    cp.add(jpProperties);
     cp.add(l3);
     cp.add(cb);
     cp.add(bOkCancel);
@@ -108,7 +115,11 @@ public class ChannelSelectorDialog extends JDialog {
     layout.putConstraint(SpringLayout.WEST,  scrollableTable, 5, SpringLayout.WEST,  cp);
     layout.putConstraint(SpringLayout.EAST,  scrollableTable, -5, SpringLayout.EAST,  cp);
     layout.putConstraint(SpringLayout.NORTH, scrollableTable, 5, SpringLayout.SOUTH, l2);
-    layout.putConstraint(SpringLayout.SOUTH, scrollableTable, -5, SpringLayout.NORTH, l3);
+    layout.putConstraint(SpringLayout.SOUTH, scrollableTable, -5, SpringLayout.NORTH, jpProperties);
+
+    layout.putConstraint(SpringLayout.WEST,  jpProperties,  5, SpringLayout.WEST,  cp);
+    layout.putConstraint(SpringLayout.EAST,  jpProperties, -5, SpringLayout.EAST,  cp);
+    layout.putConstraint(SpringLayout.SOUTH, jpProperties, -5, SpringLayout.NORTH, l3);
 
     layout.putConstraint(SpringLayout.WEST,  l3,  5, SpringLayout.WEST,  cp);
     layout.putConstraint(SpringLayout.NORTH, l3,  0, SpringLayout.NORTH, cb);
