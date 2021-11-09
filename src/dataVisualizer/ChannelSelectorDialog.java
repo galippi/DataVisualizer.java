@@ -53,7 +53,6 @@ public class ChannelSelectorDialog extends JDialog {
     ChannelListEditorTable myTable = new ChannelListEditorTable(file, colArray);
 
     JLabel l2 = new JLabel("Select signals to be displayed");
-    l2.setHorizontalAlignment(SwingConstants.CENTER);
 
     JButton bOk = new JButton("OK");
     bOk.setHorizontalAlignment(SwingConstants.LEFT);
@@ -74,6 +73,8 @@ public class ChannelSelectorDialog extends JDialog {
 
     JPanel jpanel = new JPanel();
     JScrollPane scrollableTable = new JScrollPane(myTable);
+
+    JLabel l3 = new JLabel("Signal of horizontal axle:");
 
     String s1[] = new String[file.getChannelNumber()];
     String horizontalAxleChName = colArray.horizontalAxle.getName();
@@ -97,6 +98,7 @@ public class ChannelSelectorDialog extends JDialog {
     cp.setLayout(layout);
     cp.add(l2);
     cp.add(scrollableTable);
+    cp.add(l3);
     cp.add(cb);
     cp.add(bOkCancel);
 
@@ -106,9 +108,12 @@ public class ChannelSelectorDialog extends JDialog {
     layout.putConstraint(SpringLayout.WEST,  scrollableTable, 5, SpringLayout.WEST,  cp);
     layout.putConstraint(SpringLayout.EAST,  scrollableTable, -5, SpringLayout.EAST,  cp);
     layout.putConstraint(SpringLayout.NORTH, scrollableTable, 5, SpringLayout.SOUTH, l2);
-    layout.putConstraint(SpringLayout.SOUTH, scrollableTable, -5, SpringLayout.NORTH, cb);
+    layout.putConstraint(SpringLayout.SOUTH, scrollableTable, -5, SpringLayout.NORTH, l3);
 
-    layout.putConstraint(SpringLayout.WEST,  cb,  5, SpringLayout.WEST,  cp);
+    layout.putConstraint(SpringLayout.WEST,  l3,  5, SpringLayout.WEST,  cp);
+    layout.putConstraint(SpringLayout.NORTH, l3,  0, SpringLayout.NORTH, cb);
+
+    layout.putConstraint(SpringLayout.WEST,  cb,  5, SpringLayout.EAST,  l3);
     layout.putConstraint(SpringLayout.SOUTH, cb, -5, SpringLayout.NORTH, bOkCancel);
 
     layout.putConstraint(SpringLayout.HORIZONTAL_CENTER,  bOkCancel,  0, SpringLayout.HORIZONTAL_CENTER,  cp);
