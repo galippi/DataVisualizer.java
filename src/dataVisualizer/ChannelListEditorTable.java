@@ -41,18 +41,17 @@ class MyTableModel extends javax.swing.table.DefaultTableModel {
 }
 
 public class ChannelListEditorTable extends JTable {
-    //JTable table;
     DataChannelGroup hidden = new DataChannelGroup("not visible");
     static final String[] columnNames = new String[]{"Signal name", "Signal color", "Group name"};
+    static final int colSignalName = 0;
     static final int colSignalColor = 1;
-    public ChannelListEditorTable(DataCache_File file, DataChannelList colArray)
+    static final int colGroupName = 2;
+    ChannelSelectorDialog parent;
+    public ChannelListEditorTable(ChannelSelectorDialog _parent, DataCache_File file, DataChannelList colArray)
     {
         super(new javax.swing.table.DefaultTableModel(file.getChannelNumber(), columnNames.length));
-        //setLayout(new GridLayout(2,1));
-        //javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel();
-        //model.setColumnCount(3);
-        //model.setNumRows(file.getChannelNumber());
-        //table = new JTable(model);
+        parent = _parent;
+
         javax.swing.table.TableColumnModel columnModel = this.getColumnModel();
         for (int i = 0; i < columnNames.length; i++)
         {
@@ -68,7 +67,7 @@ public class ChannelListEditorTable extends JTable {
         for (int i = 0; i < file.getChannelNumber(); i++)
         {
             String chName = file.getChannel(i).getName();
-            this.setValueAt(chName, i, 0);
+            this.setValueAt(chName, i, colSignalName);
             DataChannelListItem dcli = colArray.get(chName);
             Color color;
             DataChannelGroup dcg;
@@ -81,8 +80,8 @@ public class ChannelListEditorTable extends JTable {
                 color = Color.WHITE;
                 dcg = hidden;
             }
-            this.setValueAt(color, i, 1);
-            this.setValueAt(dcg.name, i, 2);
+            this.setValueAt(color, i, colSignalColor);
+            this.setValueAt(dcg.name, i, colGroupName);
         }
 
         //add(table.getTableHeader());
@@ -135,6 +134,7 @@ public class ChannelListEditorTable extends JTable {
             dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
             if (rowAtPoint >= 0) {
                 setRowSelectionInterval(rowAtPoint, rowAtPoint);
+                updateParent(rowAtPoint);
                 if (evt.getButton() == MouseEvent.BUTTON3)
                 {
                     if (colAtPoint == colSignalColor)
@@ -146,12 +146,18 @@ public class ChannelListEditorTable extends JTable {
                                     (Color)getValueAt(rowAtPoint, colAtPoint));
                         if (newColor != null) {
                             setValueAt(newColor, rowAtPoint, colAtPoint);
+                            updateParent(rowAtPoint);
                           //repaintRequest(true);
                         }
                     }
                 }
             }
         }
+    }
+
+    void updateParent(int row)
+    {
+        parent.setSignalProperties((String)getValueAt(row, colSignalName), (Color)getValueAt(row, colSignalColor), (String)getValueAt(row, colGroupName));
     }
 
     protected void tableChangedHandler(TableModelEvent evt)

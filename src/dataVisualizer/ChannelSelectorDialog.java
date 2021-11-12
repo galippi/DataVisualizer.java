@@ -6,6 +6,7 @@
 package dataVisualizer;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -42,7 +43,12 @@ import utils.dbg;
  * @author liptakok
  */
 public class ChannelSelectorDialog extends JDialog {
-  JComboBox<String> cb;
+  /**
+     * 
+     */
+    private static final long serialVersionUID = 3001210750112112397L;
+
+JComboBox<String> cb;
 
   DataCache_File file;
   DataChannelList colArray;
@@ -54,7 +60,7 @@ public class ChannelSelectorDialog extends JDialog {
     colArray = _colArray;
     this.setTitle("Select signals to be displayed");
     
-    ChannelListEditorTable myTable = new ChannelListEditorTable(file, colArray);
+    ChannelListEditorTable myTable = new ChannelListEditorTable(this, file, colArray);
 
     JLabel l2 = new JLabel("Select signals to be displayed");
 
@@ -83,13 +89,13 @@ public class ChannelSelectorDialog extends JDialog {
     jpProperties.setMinimumSize(new Dimension(200, 60));
     jpProperties.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.black));
     jpProperties.add(new JLabel("Signal name:"));
-    JLabel lSignalName = new JLabel("not_selected");
+    lSignalName = new JLabel("not_selected");
     jpProperties.add(lSignalName);
     jpProperties.add(new JLabel("Signal color:"));
-    JPanel jpSignalColor = new JPanel();
+    jpSignalColor = new JPanel();
     jpProperties.add(jpSignalColor);
     jpProperties.add(new JLabel("Signal group:"));
-    JComboBox<String> jcSignalGroup = new JComboBox<String>(new String[]{"g1", "g2"});
+    jcSignalGroup = new JComboBox<String>(new String[]{"g1", "g2"});
     jpProperties.add(jcSignalGroup);
 
     JLabel l3 = new JLabel("Signal of horizontal axle:");
@@ -188,4 +194,15 @@ public class ChannelSelectorDialog extends JDialog {
               KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
               JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
+
+    void setSignalProperties(String name, Color color, String groupName)
+    {
+        lSignalName.setText(name);
+        jpSignalColor.setBackground(color);
+        jcSignalGroup.setSelectedItem(groupName);
+    }
+
+    JLabel lSignalName;
+    JPanel jpSignalColor;
+    JComboBox<String> jcSignalGroup;
 }
