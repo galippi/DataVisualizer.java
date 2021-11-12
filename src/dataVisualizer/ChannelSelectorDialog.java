@@ -202,14 +202,11 @@ JComboBox<String> cb;
         lSignalName.setText(name);
         jpSignalColor.setBackground(color);
         jcSignalGroup.removeAllItems();
-        int selected = -1;
         for (int i = 0; i < groupNames.length; i++)
         {
             jcSignalGroup.addItem(groupNames[i]);
-            if (groupNames[i].equals(groupName))
-                selected = i;
         }
-        jcSignalGroup.setSelectedIndex(selected);
+        jcSignalGroup.setSelectedItem(groupName);
     }
 
     private void updateSignalGroupName(String groupName) {
