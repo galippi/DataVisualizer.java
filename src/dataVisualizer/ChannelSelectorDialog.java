@@ -73,6 +73,7 @@ public class ChannelSelectorDialog extends JDialog {
 
     JPanel jpanel = new JPanel();
     JScrollPane scrollableTable = new JScrollPane(myTable);
+    //JScrollPane scrollableTable = myTable;
 
     JPanel jpProperties = new JPanel();
     jpProperties.setMinimumSize(new Dimension(200, 60));

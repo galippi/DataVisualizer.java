@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -39,19 +40,19 @@ class MyTableModel extends javax.swing.table.DefaultTableModel {
     private static final long serialVersionUID = -504246097662989104L;
 }
 
-public class ChannelListEditorTable extends JPanel {
-    JTable table;
+public class ChannelListEditorTable extends JTable {
+    //JTable table;
     DataChannelGroup hidden = new DataChannelGroup("not visible");
+    static final String[] columnNames = new String[]{"Signal name", "Signal color", "Group name"};
     public ChannelListEditorTable(DataCache_File file, DataChannelList colArray)
     {
-        super();
-        setLayout(new GridLayout(2,1));
-        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel();
-        model.setColumnCount(3);
-        model.setNumRows(3);
-        table = new JTable(model);
-        javax.swing.table.TableColumnModel columnModel = table.getColumnModel();
-        String[] columnNames = {"Signal name", "Signal color", "Group name"};
+        super(new javax.swing.table.DefaultTableModel(file.getChannelNumber(), columnNames.length));
+        //setLayout(new GridLayout(2,1));
+        //javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel();
+        //model.setColumnCount(3);
+        //model.setNumRows(file.getChannelNumber());
+        //table = new JTable(model);
+        javax.swing.table.TableColumnModel columnModel = this.getColumnModel();
         for (int i = 0; i < columnNames.length; i++)
         {
             TableColumn column = columnModel.getColumn(i);
@@ -62,11 +63,11 @@ public class ChannelListEditorTable extends JPanel {
             column.setHeaderValue(columnNames[i]);
         }
 
-        javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)table.getModel();
+        javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)this.getModel();
         for (int i = 0; i < file.getChannelNumber(); i++)
         {
             String chName = file.getChannel(i).getName();
-            table.setValueAt(chName, i, 0);
+            this.setValueAt(chName, i, 0);
             DataChannelListItem dcli = colArray.get(chName);
             Color color;
             DataChannelGroup dcg;
@@ -79,12 +80,12 @@ public class ChannelListEditorTable extends JPanel {
                 color = Color.WHITE;
                 dcg = hidden;
             }
-            table.setValueAt(color.toString(), i, 1);
-            table.setValueAt(dcg.name, i, 2);
+            this.setValueAt(color.toString(), i, 1);
+            this.setValueAt(dcg.name, i, 2);
         }
 
-        add(table.getTableHeader());
-        add(table);
+        //add(table.getTableHeader());
+        //add(table);
     }
 
     /**
