@@ -78,14 +78,15 @@ public class ChannelSelectorDialog extends JDialog {
     JPanel jpProperties = new JPanel(new GridLayout(3, 2));
     jpProperties.setMinimumSize(new Dimension(200, 60));
     jpProperties.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.black));
-    JLabel l4 = new JLabel("Signal name:");
-    jpProperties.add(l4);
+    jpProperties.add(new JLabel("Signal name:"));
     JLabel lSignalName = new JLabel("not_selected");
     jpProperties.add(lSignalName);
     jpProperties.add(new JLabel("Signal color:"));
-    jpProperties.add(new JPanel());
+    JPanel jpSignalColor = new JPanel();
+    jpProperties.add(jpSignalColor);
     jpProperties.add(new JLabel("Signal group:"));
-    jpProperties.add(new JComboBox<String>(new String[]{"g1", "g2"}));
+    JComboBox<String> jcSignalGroup = new JComboBox<String>(new String[]{"g1", "g2"});
+    jpProperties.add(jcSignalGroup);
 
     JLabel l3 = new JLabel("Signal of horizontal axle:");
 
