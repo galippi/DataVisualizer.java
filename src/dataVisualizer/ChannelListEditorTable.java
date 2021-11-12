@@ -1,16 +1,16 @@
 package dataVisualizer;
 
 import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 //javax.swing.table.DefaultTableModel
 
 import dataCache.DataCache_File;
+import utils.dbg;
 
 class MyTableModel extends javax.swing.table.DefaultTableModel {
     private String[] columnNames = {"Signal name", "Signal color", "Group name"};
@@ -44,6 +44,7 @@ public class ChannelListEditorTable extends JTable {
     //JTable table;
     DataChannelGroup hidden = new DataChannelGroup("not visible");
     static final String[] columnNames = new String[]{"Signal name", "Signal color", "Group name"};
+    static final int colSignalColor = 1;
     public ChannelListEditorTable(DataCache_File file, DataChannelList colArray)
     {
         super(new javax.swing.table.DefaultTableModel(file.getChannelNumber(), columnNames.length));
@@ -63,7 +64,7 @@ public class ChannelListEditorTable extends JTable {
             column.setHeaderValue(columnNames[i]);
         }
 
-        javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)this.getModel();
+        //javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)this.getModel();
         for (int i = 0; i < file.getChannelNumber(); i++)
         {
             String chName = file.getChannel(i).getName();
@@ -80,12 +81,83 @@ public class ChannelListEditorTable extends JTable {
                 color = Color.WHITE;
                 dcg = hidden;
             }
-            this.setValueAt(color.toString(), i, 1);
+            this.setValueAt(color, i, 1);
             this.setValueAt(dcg.name, i, 2);
         }
 
         //add(table.getTableHeader());
         //add(table);
+        addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                mouseHandler(e);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                mouseHandler(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            { // not used - do nothing
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            { // not used - do nothing
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            { // not used - do nothing
+            }
+        });
+        getModel().addTableModelListener(
+                new javax.swing.event.TableModelListener()
+                {
+                    public void tableChanged(javax.swing.event.TableModelEvent evt) 
+                    {
+                      tableChangedHandler(evt);
+                    }
+        });
+    }
+
+    protected void mouseHandler(MouseEvent evt)
+    {
+        dbg.println(9, "ChannelListEditorTable - mouseHandler evt=" + evt.toString());
+        dbg.println(9, "  findComponentAt="+findComponentAt(evt.getX(), evt.getY()).toString());
+        if (evt.getID() == MouseEvent.MOUSE_CLICKED)
+        {
+            int rowAtPoint = rowAtPoint(evt.getPoint());
+            int colAtPoint = columnAtPoint(evt.getPoint());
+            dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
+            if (rowAtPoint >= 0) {
+                setRowSelectionInterval(rowAtPoint, rowAtPoint);
+                if (evt.getButton() == MouseEvent.BUTTON3)
+                {
+                    if (colAtPoint == colSignalColor)
+                    {
+                        java.awt.Color newColor = 
+                                javax.swing.JColorChooser.showDialog(
+                                  this,
+                                    "Choose Signal Color",
+                                    (Color)getValueAt(rowAtPoint, colAtPoint));
+                        if (newColor != null) {
+                            setValueAt(newColor, rowAtPoint, colAtPoint);
+                          //repaintRequest(true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected void tableChangedHandler(TableModelEvent evt)
+    {
+        dbg.println(9, "tableChangedHandler evt=" + evt);
+        dbg.println(19, "  UPDATE=" + TableModelEvent.UPDATE);
     }
 
     /**
