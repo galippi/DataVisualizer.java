@@ -214,6 +214,10 @@ public class ChannelListEditorTable extends JTable {
                     (Color)getValueAt(row, colSignalColor));
         if (newColor != null) {
             setValueAt(newColor, row, colSignalColor);
+            if (((String)getValueAt(row, colGroupName)).equals(Groups.notVisible))
+            {
+                setValueAt((String)getValueAt(row, colSignalName), row, colGroupName);
+            }
             updateParent(row);
           //repaintRequest(true);
         }
