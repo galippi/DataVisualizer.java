@@ -14,15 +14,19 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -145,6 +149,7 @@ public class ChannelSelectorDialog extends JDialog {
     setBounds(pt.x + pw / 2 - 150, pt.y + 200, 400, 400);
     this.setMinimumSize(new Dimension(350, 400));
     updateButtons();
+    addEscapeListener();
   }
   final void updateButtons()
   {
@@ -171,4 +176,16 @@ public class ChannelSelectorDialog extends JDialog {
         DataVisualizerLayoutFileLoader.saveLayoutFile(FileNameExtension.set(file.getName(), "dvl"), colArray);
     }
   }
+
+    void addEscapeListener() {
+        ActionListener escListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        };
+        getRootPane().registerKeyboardAction(escListener,
+              KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+              JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
 }
