@@ -15,6 +15,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -89,6 +91,33 @@ JComboBox<String> cb;
     jpProperties.add(lSignalName);
     jpProperties.add(new JLabel("Signal color:"));
     jpSignalColor = new JPanel();
+    jpSignalColor.addMouseListener(new MouseListener() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            myTable.askSignalColor();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e)
+        { // not used - do nothing
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e)
+        { // not used - do nothing
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e)
+        { // not used - do nothing
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e)
+        { // not used - do nothing
+        }
+    });
+
     jpProperties.add(jpSignalColor);
     jpProperties.add(new JLabel("Signal group:"));
     jcSignalGroup = new JComboBox<String>();
