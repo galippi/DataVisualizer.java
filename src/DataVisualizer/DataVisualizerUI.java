@@ -1,6 +1,8 @@
 package dataVisualizer;
 
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import utils.dbg;
 
@@ -153,9 +155,16 @@ public class DataVisualizerUI extends javax.swing.JFrame
           }
         });
         jMenuView.add(m_ViewChannel);
+        JMenuItem m_ViewPreferences = new javax.swing.JMenuItem("Preferences");
+        jMenuView.add(m_ViewPreferences);
+
+        JMenu jMenuHelp = new javax.swing.JMenu("Help");
+        JMenuItem m_HelpAbout = new javax.swing.JMenuItem("About");
+        jMenuHelp.add(m_HelpAbout);
 
         jMenuBar1.add(jMenu1);
         jMenuBar1.add(jMenuView);
+        jMenuBar1.add(jMenuHelp);
 
         setJMenuBar(jMenuBar1);
 
