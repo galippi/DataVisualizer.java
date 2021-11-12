@@ -13,25 +13,15 @@ import dataCache.DataCache_File;
 import utils.dbg;
 
 class MyTableModel extends javax.swing.table.DefaultTableModel {
-    private String[] columnNames = {"Signal name", "Signal color", "Group name"};
-    private String[][] data = {{"Signal 0", "red", "group 0"}};
-
-    public MyTableModel()
+    public MyTableModel(int rowNum, int colNum)
     {
-        //super(data, columnNames);
-        //super(columnNames);
-        super();
-        for (int i = 0; i < columnNames.length; i++)
-        {
-            addColumn(columnNames[i]);
-        }
+        super(rowNum, colNum);
+    }
 
-        setNumRows(1);
-        //addRow(data);
-        for (int i=0; i < columnNames.length; i++)
-        {
-            setValueAt(data[0][i], 0, i);
-        }
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        dbg.println(9, "isCellEditable rowIndex=" + rowIndex + " columnIndex=" + columnIndex);
+        return false;
     }
 
     /**
@@ -49,7 +39,7 @@ public class ChannelListEditorTable extends JTable {
     ChannelSelectorDialog parent;
     public ChannelListEditorTable(ChannelSelectorDialog _parent, DataCache_File file, DataChannelList colArray)
     {
-        super(new javax.swing.table.DefaultTableModel(file.getChannelNumber(), columnNames.length));
+        super(new MyTableModel(file.getChannelNumber(), columnNames.length));
         parent = _parent;
 
         javax.swing.table.TableColumnModel columnModel = this.getColumnModel();
