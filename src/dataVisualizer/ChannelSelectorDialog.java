@@ -5,7 +5,6 @@
  */
 package dataVisualizer;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dialog;
@@ -24,15 +23,11 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 
 import dataCache.DataCache_File;
 import utils.FileNameExtension;
@@ -52,6 +47,7 @@ JComboBox<String> cb;
 
   DataCache_File file;
   DataChannelList colArray;
+    ChannelListEditorTable myTable; 
 
   ChannelSelectorDialog(JFrame parent, DataCache_File _file, DataChannelList _colArray)
   {
@@ -60,7 +56,7 @@ JComboBox<String> cb;
     colArray = _colArray;
     this.setTitle("Select signals to be displayed");
     
-    ChannelListEditorTable myTable = new ChannelListEditorTable(this, file, colArray);
+    myTable = new ChannelListEditorTable(this, file, colArray);
 
     JLabel l2 = new JLabel("Select signals to be displayed");
 
@@ -95,7 +91,13 @@ JComboBox<String> cb;
     jpSignalColor = new JPanel();
     jpProperties.add(jpSignalColor);
     jpProperties.add(new JLabel("Signal group:"));
-    jcSignalGroup = new JComboBox<String>(new String[]{"g1", "g2"});
+    jcSignalGroup = new JComboBox<String>();
+    jcSignalGroup.addActionListener(new ActionListener(){
+        public void actionPerformed(ActionEvent e) {
+            String groupName = (String)jcSignalGroup.getSelectedItem();
+            updateSignalGroupName(groupName);
+        }
+    });
     jpProperties.add(jcSignalGroup);
 
     JLabel l3 = new JLabel("Signal of horizontal axle:");
@@ -195,11 +197,23 @@ JComboBox<String> cb;
               JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
-    void setSignalProperties(String name, Color color, String groupName)
+    void setSignalProperties(String name, Color color, String groupName, String[] groupNames)
     {
         lSignalName.setText(name);
         jpSignalColor.setBackground(color);
-        jcSignalGroup.setSelectedItem(groupName);
+        jcSignalGroup.removeAllItems();
+        int selected = -1;
+        for (int i = 0; i < groupNames.length; i++)
+        {
+            jcSignalGroup.addItem(groupNames[i]);
+            if (groupNames[i].equals(groupName))
+                selected = i;
+        }
+        jcSignalGroup.setSelectedIndex(selected);
+    }
+
+    private void updateSignalGroupName(String groupName) {
+        myTable.setSignalGroupName(groupName);
     }
 
     JLabel lSignalName;

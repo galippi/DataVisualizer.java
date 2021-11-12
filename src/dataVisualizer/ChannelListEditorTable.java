@@ -3,6 +3,9 @@ package dataVisualizer;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
@@ -30,17 +33,65 @@ class MyTableModel extends javax.swing.table.DefaultTableModel {
     private static final long serialVersionUID = -504246097662989104L;
 }
 
+class Groups
+{
+    static final String notVisible = "not visible";
+    Groups(DataChannelList colArray)
+    {
+        groupNameArray.add(notVisible);
+        groupNameMap.put(notVisible, 0);
+        for(int i = 0; i < colArray.size(); i++)
+        {
+            DataChannelListItem dcli = colArray.get(i);
+            if (!groupNameMap.containsKey(dcli.group.name))
+            {
+                int idx = groupNameArray.size();
+                groupNameArray.add(dcli.group.name);
+                groupNameMap.put(dcli.group.name, idx);
+            }
+        }
+    }
+
+    String get(int idx)
+    {
+        return groupNameArray.get(idx);
+    }
+
+    int get(String item)
+    {
+        return groupNameMap.get(item);
+    }
+
+    String[] getStringArray(String signalName)
+    {
+        if (groupNameMap.containsKey(signalName))
+            return (String[])groupNameArray.toArray();
+        int size = groupNameArray.size() + 1;
+        String[] result = new String[size];
+        for(int i = 0; i < groupNameArray.size(); i++)
+            result[i] = groupNameArray.get(i);
+        result[groupNameArray.size()] = signalName;
+        return result;
+    }
+
+    Vector<String> groupNameArray = new Vector<String>();
+    Map<String, Integer> groupNameMap = new TreeMap<String, Integer>();
+}
+
 public class ChannelListEditorTable extends JTable {
-    DataChannelGroup hidden = new DataChannelGroup("not visible");
+    DataChannelGroup hidden = new DataChannelGroup(Groups.notVisible);
     static final String[] columnNames = new String[]{"Signal name", "Signal color", "Group name"};
     static final int colSignalName = 0;
     static final int colSignalColor = 1;
     static final int colGroupName = 2;
     ChannelSelectorDialog parent;
+    Groups groupNames;
+
     public ChannelListEditorTable(ChannelSelectorDialog _parent, DataCache_File file, DataChannelList colArray)
     {
         super(new MyTableModel(file.getChannelNumber(), columnNames.length));
         parent = _parent;
+        groupNames = new Groups(colArray);
 
         javax.swing.table.TableColumnModel columnModel = this.getColumnModel();
         for (int i = 0; i < columnNames.length; i++)
@@ -147,13 +198,20 @@ public class ChannelListEditorTable extends JTable {
 
     void updateParent(int row)
     {
-        parent.setSignalProperties((String)getValueAt(row, colSignalName), (Color)getValueAt(row, colSignalColor), (String)getValueAt(row, colGroupName));
+        String signalName = (String)getValueAt(row, colSignalName);
+        parent.setSignalProperties(signalName, (Color)getValueAt(row, colSignalColor), (String)getValueAt(row, colGroupName), groupNames.getStringArray(signalName));
     }
 
     protected void tableChangedHandler(TableModelEvent evt)
     {
         dbg.println(9, "tableChangedHandler evt=" + evt);
         dbg.println(19, "  UPDATE=" + TableModelEvent.UPDATE);
+    }
+
+    public void setSignalGroupName(String groupName) {
+        int row = getSelectedRow();
+        setValueAt(groupName, row, colGroupName);
+        
     }
 
     /**
