@@ -180,16 +180,7 @@ public class ChannelListEditorTable extends JTable {
                 {
                     if (colAtPoint == colSignalColor)
                     {
-                        java.awt.Color newColor = 
-                                javax.swing.JColorChooser.showDialog(
-                                  this,
-                                    "Choose Signal Color",
-                                    (Color)getValueAt(rowAtPoint, colAtPoint));
-                        if (newColor != null) {
-                            setValueAt(newColor, rowAtPoint, colAtPoint);
-                            updateParent(rowAtPoint);
-                          //repaintRequest(true);
-                        }
+                        askSignalColor();
                     }
                 }
             }
@@ -212,6 +203,20 @@ public class ChannelListEditorTable extends JTable {
         int row = getSelectedRow();
         setValueAt(groupName, row, colGroupName);
         
+    }
+
+    public void askSignalColor() {
+        int row = getSelectedRow();
+        java.awt.Color newColor = 
+                javax.swing.JColorChooser.showDialog(
+                  this,
+                    "Choose Signal Color",
+                    (Color)getValueAt(row, colSignalColor));
+        if (newColor != null) {
+            setValueAt(newColor, row, colSignalColor);
+            updateParent(row);
+          //repaintRequest(true);
+        }
     }
 
     /**
