@@ -223,6 +223,14 @@ public class ChannelListEditorTable extends JTable {
         }
     }
 
+    public boolean isSignalVisible(int row) {
+        return !((String)getValueAt(row, colGroupName)).equals(Groups.notVisible);
+    }
+
+    public String getSignalName(int row) {
+        return (String)getValueAt(row, colSignalName);
+    }
+
     /**
      * 
      */
