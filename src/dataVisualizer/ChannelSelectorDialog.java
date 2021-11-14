@@ -204,12 +204,14 @@ JComboBox<String> cb;
             if (myTable.isSignalVisible(i))
             {
                 String colName = myTable.getSignalName(i);
+                Color color = myTable.getColor(i);
+                String groupName = myTable.getGroupName(i);
                 dbg.println(11, "  colArray["+i+"]=" + colName + "!");
-                colArray.addSignal(colName);
+                colArray.addSignal(colName, color, groupName);
             }
         }
         colArray.updateCallbacksExecute();
-        DataVisualizerLayoutFileLoader.saveLayoutFile(FileNameExtension.set(file.getName(), "dvl"), colArray);
+        //DataVisualizerLayoutFileLoader.saveLayoutFile(FileNameExtension.set(file.getName(), "dvl"), colArray);
     }
 
     void addEscapeListener() {

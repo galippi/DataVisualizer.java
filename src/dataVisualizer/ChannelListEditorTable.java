@@ -235,6 +235,14 @@ public class ChannelListEditorTable extends JTable {
         return (String)getValueAt(row, colSignalName);
     }
 
+    public Color getColor(int row) {
+        return (Color)getValueAt(row, colSignalColor);
+    }
+
+    public String getGroupName(int row) {
+        return (String)getValueAt(row, colGroupName);
+    }
+
     /**
      * 
      */

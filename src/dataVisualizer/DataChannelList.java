@@ -1,5 +1,6 @@
 package dataVisualizer;
 
+import java.awt.Color;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -48,14 +49,11 @@ public class DataChannelList {
         horizontalAxle = null;
         mapName.clear();
     }
-    public void addSignal(String colName)
+    public void addSignal(String signalName, Color color, String groupName)
     {
-        DataCache_ChannelBase ch = file.getChannel(colName);
-        if (ch == null)
-            dbg.dprintf(1, "DataChannelList.addSignal colName=%s\n", colName);
-        DataChannelListItem dcli = new DataChannelListItem(ch);
+        DataChannelListItem dcli = new DataChannelListItem(file, signalName, 1.0, 0.0, color, groupName);
         dataChannels.add(dcli);
-        mapName.put(colName, dcli);
+        mapName.put(signalName, dcli);
     }
     public void setHorizontalAxle(String colName)
     {
