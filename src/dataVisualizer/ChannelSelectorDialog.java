@@ -188,31 +188,29 @@ JComboBox<String> cb;
     updateButtons();
     addEscapeListener();
   }
+
   final void updateButtons()
   {
   }
 
-  void okHandler()
-  {
-    dbg.println(9, "ColumnSelectorDialog.okHandler");
-    setVisible(false);
-    if (false)
+    void okHandler()
     {
-        javax.swing.JTable lbSelected = new javax.swing.JTable();
-        DefaultListModel mSelected = (DefaultListModel)lbSelected.getModel();
+        dbg.println(9, "ColumnSelectorDialog.okHandler");
+        setVisible(false);
         colArray.clear();
-        for (int i = 0; i < mSelected.size(); i++)
-        {
-          String colName = mSelected.getElementAt(i).toString();
-          colArray.addSignal(colName);
-          dbg.println(11, "  colArray["+i+"]=" + colName + "!");
-        }
         colArray.setHorizontalAxle((String)cb.getSelectedItem());
+        for (int i = 0; i < myTable.getRowCount(); i++)
+        {
+            if (myTable.isSignalVisible(i))
+            {
+                String colName = myTable.getSignalName(i);
+                dbg.println(11, "  colArray["+i+"]=" + colName + "!");
+                colArray.addSignal(colName);
+            }
+        }
         colArray.updateCallbacksExecute();
-        //callBackParent.columnSelectorDialogOkHandler(colArray);
         DataVisualizerLayoutFileLoader.saveLayoutFile(FileNameExtension.set(file.getName(), "dvl"), colArray);
     }
-  }
 
     void addEscapeListener() {
         ActionListener escListener = new ActionListener() {
