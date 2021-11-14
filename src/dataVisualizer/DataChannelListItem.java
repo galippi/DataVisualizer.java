@@ -3,6 +3,7 @@ package dataVisualizer;
 import java.awt.Color;
 
 import dataCache.DataCache_ChannelBase;
+import dataCache.DataCache_File;
 import utils.dbg;
 
 public class DataChannelListItem {
@@ -14,8 +15,11 @@ public class DataChannelListItem {
         color = getNextColor();
     }
 
-    public DataChannelListItem(String chName, double factor, double offset, Color color2, String groupName) {
-        // TODO Auto-generated constructor stub
+    public DataChannelListItem(DataCache_File dcf, String chName, double factor, double offset, Color _color, String groupName) {
+        ch = dcf.getChannel(chName);
+        color = _color;
+        //group = new DataChannelGroup(groupName, factor, offset);
+        group = new DataChannelGroup(groupName);
     }
 
     public String getSignalName() {

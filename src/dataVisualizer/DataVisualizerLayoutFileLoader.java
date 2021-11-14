@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_File;
 import utils.FileNameExtension;
 import utils.dbg;
@@ -29,14 +30,34 @@ public class DataVisualizerLayoutFileLoader {
         InputStream is;
         try {
             is = new FileInputStream(layoutFileName);
-        } catch (FileNotFoundException e) {
-            dbg.dprintf(1, "Exception DataVisualizerLayoutFileLoader - unable to open file %s!\n", layoutFileName);
+            JSONTokener tokener = new JSONTokener(is);
+            jsonObject = new JSONObject(tokener);
+        } catch (Exception e) {
+            dbg.dprintf(1, "Exception DataVisualizerLayoutFileLoader - unable to open or load file %s!\n", layoutFileName);
             status = Status.LoadingError;
             return;
         }
-        JSONTokener tokener = new JSONTokener(is);
-        jsonObject = new JSONObject(tokener);
         status = Status.LoadingOk;
+    }
+
+    public DataVisualizerLayoutFileLoader(DataCache_File file) {
+        jsonObject = new JSONObject();
+        JSONArray windows = new JSONArray();
+        jsonObject.put("windows", windows);
+        JSONObject window = new JSONObject();
+        windows.put(window);
+        JSONArray channels = new JSONArray();
+        window.put("channels", channels);
+        JSONObject channel = new JSONObject();
+        channels.put(channel);
+        DataCache_ChannelBase ch = file.getChannel(1);
+        channel.put("name", ch.getName());
+        channel.put("offset", 0.0);
+        channel.put("factor", 1.0);
+        channel.put("color", Color.WHITE.getRGB());
+        channel.put("group", ch.getName());
+        ch = file.getChannel(0);
+        window.put("horizontalAxle", ch.getName());
     }
 
     public int size()
@@ -44,21 +65,23 @@ public class DataVisualizerLayoutFileLoader {
         return jsonObject.getJSONArray("windows").length();
     }
 
-    public DataChannelList getDataChannelList(int windowIdx, DataCache_File dcf, String horizontalAxleChannelName)
+    public DataChannelList getDataChannelList(int windowIdx, DataCache_File dcf)
     {
-        JSONArray window = (JSONArray)jsonObject.getJSONArray("windows").get(windowIdx);
+        JSONObject window = (JSONObject)jsonObject.getJSONArray("windows").get(windowIdx);
+        JSONArray channels = (JSONArray)window.getJSONArray("channels");
         Vector<DataChannelListItem> dcl = new Vector<DataChannelListItem>();
-        for (int i = 0; i < window.length(); i++)
+        for (int i = 0; i < channels.length(); i++)
         {
-            JSONObject channel = window.getJSONObject(i);
+            JSONObject channel = channels.getJSONObject(i);
             String chName = channel.getString("name");
             double factor = channel.getDouble("factor");
             double offset = channel.getDouble("offset");
             Color color = new Color(channel.getInt("color"));
             String groupName = channel.getString("group");
-            DataChannelListItem dcli = new DataChannelListItem(chName, factor, offset, color, groupName);
+            DataChannelListItem dcli = new DataChannelListItem(dcf, chName, factor, offset, color, groupName);
             dcl.add(dcli);
         }
+        String horizontalAxleChannelName = window.getString("horizontalAxle");
         return new DataChannelList(dcf, dcl, horizontalAxleChannelName);
     }
 
@@ -76,8 +99,9 @@ public class DataVisualizerLayoutFileLoader {
     {
         JSONObject json = new JSONObject();
         JSONArray windows = new JSONArray();
+        JSONObject window = new JSONObject();
         JSONArray channels = new JSONArray();
-        windows.put(channels);
+        window.put("channels", channels);
         for (int i = 0; i < dcl.size(); i++)
         {
             JSONObject channel = new JSONObject();
@@ -89,6 +113,8 @@ public class DataVisualizerLayoutFileLoader {
             channel.put("group", dcli.group.name);
             channels.put(channel);
         }
+        window.put("horizontalAxle", dcl.horizontalAxle.getName());
+        windows.put(window);
         json.put("windows", windows);
         json.put("horizontalAxle", dcl.horizontalAxle.getName());
         try {
@@ -104,13 +130,15 @@ public class DataVisualizerLayoutFileLoader {
     public static void saveLayoutFile(String filename, Vector<DataChannelListProvider> dataPanels)
     {
         JSONObject json = new JSONObject();
-        json.put("numOfWindows", dataPanels.size());
+        //json.put("numOfWindows", dataPanels.size());
         JSONArray windows = new JSONArray();
         for(DataChannelListProvider dataPanel: dataPanels)
         {
             DataChannelList dcl = dataPanel.getDataChannelList();
+            JSONObject window = new JSONObject();
             JSONArray channels = new JSONArray();
-            windows.put(channels);
+            window.put("channels", channels);
+            windows.put(window);
             for (int i = 0; i < dcl.size(); i++)
             {
                 JSONObject channel = new JSONObject();
@@ -122,10 +150,14 @@ public class DataVisualizerLayoutFileLoader {
                 channel.put("group", dcli.group.name);
                 channels.put(channel);
             }
+            window.put("horizontalAxle", dataPanel.getDataChannelList().horizontalAxle.getName());
         }
         json.put("windows", windows);
-        json.put("horizontalAxle", dataPanels.get(0).getDataChannelList().horizontalAxle.getName());
+        //json.put("horizontalAxle", dataPanels.get(0).getDataChannelList().horizontalAxle.getName());
         try {
+            dbg.dprintf(9, "DataVisualizerLayoutFileLoader.saveLayoutFile(%s)\n", filename);
+            filename = FileNameExtension.set(filename, fileNameExtension);
+            dbg.dprintf(9, "DataVisualizerLayoutFileLoader.saveLayoutFile - layout file %s!\n", filename);
             FileWriter myWriter = new FileWriter(filename);
             myWriter.write(json.toString());
             myWriter.close();

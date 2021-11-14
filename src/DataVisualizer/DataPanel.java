@@ -41,11 +41,10 @@ class MyPopupMenu extends java.awt.PopupMenu
 
 public class DataPanel extends javax.swing.JPanel implements ActionListener, DataChannelListProvider
 {
-    public DataPanel(DataPanelMain _parent, DataCache_File _file)
-    {
+    public DataPanel(DataPanelMain _parent, DataCache_File _file, DataChannelList dcl) {
         parent = _parent;
         dataFile = _file;
-        dataChannelList = new DataChannelList(dataFile);
+        dataChannelList = dcl;
         dataImage = new DataImage(this, dataFile);
 
         //Register for mouse-wheel events on the map area.

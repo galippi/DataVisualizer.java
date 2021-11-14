@@ -64,13 +64,14 @@ class Groups
 
     String[] getStringArray(String signalName)
     {
-        if (groupNameMap.containsKey(signalName))
-            return (String[])groupNameArray.toArray();
-        int size = groupNameArray.size() + 1;
+        int size = groupNameArray.size();
+        if (!groupNameMap.containsKey(signalName))
+            size++;
         String[] result = new String[size];
         for(int i = 0; i < groupNameArray.size(); i++)
             result[i] = groupNameArray.get(i);
-        result[groupNameArray.size()] = signalName;
+        if (size != groupNameArray.size())
+            result[groupNameArray.size()] = signalName;
         return result;
     }
 
@@ -190,7 +191,10 @@ public class ChannelListEditorTable extends JTable {
     void updateParent(int row)
     {
         String signalName = (String)getValueAt(row, colSignalName);
-        parent.setSignalProperties(signalName, (Color)getValueAt(row, colSignalColor), (String)getValueAt(row, colGroupName), groupNames.getStringArray(signalName));
+        Color color = (Color)getValueAt(row, colSignalColor);
+        String groupName = (String)getValueAt(row, colGroupName);
+        String[] groups = groupNames.getStringArray(signalName);
+        parent.setSignalProperties(signalName, color, groupName, groups);
     }
 
     protected void tableChangedHandler(TableModelEvent evt)

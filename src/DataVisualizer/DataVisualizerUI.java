@@ -224,6 +224,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
       DataVisualizerPrefs.put("MainWindowH", getHeight());
       DataVisualizerPrefs.put("MainWindowW", getWidth());
       DataVisualizerPrefs.put("MainWindowState", getExtendedState());
+      dataPanelMain.saveDataLayoutFile();
       System.exit(0);
     }
 

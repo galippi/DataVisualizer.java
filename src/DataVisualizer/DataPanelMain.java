@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import dataCache.DataCache_File;
 import dataCache.DataCache_State;
+import dataVisualizer.DataVisualizerLayoutFileLoader.Status;
 import utils.dbg;
 
 public class DataPanelMain extends javax.swing.JPanel implements ActionListener {
@@ -27,15 +28,10 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     {
         dbg.println(9, "DataPanelMain.loadFile " + filename);
         reinit();
-        dataPanels.clear();
+        dvlf = null;
         file = new DataCache_File();
         file.addActionListener(this);
         file.open(filename);
-        //DataPanel dataPanel = new DataPanel(this, file);
-        //dataPanels.add(dataPanel);
-//        setLayout(new java.awt.BorderLayout());
-        //removeAll();
-        //add(dataPanel);
         updateLayout();
     }
 
@@ -50,13 +46,29 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         //setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setLayout(new java.awt.BorderLayout());
 
-        int num = dataPanels.size();
-        for (int i = 0; i < num; i++)
+        if (dvlf != null)
         {
-            DataPanel panel = dataPanels.get(i);
-            panel.setLocation(0, i * getHeight() / num);
-            panel.setSize(getWidth(), getHeight() / num);
-            add(panel);
+            if (dataPanels.size() != dvlf.size())
+            {
+                if (dataPanels.size() == 0)
+                { // dvlf is loaded -> create new DataPanels
+                    for (int i = 0; i < dvlf.size(); i++)
+                    {
+                        dataPanels.add(new DataPanel(this, file, dvlf.getDataChannelList(i, file)));
+                    }
+                }else
+                { // dataPanels is updated -> update dvlf
+                    
+                }
+            }
+            int num = dataPanels.size();
+            for (int i = 0; i < num; i++)
+            {
+                DataPanel panel = dataPanels.get(i);
+                panel.setLocation(0, i * getHeight() / num);
+                panel.setSize(getWidth(), getHeight() / num);
+                add(panel);
+            }
         }
         //pack();
         //doLayout();
@@ -87,6 +99,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
 
     Vector<DataPanel> dataPanels = new Vector<>();
     DataCache_File file;
+    DataVisualizerLayoutFileLoader dvlf;
 
     /**
      * 
@@ -101,10 +114,26 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     public void actionPerformed(ActionEvent e) {
         if (file.getState() == DataCache_State.DataCache_Ready)
         {
-            DataVisualizerLayoutFileLoader dvlf = new DataVisualizerLayoutFileLoader(file.getName());
-            DataPanel dataPanel = new DataPanel(this, file);
-            dataPanels.add(dataPanel);
+            dvlf = new DataVisualizerLayoutFileLoader(file.getName());
+            if ((dvlf == null) || (dvlf.status != Status.LoadingOk))
+            {
+                dvlf = new DataVisualizerLayoutFileLoader(file);
+            }
             updateLayout();
+        }else
+            dvlf = null;
+    }
+
+    public void saveDataLayoutFile() {
+        dbg.dprintf(9, "DataPanelMain.saveDataLayoutFile\n");
+        if ((file == null) || (file.getState() != DataCache_State.DataCache_Ready))
+        {
+            dbg.dprintf(9, "saveDataLayoutFile - no file is loaded\n");
+            return;
         }
+        Vector<DataChannelListProvider> dataPanelsLocal = new Vector<>();
+        for (DataPanel dataPanel : dataPanels)
+            dataPanelsLocal.add(dataPanel);
+        DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal);
     }
 }
