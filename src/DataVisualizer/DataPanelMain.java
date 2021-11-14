@@ -136,4 +136,9 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
             dataPanelsLocal.add(dataPanel);
         DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal);
     }
+
+    public void createNewWindow() {
+        dataPanels.add(new DataPanel(this, file, new DataChannelList(file)));
+        updateLayout();
+    }
 }

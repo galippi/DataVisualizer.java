@@ -99,6 +99,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         };
         popup.add(item = new java.awt.MenuItem("Manage signals"));
         item.addActionListener(popupMenuListener);
+        popup.add(item = new java.awt.MenuItem("New window"));
+        item.addActionListener(popupMenuListener);
         popup.add(item = new java.awt.MenuItem("About"));
         item.addActionListener(popupMenuListener);
         add(popup);
@@ -154,6 +156,9 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
           ChannelSelectorDialog csd = new ChannelSelectorDialog(getMainFrame(), dataFile, dataChannelList);
           csd.setVisible(true);
           break;
+        case "New window":
+            parent.createNewWindow();
+            break;
 //        case "File properties":
 //          FilePropertiesDialog fpd = new FilePropertiesDialog(IgeViewerUI.mainWindow, igcCursor.get(rowAtPoint));
 //          fpd.setVisible(true);
