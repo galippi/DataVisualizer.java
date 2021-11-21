@@ -6,7 +6,7 @@ public class DataVisualizer
 {
     public static void main(String[] args)
     {
-        dbg.set(9); /* enable debug */
+        dbg.set(DataVisualizerPrefs.get("Debug level", 0));
         /* Set the Nimbus look and feel */
           //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
           /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

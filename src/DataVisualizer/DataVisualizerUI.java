@@ -1,5 +1,7 @@
 package dataVisualizer;
 
+import java.awt.event.ActionEvent;
+
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -155,6 +157,11 @@ public class DataVisualizerUI extends javax.swing.JFrame
         });
         jMenuView.add(m_ViewChannel);
         JMenuItem m_ViewPreferences = new javax.swing.JMenuItem("Preferences");
+        m_ViewPreferences.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+              m_PreferncesActionPerformed(evt);
+            }
+          });
         jMenuView.add(m_ViewPreferences);
 
         JMenu jMenuHelp = new javax.swing.JMenu("Help");
@@ -226,6 +233,11 @@ public class DataVisualizerUI extends javax.swing.JFrame
       DataVisualizerPrefs.put("MainWindowState", getExtendedState());
       dataPanelMain.saveDataLayoutFile();
       System.exit(0);
+    }
+
+    private void m_PreferncesActionPerformed(ActionEvent evt) {
+        OptionsDialog od = new OptionsDialog(this);
+        od.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
