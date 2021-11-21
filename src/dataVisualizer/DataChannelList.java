@@ -51,7 +51,13 @@ public class DataChannelList {
     }
     public void addSignal(String signalName, Color color, String groupName)
     {
-        DataChannelListItem dcli = new DataChannelListItem(file, signalName, 1.0, 0.0, color, groupName);
+        DataChannelListItem dcli;
+        try {
+            dcli = new DataChannelListItem(file, signalName, 1.0, 0.0, color, groupName);
+        } catch (Exception e) {
+            dbg.dprintf(1, "Exception: addSignal signalName=%s e=%s!\n", signalName, e.toString());
+            return;
+        }
         dataChannels.add(dcli);
         mapName.put(signalName, dcli);
     }
@@ -66,5 +72,9 @@ public class DataChannelList {
             updateCallbacks.get(i).callBack(this);
         }
         
+    }
+
+    public Object getChName(int index) {
+        return dataChannels.get(index).getSignalName();
     }
 }

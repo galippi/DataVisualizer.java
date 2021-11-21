@@ -15,8 +15,10 @@ public class DataChannelListItem {
         color = getNextColor();
     }
 
-    public DataChannelListItem(DataCache_File dcf, String chName, double factor, double offset, Color _color, String groupName) {
+    public DataChannelListItem(DataCache_File dcf, String chName, double factor, double offset, Color _color, String groupName) throws Exception {
         ch = dcf.getChannel(chName);
+        if (ch == null)
+            throw new Exception("DataChannelListItem.ctor chName="+chName+"!");
         color = _color;
         //group = new DataChannelGroup(groupName, factor, offset);
         group = new DataChannelGroup(groupName);

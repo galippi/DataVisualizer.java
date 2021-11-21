@@ -54,7 +54,11 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
                 { // dvlf is loaded -> create new DataPanels
                     for (int i = 0; i < dvlf.size(); i++)
                     {
-                        dataPanels.add(new DataPanel(this, file, dvlf.getDataChannelList(i, file)));
+                        try {
+                            dataPanels.add(new DataPanel(this, file, dvlf.getDataChannelList(i, file)));
+                        } catch (Exception e) {
+                            dbg.dprintf(1, "Exception: updateLayout i=%d!\n", i);
+                        }
                     }
                 }else
                 { // dataPanels is updated -> update dvlf
@@ -62,6 +66,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
                 }
             }
             int num = dataPanels.size();
+            parent.m_ViewChannel.setEnabled(num == 1 ? true : false);
             for (int i = 0; i < num; i++)
             {
                 DataPanel panel = dataPanels.get(i);
@@ -69,7 +74,9 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
                 panel.setSize(getWidth(), getHeight() / num);
                 add(panel);
             }
-        }
+        }else
+            if (parent.m_ViewChannel != null)
+                parent.m_ViewChannel.setEnabled(false);
         //pack();
         //doLayout();
         repaint();
@@ -115,7 +122,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         if (file.getState() == DataCache_State.DataCache_Ready)
         {
             dvlf = new DataVisualizerLayoutFileLoader(file.getName());
-            if ((dvlf == null) || (dvlf.status != Status.LoadingOk))
+            if ((dvlf == null) || (dvlf.status != Status.LoadingOk) || (!DataVisualizerLayout.checkConsistency(file, dvlf)))
             {
                 dvlf = new DataVisualizerLayoutFileLoader(file);
             }

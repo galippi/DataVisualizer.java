@@ -65,7 +65,7 @@ public class DataVisualizerLayoutFileLoader {
         return jsonObject.getJSONArray("windows").length();
     }
 
-    public DataChannelList getDataChannelList(int windowIdx, DataCache_File dcf)
+    public DataChannelList getDataChannelList(int windowIdx, DataCache_File dcf) throws Exception
     {
         JSONObject window = (JSONObject)jsonObject.getJSONArray("windows").get(windowIdx);
         JSONArray channels = (JSONArray)window.getJSONArray("channels");
