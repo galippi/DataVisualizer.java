@@ -121,7 +121,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
 
         jMenu1.setText("File");
 
-        m_FileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, 0));
+        m_FileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         m_FileOpen.setText("File open");
         m_FileOpen.addActionListener(new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,10 +145,9 @@ public class DataVisualizerUI extends javax.swing.JFrame
         });
         jMenu1.add(m_FileExit);
 
-        jMenuView = new javax.swing.JMenu();
-        jMenuView.setText("View");
-        javax.swing.JMenuItem m_ViewChannel = new javax.swing.JMenuItem();
-        m_ViewChannel.setText("Channels");
+        jMenuView = new javax.swing.JMenu("View");
+        m_ViewChannel = new javax.swing.JMenuItem("Channels");
+        m_ViewChannel.setEnabled(false);
         m_ViewChannel.addActionListener(new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             m_ViewChannelActionPerformed(evt);
@@ -238,7 +237,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
     private javax.swing.JMenuItem m_FileOpen;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private DataPanelMain dataPanelMain;
-
+    javax.swing.JMenuItem m_ViewChannel;
     /**
      * 
      */
