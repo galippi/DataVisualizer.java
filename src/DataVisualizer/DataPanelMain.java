@@ -124,6 +124,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
             dvlf = new DataVisualizerLayoutFileLoader(file.getName());
             if ((dvlf == null) || (dvlf.status != Status.LoadingOk) || (!DataVisualizerLayout.checkConsistency(file, dvlf)))
             {
+                dbg.println(9, "DataPanelMain.actionPerformed dvlf error!");
                 dvlf = new DataVisualizerLayoutFileLoader(file);
             }
             updateLayout();

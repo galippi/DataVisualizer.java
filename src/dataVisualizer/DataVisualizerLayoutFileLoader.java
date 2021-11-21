@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Vector;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -58,6 +59,12 @@ public class DataVisualizerLayoutFileLoader {
         channel.put("group", ch.getName());
         ch = file.getChannel(0);
         window.put("horizontalAxle", ch.getName());
+        window.put("pointIndexMin", 0);
+        try {
+            window.put("pointIndexMax", file.getLength());
+        } catch (Exception e) {
+            dbg.println(1, "DataVisualizerLayoutFileLoader.ctor file.getLength() exception e=" + e.toString());
+        }
     }
 
     public int size()
@@ -157,7 +164,12 @@ public class DataVisualizerLayoutFileLoader {
             window.put("pointIndexMax", dataPanel.getDataChannelList().getDataPointIndexMax());
         }
         json.put("windows", windows);
-        //json.put("horizontalAxle", dataPanels.get(0).getDataChannelList().horizontalAxle.getName());
+        json.put("pointIndexMin", 0);
+        try {
+            json.put("pointIndexMax", dataPanels.get(0).getDataChannelList().file.getLength());
+        } catch (Exception e) {
+            dbg.dprintf(1, "DataVisualizerLayoutFileLoader.saveLayoutFile file.getLength() exception e=%s!\n", e.toString());
+        }
         try {
             dbg.dprintf(9, "DataVisualizerLayoutFileLoader.saveLayoutFile(%s)\n", filename);
             filename = FileNameExtension.set(filename, fileNameExtension);
