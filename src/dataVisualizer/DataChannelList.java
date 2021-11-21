@@ -1,6 +1,7 @@
 package dataVisualizer;
 
 import java.awt.Color;
+import java.awt.event.ActionListener;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -13,6 +14,7 @@ public class DataChannelList {
     Vector<DataChannelListItem> dataChannels = new Vector<>();
     TreeMap<String, DataChannelListItem> mapName = new TreeMap();
     Vector<DataChannelListUpdateCallback> updateCallbacks = new Vector<>();
+    Vector<ActionListener> actionListeners = new Vector<>();
     DataCache_File file;
     public DataChannelList(DataCache_File _file)
     {
@@ -77,7 +79,10 @@ public class DataChannelList {
         {
             updateCallbacks.get(i).callBack(this);
         }
-        
+        for(ActionListener al: actionListeners)
+        {
+            al.actionPerformed(null);
+        }
     }
 
     public Object getChName(int index) {
@@ -95,5 +100,13 @@ public class DataChannelList {
     public int getDataPointIndexMax() {
         return pointIndexMax;
     }
+
     int pointIndexMin = -1, pointIndexMax = -1;
+    public DataCache_ChannelBase getHorizontalAxle() {
+        return horizontalAxle;
+    }
+
+    public void addActionListener(ActionListener listener) {
+        actionListeners.add(listener);
+    }
 }

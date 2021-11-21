@@ -2,6 +2,7 @@ package dataVisualizer;
 
 import java.awt.Color;
 
+import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_File;
 import utils.dbg;
 import utils.threadImage;
@@ -43,9 +44,23 @@ public class DataImage extends threadImage
             g.drawString("hMin="+hMin, 0, img.getHeight() - 10);
             g.drawString("hMax="+hMax, img.getWidth() - 60, img.getHeight() - 10);
             int hStep = (hMax - hMin) / 10;
+            DataCache_ChannelBase chHor = dcl.getHorizontalAxle();
+            g.drawString(chHor.getName(), 0, img.getHeight() - 20);
             for(int h = hMin + hStep; h < hMax; h+=hStep)
             {
                 g.drawString("h="+h, img.getWidth() * (h-hMin) / (hMax - hMin), img.getHeight() - 10);
+                try {
+                    g.drawString(""+chHor.getDouble(h), img.getWidth() * (h-hMin) / (hMax - hMin), img.getHeight() - 20);
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                }
+            }
+            for(int i = 0; i < dcl.size(); i++)
+            {
+                for(int h = hMin + hStep; h < hMax; h+=hStep)
+                {
+                    
+                }
             }
         }
         g.dispose();

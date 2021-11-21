@@ -45,6 +45,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         parent = _parent;
         dataFile = _file;
         dataChannelList = dcl;
+        dataChannelList.addActionListener(this);
         windowIdx = windowIdxMax;
         windowIdxMax++;
         dataImage = new DataImage(this, dataFile, dcl);
@@ -158,6 +159,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
       {
         case "Manage signals":
           ChannelSelectorDialog csd = new ChannelSelectorDialog(getMainFrame(), dataFile, dataChannelList);
+          //csd.addActionListener(this);
           csd.setVisible(true);
           break;
         case "New window":
@@ -179,8 +181,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        // TODO Auto-generated method stub
-        
+        dataImage.repaint();
     }
 
     @Override
