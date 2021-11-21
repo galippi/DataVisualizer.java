@@ -141,4 +141,9 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         dataPanels.add(new DataPanel(this, file, new DataChannelList(file)));
         updateLayout();
     }
+
+    public void closeWindow(DataPanel dataPanel) {
+        dataPanels.remove(dataPanel);
+        updateLayout();
+    }
 }

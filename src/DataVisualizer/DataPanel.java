@@ -45,6 +45,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         parent = _parent;
         dataFile = _file;
         dataChannelList = dcl;
+        windowIdx = windowIdxMax;
+        windowIdxMax++;
         dataImage = new DataImage(this, dataFile);
 
         //Register for mouse-wheel events on the map area.
@@ -101,6 +103,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         item.addActionListener(popupMenuListener);
         popup.add(item = new java.awt.MenuItem("New window"));
         item.addActionListener(popupMenuListener);
+        popup.add(item = new java.awt.MenuItem("Close window"));
+        item.addActionListener(popupMenuListener);
         popup.add(item = new java.awt.MenuItem("About"));
         item.addActionListener(popupMenuListener);
         add(popup);
@@ -149,7 +153,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
       java.awt.Point pt = new java.awt.Point(popup.x, popup.y);
       //int colAtPoint = columnAtPoint(pt);
       //int rowAtPoint = rowAtPoint(pt);
-      dbg.println(9, "popupMenuHandler event.getActionCommand="+event.getActionCommand());
+      dbg.println(9, "popupMenuHandler windowIdx="+windowIdx+" event.getActionCommand="+event.getActionCommand());
       switch(event.getActionCommand())
       {
         case "Manage signals":
@@ -159,10 +163,10 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         case "New window":
             parent.createNewWindow();
             break;
-//        case "File properties":
-//          FilePropertiesDialog fpd = new FilePropertiesDialog(IgeViewerUI.mainWindow, igcCursor.get(rowAtPoint));
-//          fpd.setVisible(true);
-//          break;
+        case "Close window":
+            dbg.println(9, "popupMenuHandler.closeWindow windowIdx="+windowIdx);
+            parent.closeWindow(this);
+            break;
         default:
            dbg.println(1, "popupMenuHandler invalid event="+event.toString());
           break;
@@ -184,7 +188,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         super.paintComponent(g);
 
         boolean repaintNeeded = false;
-        dbg.println(9, "DataPanel - paintComponent");
+        dbg.println(9, "DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax);
         g.setColor(Color.BLUE);
         g.fillRect(0, 0, getWidth(), getHeight());
         ctr++;
@@ -205,6 +209,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         // cursor drawing
         g.setColor(Color.BLACK);
         g.drawString("dataPanel ctr=" + ctr, 5, 10);
+        g.drawString("DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax, 5, 30);
     }
     int ctr = 0;
 
@@ -219,6 +224,9 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     DataCache_File dataFile;
     public DataChannelList dataChannelList;
     MyPopupMenu popup;
+    int windowIdx;
+    static int windowIdxMax = 0;
+
     /**
      * 
      */
