@@ -32,6 +32,12 @@ public class DataChannelList {
             mapName.put(colName, dcli);
         }
         horizontalAxle = file.getChannel(horizontalAxleChannelName);
+        pointIndexMin = 0;
+        try {
+            pointIndexMax = file.getLength();
+        } catch (Exception e) {
+            dbg.dprintf(1, "file.getLength exception e=%s!\n", e.toString());
+        }
     }
 
     public int size() {
@@ -81,4 +87,13 @@ public class DataChannelList {
     public boolean isReady() {
         return true;
     }
+
+    public int getDataPointIndexMin() {
+        return pointIndexMin;
+    }
+
+    public int getDataPointIndexMax() {
+        return pointIndexMax;
+    }
+    int pointIndexMin = -1, pointIndexMax = -1;
 }
