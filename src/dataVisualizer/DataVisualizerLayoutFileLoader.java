@@ -82,7 +82,9 @@ public class DataVisualizerLayoutFileLoader {
             dcl.add(dcli);
         }
         String horizontalAxleChannelName = window.getString("horizontalAxle");
-        return new DataChannelList(dcf, dcl, horizontalAxleChannelName);
+        int piMin = window.getInt("pointIndexMin");
+        int piMax = window.getInt("pointIndexMax");
+        return new DataChannelList(dcf, dcl, horizontalAxleChannelName, piMin, piMax);
     }
 
     public enum Status
@@ -151,6 +153,8 @@ public class DataVisualizerLayoutFileLoader {
                 channels.put(channel);
             }
             window.put("horizontalAxle", dataPanel.getDataChannelList().horizontalAxle.getName());
+            window.put("pointIndexMin", dataPanel.getDataChannelList().getDataPointIndexMin());
+            window.put("pointIndexMax", dataPanel.getDataChannelList().getDataPointIndexMax());
         }
         json.put("windows", windows);
         //json.put("horizontalAxle", dataPanels.get(0).getDataChannelList().horizontalAxle.getName());
@@ -159,7 +163,7 @@ public class DataVisualizerLayoutFileLoader {
             filename = FileNameExtension.set(filename, fileNameExtension);
             dbg.dprintf(9, "DataVisualizerLayoutFileLoader.saveLayoutFile - layout file %s!\n", filename);
             FileWriter myWriter = new FileWriter(filename);
-            myWriter.write(json.toString());
+            myWriter.write(json.toString(2));
             myWriter.close();
             dbg.dprintf(9, "DataVisualizerLayoutFileLoader.saveLayoutFile(%s) done!\n", filename);
         } catch (Exception e) {

@@ -16,14 +16,21 @@ public class DataChannelList {
     Vector<DataChannelListUpdateCallback> updateCallbacks = new Vector<>();
     Vector<ActionListener> actionListeners = new Vector<>();
     DataCache_File file;
+
     public DataChannelList(DataCache_File _file)
     {
         file = _file;
         clear();
         horizontalAxle = file.getIndexChannel();
+        pointIndexMin = 0;
+        try {
+            pointIndexMax = file.getLength();
+        } catch (Exception e) {
+            dbg.dprintf(1, "file.getLength exception e=%s!\n", e.toString());
+        }
     }
 
-    public DataChannelList(DataCache_File _file, Vector<DataChannelListItem> dcl, String horizontalAxleChannelName)
+    public DataChannelList(DataCache_File _file, Vector<DataChannelListItem> dcl, String horizontalAxleChannelName, int piMin, int piMax)
     {
         file = _file;
         clear();
@@ -34,12 +41,8 @@ public class DataChannelList {
             mapName.put(colName, dcli);
         }
         horizontalAxle = file.getChannel(horizontalAxleChannelName);
-        pointIndexMin = 0;
-        try {
-            pointIndexMax = file.getLength();
-        } catch (Exception e) {
-            dbg.dprintf(1, "file.getLength exception e=%s!\n", e.toString());
-        }
+        pointIndexMin = piMin;
+        pointIndexMax = piMax;
     }
 
     public int size() {
