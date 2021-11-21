@@ -164,6 +164,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
 
         jMenuBar1.add(jMenu1);
         jMenuBar1.add(jMenuView);
+        jMenuBar1.add(new javax.swing.JMenu("Window"));
         jMenuBar1.add(jMenuHelp);
 
         setJMenuBar(jMenuBar1);
