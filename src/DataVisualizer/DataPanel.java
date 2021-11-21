@@ -47,7 +47,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         dataChannelList = dcl;
         windowIdx = windowIdxMax;
         windowIdxMax++;
-        dataImage = new DataImage(this, dataFile);
+        dataImage = new DataImage(this, dataFile, dcl);
 
         //Register for mouse-wheel events on the map area.
         addMouseWheelListener(new MouseWheelListener() {

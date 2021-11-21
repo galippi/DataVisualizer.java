@@ -77,4 +77,8 @@ public class DataChannelList {
     public Object getChName(int index) {
         return dataChannels.get(index).getSignalName();
     }
+
+    public boolean isReady() {
+        return true;
+    }
 }
