@@ -25,6 +25,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
 {
     public DataVisualizerUI()
     {
+        setTitle("DataVisualizer - no file is loaded");
         initComponents();
 
         int nextRecentFile = 0;

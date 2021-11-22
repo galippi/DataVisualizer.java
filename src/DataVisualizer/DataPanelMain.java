@@ -60,6 +60,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
                             dbg.dprintf(1, "Exception: updateLayout i=%d!\n", i);
                         }
                     }
+                    parent.setTitle("DataVisualizer - " + file.getName());
                 }else
                 { // dataPanels is updated -> update dvlf
                     
