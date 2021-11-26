@@ -14,11 +14,11 @@ set CYGWIN=C:\KBApps\DevEnv\Cygwin\V2_3_1
 
 :: updating source list
 del /f /Q javafiles
-%CYGWIN%\bin\bash.exe -i -c "find src -iname '*.java' >javafiles"
+%CYGWIN%\bin\bash.exe -i -c "find src -iname '*.java' ! -name DataVisualizerLayoutFile_test.java >javafiles"
 mkdir bin
 del /f /q /s *.class
 ::"C:\Program Files (x86)\Java\jdk1.7.0_11\bin\javac" -Werror -d bin -cp patzh-to-jar;path-to-jar2 @javafiles
-"%JAVA%\bin\javac" -Werror -d bin -cp lib/RXTXcomm/rxtxcomm.jar @javafiles
+"%JAVA%\bin\javac" -Werror -d bin -cp lib/json-20180813.jar @javafiles
 if %ERRORLEVEL%==0 goto link_step
 echo ERROR!
 goto end_pause
