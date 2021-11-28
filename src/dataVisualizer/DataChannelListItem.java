@@ -33,6 +33,15 @@ public class DataChannelListItem {
         return Color.BLACK;
     }
 
+    public double getDouble(int hIdx) {
+        try {
+            return ch.getDouble(hIdx);
+        } catch (Exception e) {
+            dbg.println(1, "Exception: DataChannelListItem.getDouble("+ch.getName()+","+hIdx+") e="+e.toString());
+            return 0;
+        }
+    }
+
     DataCache_ChannelBase ch;
     Color color;
     DataChannelGroup group;
