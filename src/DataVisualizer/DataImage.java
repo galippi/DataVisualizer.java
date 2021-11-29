@@ -9,9 +9,11 @@ import utils.threadImage;
 
 public class DataImage extends threadImage
 {
-    public DataImage(java.awt.Component parent, DataCache_File _file, DataChannelList _dcl)
+    DataPanel parent;
+    public DataImage(DataPanel _parent, DataCache_File _file, DataChannelList _dcl)
     {
-      super(parent);
+      super(_parent);
+      parent = _parent;
       file = _file;
       dcl = _dcl;
     }
@@ -28,6 +30,8 @@ public class DataImage extends threadImage
         java.awt.Graphics2D g = img.createGraphics();
         int w = img.getWidth();
         int h = img.getHeight();
+        g.setColor(parent.parent.bgColor);
+        g.fillRect(0, 0, w, h);
         while (!(file.isReady() && (dcl != null) && dcl.isReady()))
         {
             try {

@@ -5,6 +5,8 @@
  */
 package dataVisualizer;
 
+import java.awt.Color;
+
 /**
  *
  * @author liptak
@@ -89,5 +91,16 @@ public class DataVisualizerPrefs {
   {
     put("RecentFiles", "RecentFile" + idx, val);
   }
+
+  static final String backgroundColorPrefsStr = "Background color";
+  public static Color getBackgroundColor(Color color)
+  {
+      return get(backgroundColorPrefsStr, color);
+  }
+  public static void putBackgroundColor(Color backgroundColor)
+  {
+      put(backgroundColorPrefsStr, backgroundColor);
+  }
+
   static final String root = "DataVisualizer";
 }

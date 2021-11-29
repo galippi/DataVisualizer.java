@@ -6,6 +6,7 @@
 package dataVisualizer;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -14,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,8 +25,13 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import utils.dbg;
 
@@ -33,24 +41,84 @@ import utils.dbg;
  */
 public class OptionsDialog extends JDialog {
 
-  JTextField debugLevel;
-  JTextField SRTM_cacheFolder;
-  OptionsDialog(JFrame parent)
+  //headers for the table
+  final String[] columnNames = new String[] {
+      "Property name", "Property value"
+  };
+  final int rowDebugLevel = 0;
+  final int colDebugLevel = 1;
+  final int rowBackgroundColor = 1;
+  final int colBackgroundColor = 1;
+
+  DataVisualizerUI parent;
+
+  OptionsDialog(DataVisualizerUI _parent)
   {
-    super(parent, Dialog.ModalityType.APPLICATION_MODAL);
+    super(_parent, Dialog.ModalityType.APPLICATION_MODAL);
+    parent = _parent;
     this.setTitle("Options");
 
-    JLabel l2 = new JLabel("Debug level:");
-    l2.setHorizontalAlignment(JTextField.LEFT);
-    debugLevel = new JTextField("" + dbg.get(), 5);
-    //debugLevel.setSize(100,20);
-    debugLevel.setHorizontalAlignment(JTextField.TRAILING);
-    //debugLevel.
+    //create table with data
+    table = new JTable(new DefaultTableModel(2, 2) {
+        @Override
+        public boolean isCellEditable(int row, int column)
+        {
+            return (column == 1);
+        }
+    });
+    javax.swing.table.TableColumnModel columnModel = table.getColumnModel();
+    for (int i = 0; i < columnNames.length; i++)
+    {
+        TableColumn column = columnModel.getColumn(i);
+        column.setMinWidth(10);
+        column.setMaxWidth(200);
+        column.setWidth(10);
+        column.setResizable(true);
+        column.setHeaderValue(columnNames[i]);
+    }
+    table.setValueAt("Debug level:", 0, 0);
+    table.setValueAt("" + dbg.get(), 0, 1);
+    table.setValueAt("Background color", 1, 0);
+    table.setValueAt(DataVisualizerPrefs.getBackgroundColor(new Color(0, 0, 0)), 1, 1);
 
-    JPanel jpDebugLevel = new JPanel();
-    //jpDebugLevel.setLayout(new GroupLayout(jpDebugLevel));
-    jpDebugLevel.add(l2);
-    jpDebugLevel.add(debugLevel);
+    table.addMouseListener(new MouseListener() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            mouseHandlerTable(e);
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e)
+        {
+            mouseHandlerTable(e);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e)
+        { // not used - do nothing
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e)
+        { // not used - do nothing
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e)
+        { // not used - do nothing
+        }
+    });
+    table.getModel().addTableModelListener(
+            new javax.swing.event.TableModelListener()
+            {
+                public void tableChanged(javax.swing.event.TableModelEvent evt) 
+                {
+                  tableChangedHandler(evt);
+                }
+    });
+
+    //add the table to the frame
+    this.add(new JScrollPane(table));
 
     JButton bOk = new JButton("Ok");
     //b2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -72,8 +140,6 @@ public class OptionsDialog extends JDialog {
     Container cp = getContentPane();
     // add label, text field and button one after another into a single column
     cp.setLayout(new BoxLayout(cp, BoxLayout.Y_AXIS));
-    cp.add(jpDebugLevel);
-    //cp.add(jpSrtm);
     cp.add(bOkCancel, BorderLayout.SOUTH);
 
     Point pt = parent.getLocationOnScreen();
@@ -82,11 +148,48 @@ public class OptionsDialog extends JDialog {
     this.setMinimumSize(new Dimension(350, 300));
     addEscapeListener();
   }
+
+  private void mouseHandlerTable(MouseEvent evt)
+  {
+      dbg.println(9, "OptionsDialog - mouseHandlerTable evt=" + evt.toString());
+      dbg.println(9, "  findComponentAt="+findComponentAt(evt.getX(), evt.getY()).toString());
+      if (evt.getID() == MouseEvent.MOUSE_CLICKED)
+      {
+          int rowAtPoint = table.rowAtPoint(evt.getPoint());
+          int colAtPoint = table.columnAtPoint(evt.getPoint());
+          dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
+          if (rowAtPoint >= 0) {
+              //setRowSelectionInterval(rowAtPoint, rowAtPoint);
+              if (evt.getButton() == MouseEvent.BUTTON3)
+              {
+                  if ((rowAtPoint == rowBackgroundColor) && (colAtPoint == colBackgroundColor))
+                  {
+                      java.awt.Color newColor = 
+                              javax.swing.JColorChooser.showDialog(
+                                this,
+                                  "Choose background color",
+                                  (Color)table.getValueAt(rowBackgroundColor, colBackgroundColor));
+                      if (newColor != null) {
+                          table.setValueAt(newColor, rowBackgroundColor, colBackgroundColor);
+                      }
+                  }
+              }
+          }
+      }
+
+  }
+
+  private void tableChangedHandler(TableModelEvent evt)
+  {
+      dbg.println(9, "tableChangedHandler evt=" + evt);
+      dbg.println(19, "  UPDATE=" + TableModelEvent.UPDATE);
+  }
+
   void okHandler()
   {
     boolean closable = true;
     try {
-      int level = Integer.parseInt(debugLevel.getText());
+      int level = Integer.parseInt((String) table.getValueAt(rowDebugLevel, colDebugLevel));
       DataVisualizerPrefs.put("Debug level", level);
       dbg.set(level);
     }catch (NumberFormatException e)
@@ -94,6 +197,11 @@ public class OptionsDialog extends JDialog {
       dbg.println(2, "OptionDialog.okHandler.NumberFormatException="+e.toString());
       closable = false;
     }
+
+    Color backgroundColor = (Color)table.getValueAt(rowBackgroundColor, colBackgroundColor);
+    DataVisualizerPrefs.putBackgroundColor(backgroundColor);
+    parent.setBackgroundColor(backgroundColor);
+
     if (closable)
     {
         //IgcViewerPrefs.setSrtmCache(SRTM_cacheFolder.getText());
@@ -119,5 +227,6 @@ public class OptionsDialog extends JDialog {
             JComponent.WHEN_IN_FOCUSED_WINDOW);
   }
 
+  JTable table;
   private static final long serialVersionUID = -4777973355120139808L;
 }

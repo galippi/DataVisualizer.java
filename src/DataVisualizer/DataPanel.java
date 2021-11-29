@@ -191,8 +191,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
 
         boolean repaintNeeded = false;
         dbg.println(9, "DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax);
-        g.setColor(Color.BLUE);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        //g.setColor(Color.BLUE);
+        //g.fillRect(0, 0, getWidth(), getHeight());
         ctr++;
         if (dataImage.setImage(getWidth(), getHeight()))
         {

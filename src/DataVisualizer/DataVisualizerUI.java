@@ -1,5 +1,6 @@
 package dataVisualizer;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JFileChooser;
@@ -239,6 +240,11 @@ public class DataVisualizerUI extends javax.swing.JFrame
     private void m_PreferncesActionPerformed(ActionEvent evt) {
         OptionsDialog od = new OptionsDialog(this);
         od.setVisible(true);
+    }
+
+    public void setBackgroundColor(Color backgroundColor)
+    {
+        dataPanelMain.setBackgroundColor(backgroundColor);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
