@@ -12,10 +12,12 @@ import dataCache.DataCache_ChannelBase;
 public class DataChannelList {
     DataCache_ChannelBase horizontalAxle;
     Vector<DataChannelListItem> dataChannels = new Vector<>();
-    TreeMap<String, DataChannelListItem> mapName = new TreeMap();
+    TreeMap<String, DataChannelListItem> mapName = new TreeMap<>();
     Vector<DataChannelListUpdateCallback> updateCallbacks = new Vector<>();
     Vector<ActionListener> actionListeners = new Vector<>();
     DataCache_File file;
+    int groupCnt = -1;
+    Vector<DataChannelGroup> groups = new Vector<>();
 
     public DataChannelList(DataCache_File _file)
     {
@@ -28,6 +30,7 @@ public class DataChannelList {
         } catch (Exception e) {
             dbg.dprintf(1, "file.getLength exception e=%s!\n", e.toString());
         }
+        updateGroupData();
     }
 
     public DataChannelList(DataCache_File _file, Vector<DataChannelListItem> dcl, String horizontalAxleChannelName, int piMin, int piMax)
@@ -43,6 +46,7 @@ public class DataChannelList {
         horizontalAxle = file.getChannel(horizontalAxleChannelName);
         pointIndexMin = piMin;
         pointIndexMax = piMax;
+        updateGroupData();
     }
 
     public int size() {
@@ -111,5 +115,60 @@ public class DataChannelList {
 
     public void addActionListener(ActionListener listener) {
         actionListeners.add(listener);
+    }
+
+    public void updateGroupData() {
+        TreeMap<String, DataChannelGroup> groupTree = new TreeMap<>();
+        groupCnt = -1;
+        groups.clear();
+        for(DataChannelListItem dcli: dataChannels)
+        {
+            DataChannelGroup cg = dcli.group;
+            DataChannelGroup cgm = groupTree.get(cg.name);
+            if (cgm == null)
+            {
+                groupTree.put(cg.name, cg);
+                groups.add(cg);
+            }else
+            {
+                if (cg != cgm)
+                {
+                    dbg.println(1, "DataChannelList.updateGroupData cg != cgm name="+cg.name+" signal="+dcli.getSignalName());
+                    System.exit(2);
+                    //throw new Exception("DataChannelList.updateGroupData cg != cgm name="+cg.name);
+                }
+            }
+        }
+        groupCnt = groups.size();
+        for(DataChannelGroup cg: groups)
+        {
+            if (cg.isFactorDefault())
+            {
+                double valMin = 1e99;
+                double valMax = -1e99;
+                for(DataChannelListItem dcli: dataChannels)
+                {
+                    if (dcli.group == cg)
+                    {
+                        try {
+                            double valMinLocal = dcli.ch.getDoubleMin();
+                            double valMaxLocal = dcli.ch.getDoubleMax();
+                            if (valMin > valMinLocal)
+                                valMin = valMinLocal;
+                            if (valMax < valMaxLocal)
+                                valMax = valMaxLocal;
+                        } catch (Exception e) {
+                            dbg.println(1, "DataChannelList.updateGroupData getDoubleMin/getDoubleMax name="+cg.name+" signal="+dcli.getSignalName());
+                            System.exit(2);
+                            //throw new Exception("DataChannelList.updateGroupData cg != cgm name="+cg.name);
+                        }
+                    }
+                }
+                cg.valMin = valMin;
+                cg.valMax = valMax;
+                cg.factor = 1.0 / (cg.valMax - cg.valMin) / groupCnt;
+                cg.offset = cg.valMin;
+            }
+        }
     }
 }
