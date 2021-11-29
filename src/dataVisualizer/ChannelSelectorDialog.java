@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -18,7 +17,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -32,7 +30,6 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 
 import dataCache.DataCache_File;
-import utils.FileNameExtension;
 import utils.dbg;
 
 /**
@@ -210,6 +207,7 @@ JComboBox<String> cb;
                 colArray.addSignal(colName, color, groupName);
             }
         }
+        colArray.updateGroupData();
         colArray.updateCallbacksExecute();
         //DataVisualizerLayoutFileLoader.saveLayoutFile(FileNameExtension.set(file.getName(), "dvl"), colArray);
     }

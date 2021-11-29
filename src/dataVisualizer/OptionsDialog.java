@@ -80,15 +80,7 @@ public class OptionsDialog extends JDialog {
     int pw = parent.getWidth();
     setBounds(pt.x + pw / 2 - 150, pt.y + 200, 400, 400);
     this.setMinimumSize(new Dimension(350, 300));
-    ActionListener escListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            cancelHandler();
-        }
-    };
-    getRootPane().registerKeyboardAction(escListener,
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
+    addEscapeListener();
   }
   void okHandler()
   {
@@ -108,10 +100,23 @@ public class OptionsDialog extends JDialog {
         setVisible(false);
     }
   }
+
   void cancelHandler()
   {
     setVisible(false);
     //dispose();
+  }
+
+  void addEscapeListener() {
+      ActionListener escListener = new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              cancelHandler();
+          }
+      };
+      getRootPane().registerKeyboardAction(escListener,
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
   }
 
   private static final long serialVersionUID = -4777973355120139808L;

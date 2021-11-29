@@ -179,6 +179,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         return parent.getMainFrame();
     }
 
+    /* Callback for ChannelSelectorDialog - ok handler */
     @Override
     public void actionPerformed(ActionEvent arg0) {
         dataImage.repaint();
