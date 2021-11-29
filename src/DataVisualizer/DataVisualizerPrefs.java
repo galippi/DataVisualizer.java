@@ -41,6 +41,12 @@ public class DataVisualizerPrefs {
   {
     return Double.parseDouble(get(key, "" + defVal));
   }
+
+  static java.awt.Color get(String key, java.awt.Color defVal)
+  {
+    return new java.awt.Color(get(key, defVal.getRGB()));
+  }
+
   static public void put(String path, String key, String val)
   {
     if (path.isEmpty())
@@ -68,7 +74,14 @@ public class DataVisualizerPrefs {
   static public void put(String key, double val)
   {
     put(key, "" + val);
-  }  static public String getRecentFile(int idx, String defVal)
+  }
+
+  static public void put(String key, java.awt.Color val)
+  {
+    put(key, val.getRGB());
+  }
+
+  static public String getRecentFile(int idx, String defVal)
   {
     return get("RecentFiles", "RecentFile" + idx, defVal);
   }
