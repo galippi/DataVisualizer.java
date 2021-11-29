@@ -158,7 +158,7 @@ public class DataChannelList {
                             if (valMax < valMaxLocal)
                                 valMax = valMaxLocal;
                         } catch (Exception e) {
-                            dbg.println(1, "DataChannelList.updateGroupData getDoubleMin/getDoubleMax name="+cg.name+" signal="+dcli.getSignalName());
+                            dbg.println(1, "Exception DataChannelList.updateGroupData getDoubleMin/getDoubleMax name="+cg.name+" signal="+dcli.getSignalName() + " e=" + e.toString());
                             System.exit(2);
                             //throw new Exception("DataChannelList.updateGroupData cg != cgm name="+cg.name);
                         }

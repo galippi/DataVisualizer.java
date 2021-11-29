@@ -200,9 +200,12 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         }
         if (repaintNeeded)
             dataImage.repaint();
-        String state = dataFile.getStateString();
-        g.setColor(Color.BLACK);
-        g.drawString(state, 5, getHeight() / 2);
+        if (dbg.get(19))
+        {
+            String state = dataFile.getStateString();
+            g.setColor(Color.BLACK);
+            g.drawString(state, 5, getHeight() / 2);
+        }
         if (dataImage.isReady())
         {
           dbg.dprintf(21, "dataPanel - paintComponent(%d, %d)\n", 0, 0);
@@ -210,8 +213,10 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         }
         // cursor drawing
         g.setColor(Color.BLACK);
-        g.drawString("dataPanel ctr=" + ctr, 5, 10);
-        g.drawString("DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax, 5, 30);
+        if (dbg.get(19))
+            g.drawString("dataPanel ctr=" + ctr, 5, 10);
+        if (dbg.get(9))
+            g.drawString("DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax, 5, 30);
     }
     int ctr = 0;
 

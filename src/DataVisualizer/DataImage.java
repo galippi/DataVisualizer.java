@@ -38,7 +38,7 @@ public class DataImage extends threadImage
         }
         {
             final int hScaleHeight = 20;
-            if (dbg.get(11))
+            if (dbg.get(19))
             {
                 g.setColor(Color.red);
                 g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
