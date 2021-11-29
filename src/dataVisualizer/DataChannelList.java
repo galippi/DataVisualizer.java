@@ -166,7 +166,7 @@ public class DataChannelList {
                 }
                 cg.valMin = valMin;
                 cg.valMax = valMax;
-                cg.factor = 1.0 / (cg.valMax - cg.valMin);
+                cg.factor = 1.0 / (cg.valMax - cg.valMin) / groupCnt;
                 cg.offset = cg.valMin;
             }
         }
