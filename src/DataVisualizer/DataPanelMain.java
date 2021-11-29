@@ -42,12 +42,14 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
 
     void updateLayout()
     {
+        dbg.println(11, "DataPanelMain.updateLayout");
         removeAll();
         //setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setLayout(new java.awt.BorderLayout());
+        //setLayout(new java.awt.BorderLayout());
 
         if (dvlf != null)
         {
+            setLayout(new java.awt.GridLayout(dvlf.size(), 1));
             if (dataPanels.size() != dvlf.size())
             {
                 if (dataPanels.size() == 0)
@@ -90,18 +92,25 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         dbg.println(9, "DataPanelMain - paintComponent num=" + dataPanels.size());
         g.setColor(Color.YELLOW);
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.setColor(Color.GREEN);
-        g.fillOval(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 5, getHeight() / 2 - 5);
+        if (dbg.get(19))
+        {
+            g.setColor(Color.GREEN);
+            g.fillOval(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 5, getHeight() / 2 - 5);
+        }
         ctr++;
         // cursor drawing
         g.setColor(Color.BLACK);
-        g.drawString("DataPanelMain ctr=" + ctr, 5, 10);
-        String state;
-        if (file == null)
-            state = "No file is selected!";
-        else
-            state = file.getStateString();
-        g.drawString(state, 5, getHeight() / 2);
+        if (dbg.get(19))
+            g.drawString("DataPanelMain ctr=" + ctr, 5, 10);
+        if (dbg.get(19))
+        {
+            String state;
+            if (file == null)
+                state = "No file is selected!";
+            else
+                state = file.getStateString();
+            g.drawString(state, 5, getHeight() / 2);
+        }
     }
     int ctr = 0;
 
