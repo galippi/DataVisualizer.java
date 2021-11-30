@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_File;
+import utils.Sprintf;
 import utils.dbg;
 import utils.threadImage;
 
@@ -76,17 +77,30 @@ public class DataImage extends threadImage
                 DataChannelListItem dcli = dcl.get(i);
                 DataChannelGroup dcg = dcli.group;
                 Color color = dcli.color;
-                g.setColor(color);
-                final double vScale = -(h - hScaleHeight);
+                final double vScale = (h - hScaleHeight);
                 final int vOffset = h - hScaleHeight;
                 int x0 = 0;
                 int y0 = (int)(((dcli.getDouble(hMin) - dcg.offset) * dcg.factor) * vScale + 0.5);
+                if (dbg.get(11))
+                {
+                    g.setColor(Color.BLACK);
+                    String dbgStr = Sprintf.sprintf("%s: fac=%8f offs=%8f", dcli.getSignalName(), dcg.factor, dcg.offset);
+                    try
+                    {
+                        dbgStr += " min="+dcli.ch.getDoubleMin()+" max="+dcli.ch.getDoubleMax();
+                    } catch (Exception e)
+                    {
+                        dbgStr += " min/max exception";
+                    }
+                    g.drawString(dbgStr, 0, i * 12 + 50);
+                }
+                g.setColor(color);
                 for(int hIdx = hMin + 1; hIdx < hMax; hIdx++)
                 {
                     double val = dcli.getDouble(hIdx);
                     int x = (hIdx - hMin) * w / hNum;
-                    int y = (int)(((val - dcg.offset) * dcg.factor) * vScale + 0.5) + vOffset;
-                    g.drawOval(x, y, 2, 2);
+                    int y = vOffset - (int)((((val - dcg.offset) * dcg.factor) * vScale) + 0.5);
+                    g.drawOval(x - 1, y - 1, 3, 3);
                     g.drawLine(x0, y0, x, y);
                     x0 = x;
                     y0 = y;
