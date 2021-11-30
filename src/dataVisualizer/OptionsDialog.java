@@ -144,7 +144,9 @@ public class OptionsDialog extends JDialog {
 
     Point pt = parent.getLocationOnScreen();
     int pw = parent.getWidth();
-    setBounds(pt.x + pw / 2 - 150, pt.y + 200, 400, 400);
+    //setBounds(pt.x + pw / 2 - 150, pt.y + 200, 400, 400);
+    setLocation(DataVisualizerPrefs.get("OptionsDialogX", 0), DataVisualizerPrefs.get("OptionsDialogY", 0));
+    setSize(DataVisualizerPrefs.get("OptionsDialogW", 350), DataVisualizerPrefs.get("OptionsDialogH", 300));
     this.setMinimumSize(new Dimension(350, 300));
     addEscapeListener();
   }
@@ -204,7 +206,11 @@ public class OptionsDialog extends JDialog {
 
     if (closable)
     {
-        //IgcViewerPrefs.setSrtmCache(SRTM_cacheFolder.getText());
+        DataVisualizerPrefs.put("OptionsDialogX", getX());
+        DataVisualizerPrefs.put("OptionsDialogY", getY());
+        DataVisualizerPrefs.put("OptionsDialogH", getHeight());
+        DataVisualizerPrefs.put("OptionsDialogW", getWidth());
+
         setVisible(false);
     }
   }

@@ -140,6 +140,7 @@ public class DataChannelList {
             }
         }
         groupCnt = groups.size();
+        int grpIdx = 0;
         for(DataChannelGroup cg: groups)
         {
             if (cg.isFactorDefault())
@@ -167,8 +168,9 @@ public class DataChannelList {
                 cg.valMin = valMin;
                 cg.valMax = valMax;
                 cg.factor = 1.0 / (cg.valMax - cg.valMin) / groupCnt;
-                cg.offset = cg.valMin;
+                cg.offset = cg.valMin - (grpIdx / cg.factor / groupCnt);
             }
+            grpIdx++;
         }
     }
 }
