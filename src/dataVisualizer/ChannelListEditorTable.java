@@ -8,6 +8,8 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 //javax.swing.table.DefaultTableModel
@@ -163,6 +165,14 @@ public class ChannelListEditorTable extends JTable {
                       tableChangedHandler(evt);
                     }
         });
+        getSelectionModel().addListSelectionListener(
+            new ListSelectionListener (){
+                @Override
+                public void valueChanged(ListSelectionEvent evt)
+                {
+                    listSelectionIsChanged(evt);
+                }
+        });
     }
 
     protected void mouseHandler(MouseEvent evt)
@@ -203,10 +213,21 @@ public class ChannelListEditorTable extends JTable {
         dbg.println(19, "  UPDATE=" + TableModelEvent.UPDATE);
     }
 
+    private void listSelectionIsChanged(ListSelectionEvent evt)
+    {
+        dbg.println(11, "ChannelListEditorTable - ListSelectionListener evt=" + evt.toString());
+        int selIdx = getSelectedRow();
+        dbg.println(11, "ChannelListEditorTable - ListSelectionListener selIdx=" + selIdx);
+//        int firstIdx = evt.getFirstIndex();
+//        int lastIdx = evt.getLastIndex();
+//        dbg.println(11, "ChannelListEditorTable - ListSelectionListener firstIdx=" + firstIdx + " lastIdx=" + lastIdx);
+        //updateParent();
+        parent.updateProperties();
+    }
+
     public void setSignalGroupName(String groupName) {
         int row = getSelectedRow();
         setValueAt(groupName, row, colGroupName);
-        
     }
 
     public void askSignalColor() {
