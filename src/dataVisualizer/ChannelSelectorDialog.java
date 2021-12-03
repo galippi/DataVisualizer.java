@@ -32,6 +32,10 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import dataCache.DataCache_File;
 import utils.dbg;
@@ -68,6 +72,25 @@ JComboBox<String> cb;
 
     JLabel l2 = new JLabel("Filter:");
     signalNameFilterText = new JTextField();
+    signalNameFilterText.getDocument().addDocumentListener(new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e)
+        {
+            dbg.println(11, "signalNameFilterText.insertUpdate=" + signalNameFilterText.getText());
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e)
+        {
+            dbg.println(11, "signalNameFilterText.removeUpdate=" + signalNameFilterText.getText());
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e)
+        {
+            dbg.println(11, "signalNameFilterText.changedUpdate=" + signalNameFilterText.getText());
+        }
+    });
     signalVisibilityFilter = new JCheckBox("show only visible signals");
     signalVisibilityFilter.addItemListener(new ItemListener() {    
         @Override
@@ -228,9 +251,12 @@ JComboBox<String> cb;
     setLocation(DataVisualizerPrefs.get("SignalSelectorDialogX", 0), DataVisualizerPrefs.get("SignalSelectorDialogY", 0));
     setSize(DataVisualizerPrefs.get("SignalSelectorDialogW", 350), DataVisualizerPrefs.get("SignalSelectorDialogH", 300));
     this.setMinimumSize(new Dimension(350, 400));
+
+    addEscapeListener();
+
+    fillRowData();
     updateButtons();
     updateProperties();
-    addEscapeListener();
   }
 
   final void updateButtons()
@@ -242,6 +268,52 @@ JComboBox<String> cb;
         dbg.println(11, "ChannelSelectorDialog.signalVisibilityFilterIsChanged e="+e.toString());
         dbg.println(19, "ChannelSelectorDialog.signalVisibilityFilterIsChanged e="+e.getStateChange() + "=="+(e.getStateChange() == java.awt.event.ItemEvent.SELECTED));
         myTable.clearSelection();
+        if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED)
+        { // hide all not visible signals
+            DefaultTableModel model = (DefaultTableModel)myTable.getModel();
+            //for (int i = 0; i < myTable.getRowCount(); i++)
+            for (int i = myTable.getRowCount() - 1; i >= 0; i--)
+            {
+                if (!myTable.isSignalVisible(i))
+                {
+                    //myTable.setRowHeight(0);
+                    model.removeRow(i);
+                }
+            }
+        }else
+        { // show all signals
+            fillRowData();
+        }
+    }
+
+    public void fillRowData()
+    {
+        String filterStr = signalNameFilterText.getText();
+        if (filterStr.isEmpty())
+            filterStr = null;
+        boolean filterActive = signalVisibilityFilter.isSelected();
+        dbg.println(11, "fillRowData filterActive="+filterActive + " filterStr="+filterStr);
+        DefaultTableModel model = (DefaultTableModel)myTable.getModel();
+        model.setRowCount(file.getChannelNumber());
+        for (int i = 0; i < file.getChannelNumber(); i++)
+        {
+            String chName = file.getChannel(i).getName();
+            myTable.setValueAt(chName, i, myTable.colSignalName);
+            DataChannelListItem dcli = colArray.get(chName);
+            Color color;
+            DataChannelGroup dcg;
+            if (dcli != null)
+            {
+                color = dcli.color;
+                dcg = dcli.group;
+            }else
+            {
+                color = Color.WHITE;
+                dcg = myTable.hidden;
+            }
+            myTable.setValueAt(color, i, myTable.colSignalColor);
+            myTable.setValueAt(dcg.name, i, myTable.colGroupName);
+        }
     }
 
     void okHandler()
