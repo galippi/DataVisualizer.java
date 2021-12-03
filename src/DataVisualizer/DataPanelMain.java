@@ -168,6 +168,9 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     public void setBackgroundColor(Color backgroundColor)
     {
         bgColor = backgroundColor;
+        for (DataPanel dataPanel : dataPanels)
+            dataPanel.dataImage.repaint();
     }
+
     Color bgColor = DataVisualizerPrefs.getBackgroundColor(new Color(0, 0, 0));
 }
