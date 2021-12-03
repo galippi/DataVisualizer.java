@@ -173,4 +173,21 @@ public class DataChannelList {
             grpIdx++;
         }
     }
+
+    public DataChannelList copy()
+    {
+        DataChannelList result = new DataChannelList(file);
+        for(DataChannelListItem dcli: dataChannels)
+        {
+            result.addSignal(dcli.getSignalName(), dcli.color, dcli.group.name);
+        }
+        result.updateGroupData();
+        return result;
+    }
+
+    public void remove(DataChannelListItem dcli)
+    {
+        dataChannels.remove(dcli);
+        mapName.remove(dcli.getSignalName());
+    }
 }
