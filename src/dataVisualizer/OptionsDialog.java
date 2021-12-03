@@ -162,7 +162,7 @@ public class OptionsDialog extends JDialog {
           dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
           if (rowAtPoint >= 0) {
               //setRowSelectionInterval(rowAtPoint, rowAtPoint);
-              if (evt.getButton() == MouseEvent.BUTTON3)
+              if ((evt.getButton() == MouseEvent.BUTTON1) || (evt.getButton() == MouseEvent.BUTTON3))
               {
                   if ((rowAtPoint == rowBackgroundColor) && (colAtPoint == colBackgroundColor))
                   {
@@ -190,22 +190,25 @@ public class OptionsDialog extends JDialog {
   void okHandler()
   {
     boolean closable = true;
+    int level = -1;
+    Color backgroundColor = null;
     try {
-      int level = Integer.parseInt((String) table.getValueAt(rowDebugLevel, colDebugLevel));
-      DataVisualizerPrefs.put("Debug level", level);
-      dbg.set(level);
+      level = Integer.parseInt((String) table.getValueAt(rowDebugLevel, colDebugLevel));
+      backgroundColor = (Color)table.getValueAt(rowBackgroundColor, colBackgroundColor);
     }catch (NumberFormatException e)
     {
       dbg.println(2, "OptionDialog.okHandler.NumberFormatException="+e.toString());
       closable = false;
     }
 
-    Color backgroundColor = (Color)table.getValueAt(rowBackgroundColor, colBackgroundColor);
-    DataVisualizerPrefs.putBackgroundColor(backgroundColor);
-    parent.setBackgroundColor(backgroundColor);
-
     if (closable)
     {
+        DataVisualizerPrefs.put("Debug level", level);
+        dbg.set(level);
+
+        DataVisualizerPrefs.putBackgroundColor(backgroundColor);
+        parent.setBackgroundColor(backgroundColor);
+
         DataVisualizerPrefs.put("OptionsDialogX", getX());
         DataVisualizerPrefs.put("OptionsDialogY", getY());
         DataVisualizerPrefs.put("OptionsDialogH", getHeight());

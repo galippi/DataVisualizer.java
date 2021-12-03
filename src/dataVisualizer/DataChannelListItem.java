@@ -42,6 +42,13 @@ public class DataChannelListItem {
         }
     }
 
+    public void update(Color _color, String groupName)
+    {
+        color = _color;
+        if (!group.name.equals(groupName))
+            group = new DataChannelGroup(groupName);
+    }
+
     DataCache_ChannelBase ch;
     Color color;
     DataChannelGroup group;

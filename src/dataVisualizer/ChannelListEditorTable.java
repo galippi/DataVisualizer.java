@@ -12,7 +12,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
-//javax.swing.table.DefaultTableModel
 
 import dataCache.DataCache_File;
 import utils.dbg;
@@ -92,8 +91,9 @@ public class ChannelListEditorTable extends JTable {
 
     public ChannelListEditorTable(ChannelSelectorDialog _parent, DataCache_File file, DataChannelList colArray)
     {
-        super(new MyTableModel(file.getChannelNumber(), columnNames.length));
+        super(new MyTableModel(0, columnNames.length));
         parent = _parent;
+
         groupNames = new Groups(colArray);
 
         javax.swing.table.TableColumnModel columnModel = this.getColumnModel();
@@ -107,29 +107,6 @@ public class ChannelListEditorTable extends JTable {
             column.setHeaderValue(columnNames[i]);
         }
 
-        //javax.swing.table.DefaultTableModel tableModel = (javax.swing.table.DefaultTableModel)this.getModel();
-        for (int i = 0; i < file.getChannelNumber(); i++)
-        {
-            String chName = file.getChannel(i).getName();
-            this.setValueAt(chName, i, colSignalName);
-            DataChannelListItem dcli = colArray.get(chName);
-            Color color;
-            DataChannelGroup dcg;
-            if (dcli != null)
-            {
-                color = dcli.color;
-                dcg = dcli.group;
-            }else
-            {
-                color = Color.WHITE;
-                dcg = hidden;
-            }
-            this.setValueAt(color, i, colSignalColor);
-            this.setValueAt(dcg.name, i, colGroupName);
-        }
-
-        //add(table.getTableHeader());
-        //add(table);
         addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -209,7 +186,7 @@ public class ChannelListEditorTable extends JTable {
 
     protected void tableChangedHandler(TableModelEvent evt)
     {
-        dbg.println(9, "tableChangedHandler evt=" + evt);
+        dbg.println(19, "tableChangedHandler evt=" + evt);
         dbg.println(19, "  UPDATE=" + TableModelEvent.UPDATE);
     }
 
@@ -243,6 +220,7 @@ public class ChannelListEditorTable extends JTable {
             {
                 setValueAt((String)getValueAt(row, colSignalName), row, colGroupName);
             }
+            parent.signalDataIsUpdated = true;
             updateParent(row);
           //repaintRequest(true);
         }
@@ -264,8 +242,5 @@ public class ChannelListEditorTable extends JTable {
         return (String)getValueAt(row, colGroupName);
     }
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 274626894788601964L;
 }
