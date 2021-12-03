@@ -186,7 +186,7 @@ public class ChannelListEditorTable extends JTable {
 
     protected void tableChangedHandler(TableModelEvent evt)
     {
-        dbg.println(9, "tableChangedHandler evt=" + evt);
+        dbg.println(19, "tableChangedHandler evt=" + evt);
         dbg.println(19, "  UPDATE=" + TableModelEvent.UPDATE);
     }
 
@@ -220,6 +220,7 @@ public class ChannelListEditorTable extends JTable {
             {
                 setValueAt((String)getValueAt(row, colSignalName), row, colGroupName);
             }
+            parent.signalDataIsUpdated = true;
             updateParent(row);
           //repaintRequest(true);
         }

@@ -35,8 +35,8 @@ import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
+import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_File;
 import utils.dbg;
 
@@ -52,20 +52,23 @@ public class ChannelSelectorDialog extends JDialog {
 
 JComboBox<String> cb;
 
-  DataCache_File file;
-  DataChannelList colArray;
+    DataCache_File file;
+    DataChannelList colArray;
+    DataChannelList colArrayLocal; // this will store the visibility data before ok key
     ChannelListEditorTable myTable;
     private JTextField signalNameFilterText;
     private JCheckBox signalVisibilityFilter;
     private JLabel lGroupName;
     private JTextField tGroupFactor;
     private JTextField tGroupOffset; 
+    boolean signalDataIsUpdated = false;
 
   ChannelSelectorDialog(JFrame parent, DataCache_File _file, DataChannelList _colArray)
   {
     super(parent, Dialog.ModalityType.APPLICATION_MODAL);
     file = _file;
     colArray = _colArray;
+    colArrayLocal = colArray.copy();
     this.setTitle("Select signals to be displayed");
     
     myTable = new ChannelListEditorTable(this, file, colArray);
@@ -77,18 +80,21 @@ JComboBox<String> cb;
         public void insertUpdate(DocumentEvent e)
         {
             dbg.println(11, "signalNameFilterText.insertUpdate=" + signalNameFilterText.getText());
+            signalVisibilityFilterIsChanged();
         }
 
         @Override
         public void removeUpdate(DocumentEvent e)
         {
             dbg.println(11, "signalNameFilterText.removeUpdate=" + signalNameFilterText.getText());
+            signalVisibilityFilterIsChanged();
         }
 
         @Override
         public void changedUpdate(DocumentEvent e)
         {
             dbg.println(11, "signalNameFilterText.changedUpdate=" + signalNameFilterText.getText());
+            signalVisibilityFilterIsChanged();
         }
     });
     signalVisibilityFilter = new JCheckBox("show only visible signals");
@@ -96,7 +102,7 @@ JComboBox<String> cb;
         @Override
         public void itemStateChanged(ItemEvent e)
         {
-            signalVisibilityFilterIsChanged(e);
+            signalVisibilityFilterIsChanged();
         }
      });  
     JButton bOk = new JButton("OK");
@@ -162,6 +168,7 @@ JComboBox<String> cb;
         public void actionPerformed(ActionEvent e) {
             String groupName = (String)jcSignalGroup.getSelectedItem();
             updateSignalGroupName(groupName);
+            signalDataIsUpdated = true;
         }
     });
     jpProperties.add(jcSignalGroup);
@@ -263,27 +270,42 @@ JComboBox<String> cb;
   {
   }
 
-    private void signalVisibilityFilterIsChanged(ItemEvent e)
+    private void signalVisibilityFilterIsChanged()
     {
-        dbg.println(11, "ChannelSelectorDialog.signalVisibilityFilterIsChanged e="+e.toString());
-        dbg.println(19, "ChannelSelectorDialog.signalVisibilityFilterIsChanged e="+e.getStateChange() + "=="+(e.getStateChange() == java.awt.event.ItemEvent.SELECTED));
+        dbg.println(11, "ChannelSelectorDialog.signalVisibilityFilterIsChanged");
         myTable.clearSelection();
-        if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED)
-        { // hide all not visible signals
-            DefaultTableModel model = (DefaultTableModel)myTable.getModel();
-            //for (int i = 0; i < myTable.getRowCount(); i++)
-            for (int i = myTable.getRowCount() - 1; i >= 0; i--)
-            {
-                if (!myTable.isSignalVisible(i))
-                {
-                    //myTable.setRowHeight(0);
-                    model.removeRow(i);
-                }
-            }
-        }else
-        { // show all signals
-            fillRowData();
+        if (signalDataIsUpdated)
+        {
+            updateLocalColArray();
+            signalDataIsUpdated = false;
         }
+        fillRowData();
+//        if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED)
+//        { // hide all not visible signals
+//            DefaultTableModel model = (DefaultTableModel)myTable.getModel();
+//            //for (int i = 0; i < myTable.getRowCount(); i++)
+//            for (int i = myTable.getRowCount() - 1; i >= 0; i--)
+//            {
+//                if (!myTable.isSignalVisible(i))
+//                {
+//                    //myTable.setRowHeight(0);
+//                    model.removeRow(i);
+//                }
+//            }
+//        }else
+//        { // show all signals
+//            if (signalDataIsUpdated)
+//            {
+//                updateLocalColArray();
+//                signalDataIsUpdated = false;
+//            }
+//            fillRowData();
+//        }
+    }
+
+    private void updateLocalColArray()
+    {
+        updateColArray(colArrayLocal);
     }
 
     public void fillRowData()
@@ -294,26 +316,93 @@ JComboBox<String> cb;
         boolean filterActive = signalVisibilityFilter.isSelected();
         dbg.println(11, "fillRowData filterActive="+filterActive + " filterStr="+filterStr);
         DefaultTableModel model = (DefaultTableModel)myTable.getModel();
-        model.setRowCount(file.getChannelNumber());
+        DataChannelList colArrayFiltered;
+        if (filterStr == null)
+            if (filterActive)
+                colArrayFiltered = colArrayLocal;
+            else
+                colArrayFiltered = null;
+        else
+        {
+            if (filterActive)
+                colArrayFiltered = filterSignals(colArrayLocal, filterStr);
+            else
+                colArrayFiltered = filterSignals(null, filterStr);
+        }
+        int rowCount;
+        if (colArrayFiltered == null)
+            rowCount = file.getChannelNumber();
+        else
+            rowCount = colArrayFiltered.size();
+        model.setRowCount(rowCount);
+        int rowIdx = 0;
         for (int i = 0; i < file.getChannelNumber(); i++)
         {
             String chName = file.getChannel(i).getName();
-            myTable.setValueAt(chName, i, myTable.colSignalName);
-            DataChannelListItem dcli = colArray.get(chName);
-            Color color;
-            DataChannelGroup dcg;
-            if (dcli != null)
+            if ((colArrayFiltered == null) || (colArrayFiltered.get(chName) != null))
             {
-                color = dcli.color;
-                dcg = dcli.group;
-            }else
-            {
-                color = Color.WHITE;
-                dcg = myTable.hidden;
+                DataChannelListItem dcli = colArrayLocal.get(chName);
+                Color color;
+                DataChannelGroup dcg;
+                if (dcli != null)
+                {
+                    color = dcli.color;
+                    dcg = dcli.group;
+                }else
+                {
+                    color = Color.WHITE;
+                    dcg = myTable.hidden;
+                }
+                myTable.setValueAt(chName, rowIdx, myTable.colSignalName);
+                myTable.setValueAt(color, rowIdx, myTable.colSignalColor);
+                myTable.setValueAt(dcg.name, rowIdx, myTable.colGroupName);
+                rowIdx++;
             }
-            myTable.setValueAt(color, i, myTable.colSignalColor);
-            myTable.setValueAt(dcg.name, i, myTable.colGroupName);
         }
+    }
+
+    private DataChannelList filterSignals(DataChannelList colArrayParam, String filterStr)
+    {
+        DataChannelList result = new DataChannelList(file);
+        if (colArrayParam == null)
+        {
+            for (int i = 0; i < file.getChannelNumber(); i++)
+            {
+                DataCache_ChannelBase ch = file.getChannel(i);
+                if (filterSignalName(ch.getName(), filterStr))
+                {
+                    DataChannelListItem dcli = colArrayLocal.get(ch.getName());
+                    Color color;
+                    String groupName;
+                    if (dcli == null)
+                    {
+                        color = Color.WHITE;
+                        groupName = "not visible";
+                    }else
+                    {
+                        color = dcli.color;
+                        groupName = dcli.group.name;
+                    }
+                    result.addSignal(ch.getName(), color, groupName);
+                }
+            }
+        }else
+        {
+            for (int i = 0; i < colArrayParam.size(); i++)
+            {
+                DataChannelListItem dcli = colArrayParam.get(i);
+                if (filterSignalName(dcli.getSignalName(), filterStr))
+                {
+                    result.addSignal(dcli.getSignalName(), dcli.color, dcli.group.name);
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean filterSignalName(String name, String filterStr)
+    {
+        return name.contains(filterStr);
     }
 
     void okHandler()
@@ -326,22 +415,33 @@ JComboBox<String> cb;
         DataVisualizerPrefs.put("SignalSelectorDialogH", getHeight());
         DataVisualizerPrefs.put("SignalSelectorDialogW", getWidth());
 
-        colArray.clear();
-        colArray.setHorizontalAxle((String)cb.getSelectedItem());
-        for (int i = 0; i < myTable.getRowCount(); i++)
-        {
-            if (myTable.isSignalVisible(i))
-            {
-                String colName = myTable.getSignalName(i);
-                Color color = myTable.getColor(i);
-                String groupName = myTable.getGroupName(i);
-                dbg.println(11, "  colArray["+i+"]=" + colName + "!");
-                colArray.addSignal(colName, color, groupName);
-            }
-        }
+        updateColArray(colArray);
         colArray.updateGroupData();
         colArray.updateCallbacksExecute();
         //DataVisualizerLayoutFileLoader.saveLayoutFile(FileNameExtension.set(file.getName(), "dvl"), colArray);
+    }
+
+    private void updateColArray(DataChannelList colArray)
+    {
+        //colArray.clear();
+        for (int i = 0; i < myTable.getRowCount(); i++)
+        {
+            String chName = myTable.getSignalName(i);
+            DataChannelListItem dcli = colArray.get(chName);
+            if (myTable.isSignalVisible(i))
+            {
+                Color color = myTable.getColor(i);
+                String groupName = myTable.getGroupName(i);
+                dbg.println(11, "  colArray["+i+"]=" + chName + "!");
+                if (dcli != null)
+                    dcli.update(color, groupName);
+                else
+                    colArray.addSignal(chName, color, groupName);
+            }else
+                if (dcli != null)
+                    colArray.remove(dcli);
+        }
+        colArray.setHorizontalAxle((String)cb.getSelectedItem());
     }
 
     void addEscapeListener() {
