@@ -44,11 +44,11 @@ class Groups
         for(int i = 0; i < colArray.size(); i++)
         {
             DataChannelListItem dcli = colArray.get(i);
-            if (!groupNameMap.containsKey(dcli.group.name))
+            if (!groupNameMap.containsKey(dcli.group))
             {
                 int idx = groupNameArray.size();
-                groupNameArray.add(dcli.group.name);
-                groupNameMap.put(dcli.group.name, idx);
+                groupNameArray.add(dcli.group);
+                groupNameMap.put(dcli.group, idx);
             }
         }
     }

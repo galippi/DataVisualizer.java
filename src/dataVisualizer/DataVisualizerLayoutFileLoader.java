@@ -119,7 +119,7 @@ public class DataVisualizerLayoutFileLoader {
             channel.put("offset", 0.0);
             channel.put("factor", 1.0);
             channel.put("color", dcli.color.getRGB());
-            channel.put("group", dcli.group.name);
+            channel.put("group", dcli.group);
             channels.put(channel);
         }
         window.put("horizontalAxle", dcl.horizontalAxle.getName());
@@ -156,7 +156,7 @@ public class DataVisualizerLayoutFileLoader {
                 channel.put("offset", 0.0);
                 channel.put("factor", 1.0);
                 channel.put("color", dcli.color.getRGB());
-                channel.put("group", dcli.group.name);
+                channel.put("group", dcli.group);
                 channels.put(channel);
             }
             window.put("horizontalAxle", dataPanel.getDataChannelList().horizontalAxle.getName());

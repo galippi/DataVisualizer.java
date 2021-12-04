@@ -347,7 +347,7 @@ JComboBox<String> cb;
                 if (dcli != null)
                 {
                     color = dcli.color;
-                    dcg = dcli.group;
+                    dcg = colArrayLocal.getGroup(dcli.group);
                 }else
                 {
                     color = Color.WHITE;
@@ -381,7 +381,7 @@ JComboBox<String> cb;
                     }else
                     {
                         color = dcli.color;
-                        groupName = dcli.group.name;
+                        groupName = dcli.group;
                     }
                     result.addSignal(ch.getName(), color, groupName);
                 }
@@ -393,7 +393,7 @@ JComboBox<String> cb;
                 DataChannelListItem dcli = colArrayParam.get(i);
                 if (filterSignalName(dcli.getSignalName(), filterStr))
                 {
-                    result.addSignal(dcli.getSignalName(), dcli.color, dcli.group.name);
+                    result.addSignal(dcli.getSignalName(), dcli.color, dcli.group);
                 }
             }
         }

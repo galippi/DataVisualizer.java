@@ -75,7 +75,7 @@ public class DataImage extends threadImage
             for(int i = 0; i < dcl.size(); i++)
             {
                 DataChannelListItem dcli = dcl.get(i);
-                DataChannelGroup dcg = dcli.group;
+                DataChannelGroup dcg = dcl.getGroup(dcli.group);
                 Color color = dcli.color;
                 final double vScale = (h - hScaleHeight);
                 final int vOffset = h - hScaleHeight;

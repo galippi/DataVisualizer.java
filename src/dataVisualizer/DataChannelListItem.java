@@ -11,7 +11,7 @@ public class DataChannelListItem {
     {
         ch = _ch;
         dbg.dprintf(9, "DataChannelListItem.ctor ch=%s\n", ch.getName());
-        group = new DataChannelGroup(ch.getName());
+        group = ch.getName();
         color = getNextColor();
     }
 
@@ -21,7 +21,7 @@ public class DataChannelListItem {
             throw new Exception("DataChannelListItem.ctor chName="+chName+"!");
         color = _color;
         //group = new DataChannelGroup(groupName, factor, offset);
-        group = new DataChannelGroup(groupName);
+        group = groupName;
     }
 
     public String getSignalName() {
@@ -45,11 +45,11 @@ public class DataChannelListItem {
     public void update(Color _color, String groupName)
     {
         color = _color;
-        if (!group.name.equals(groupName))
-            group = new DataChannelGroup(groupName);
+        if (!group.equals(groupName))
+            group = groupName;
     }
 
     DataCache_ChannelBase ch;
     Color color;
-    DataChannelGroup group;
+    String group;
 }

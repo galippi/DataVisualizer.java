@@ -18,6 +18,7 @@ public class DataChannelList {
     DataCache_File file;
     int groupCnt = -1;
     Vector<DataChannelGroup> groups = new Vector<>();
+    TreeMap<String, DataChannelGroup> groupMap = new TreeMap<>();
 
     public DataChannelList(DataCache_File _file)
     {
@@ -75,7 +76,21 @@ public class DataChannelList {
         }
         dataChannels.add(dcli);
         mapName.put(signalName, dcli);
+        addGroup(groupName);
     }
+
+    private boolean addGroup(String groupName) {
+        DataChannelGroup cgm = groupMap.get(groupName);
+        if (cgm == null)
+        {
+            DataChannelGroup cg = new DataChannelGroup(groupName);
+            groupMap.put(cg.name, cg);
+            groups.add(cg);
+            return false;
+        }
+        return true;
+    }
+
     public void setHorizontalAxle(String colName)
     {
         horizontalAxle = file.getChannel(colName);
@@ -118,22 +133,18 @@ public class DataChannelList {
     }
 
     public void updateGroupData() {
-        TreeMap<String, DataChannelGroup> groupTree = new TreeMap<>();
         groupCnt = -1;
         groups.clear();
+        groupMap.clear();
         for(DataChannelListItem dcli: dataChannels)
         {
-            DataChannelGroup cg = dcli.group;
-            DataChannelGroup cgm = groupTree.get(cg.name);
-            if (cgm == null)
+            String groupName = dcli.group;
+            if (addGroup(groupName))
             {
-                groupTree.put(cg.name, cg);
-                groups.add(cg);
-            }else
-            {
-                if (cg != cgm)
+                DataChannelGroup cgm = groupMap.get(groupName);
+                if (groupName != cgm.name)
                 {
-                    dbg.println(1, "DataChannelList.updateGroupData cg != cgm name="+cg.name+" signal="+dcli.getSignalName());
+                    dbg.println(1, "DataChannelList.updateGroupData cg != cgm name="+groupName+" signal="+dcli.getSignalName());
                     System.exit(2);
                     //throw new Exception("DataChannelList.updateGroupData cg != cgm name="+cg.name);
                 }
@@ -149,7 +160,7 @@ public class DataChannelList {
                 double valMax = -1e99;
                 for(DataChannelListItem dcli: dataChannels)
                 {
-                    if (dcli.group == cg)
+                    if (dcli.group == cg.name)
                     {
                         try {
                             double valMinLocal = dcli.ch.getDoubleMin();
@@ -179,7 +190,7 @@ public class DataChannelList {
         DataChannelList result = new DataChannelList(file);
         for(DataChannelListItem dcli: dataChannels)
         {
-            result.addSignal(dcli.getSignalName(), dcli.color, dcli.group.name);
+            result.addSignal(dcli.getSignalName(), dcli.color, dcli.group);
         }
         result.updateGroupData();
         return result;
@@ -189,5 +200,9 @@ public class DataChannelList {
     {
         dataChannels.remove(dcli);
         mapName.remove(dcli.getSignalName());
+    }
+
+    public DataChannelGroup getGroup(String groupName) {
+        return groupMap.get(groupName);
     }
 }
