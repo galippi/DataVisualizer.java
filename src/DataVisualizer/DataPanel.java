@@ -111,10 +111,10 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         popup.add(item = new java.awt.MenuItem("About"));
         item.addActionListener(popupMenuListener);
         add(popup);
-    }
+        }
 
     public void mouseWheelMovedHandler(MouseWheelEvent e) {
-        dbg.println(9, "mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
+        dbg.println(19, "mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
         /*
          * double zoom_new = (e.getWheelRotation() < 0) ? (gu.zoom * zoom_factor) :
          * (gu.zoom / zoom_factor); if (((zoom_new > 40) || (e.getWheelRotation() < 0))
@@ -130,30 +130,45 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
 
     public void mouseHandler(MouseEvent e) {
         dbg.println(19, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
-        if (e.getID() == MouseEvent.MOUSE_PRESSED)
+        switch (e.getID())
         {
-            dbg.println(9, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
-            if (e.getButton() == MouseEvent.BUTTON1)
+            case MouseEvent.MOUSE_PRESSED:
             {
-                int x = e.getX();
-                if (x > dataImage.hOffset)
+                dbg.println(19, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
+                if (e.getButton() == MouseEvent.BUTTON1)
                 {
-                    cursors[0].hPos = (x - dataImage.hOffset) * (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) / dataImage.diagramWidth + dataChannelList.getDataPointIndexMin();
-                    repaint();
+                    int x = e.getX();
+                    if (x > dataImage.hOffset)
+                    {
+                        cursors[0].hPos = (x - dataImage.hOffset) * (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) / dataImage.diagramWidth + dataChannelList.getDataPointIndexMin();
+                        cursorLast = cursors[0];
+                        repaint();
+                    }
+                }else
+                if (e.getButton() == MouseEvent.BUTTON3)
+                    popup.show(this, e.getX(), e.getY());
+            }
+            break;
+            case MouseEvent.MOUSE_RELEASED:
+                cursorLast = null;
+                break;
+            case MouseEvent.MOUSE_DRAGGED:
+            {
+                if (cursorLast != null)
+                {
+                    int x = e.getX();
+                    if (x > dataImage.hOffset)
+                    {
+                        cursorLast.hPos = (x - dataImage.hOffset) * (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) / dataImage.diagramWidth + dataChannelList.getDataPointIndexMin();
+                        repaint();
+                    }
                 }
-            }else
-            if (e.getButton() == MouseEvent.BUTTON3)
-                popup.show(this, e.getX(), e.getY());
-        }else
-        if ((e.getID() == MouseEvent.MOUSE_MOVED) || (e.getID() == MouseEvent.MOUSE_DRAGGED))
-        {
-                //dx = e.getX() - x_start;
-                //dy = e.getY() - y_start;
-        }else
-        if (e.getID() == MouseEvent.MOUSE_RELEASED)
-        {
-        }else
-        { // not used event
+            }
+            break;
+            case MouseEvent.MOUSE_MOVED:
+                break;
+            default:
+                break;
         }
     }
     boolean m_capture = false;
