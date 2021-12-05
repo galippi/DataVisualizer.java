@@ -249,7 +249,10 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                   {
                       DataChannelListItem dcli = dataChannelList.get(i);
                       double val = dcli.getDouble(cursors[0].hPos);
-                      String valStr = "" + val + dcli.ch.getUnit();
+                      String unit = dcli.ch.getUnit();
+                      if (!unit.isEmpty())
+                          unit = " " + unit;
+                      String valStr = " " + val + unit + " ";
                       g.setColor(dcli.color);
                       java.awt.FontMetrics metrics = g.getFontMetrics();
                       int fontHgt = metrics.getHeight();
@@ -259,12 +262,12 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                           xVal = 0;
                       else if (xVal > (getWidth() - textWidth))
                           xVal = (getWidth() - textWidth);
-                      int yVal = dataImage.getY(dcli, cursors[0].hPos) + (fontHgt / 2);
+                      int yVal = dataImage.getY(dcli, val) + (fontHgt / 2);
                       if (yVal > (getHeight() - 10))
                           yVal = getHeight() - 10;
                       g.clearRect(xVal, yVal - fontHgt, textWidth, fontHgt);
                       g.drawRect(xVal, yVal - fontHgt, textWidth + 1, fontHgt);
-                      g.drawString(valStr, xVal + 1, yVal - 1);
+                      g.drawString(valStr, xVal + 1, yVal - 2);
                   }
               }
           }
