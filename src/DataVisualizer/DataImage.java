@@ -29,10 +29,10 @@ public class DataImage extends threadImage
     protected void Drawing()
     { /* drawing function */
         java.awt.Graphics2D g = img.createGraphics();
-        int w = img.getWidth();
-        int h = img.getHeight();
+        final int imgWidth = img.getWidth();
+        final int imgHeight = img.getHeight();
         g.setColor(parent.parent.bgColor);
-        g.fillRect(0, 0, w, h);
+        g.fillRect(0, 0, imgWidth, imgHeight);
         while (!(file.isReady() && (dcl != null) && dcl.isReady()))
         {
             try {
@@ -43,10 +43,13 @@ public class DataImage extends threadImage
         }
         {
             final int hScaleHeight = 16;
+            final int diagHeight = imgHeight - hScaleHeight;
+            final int hOffset = 40;
+            final int diagWidth = imgWidth - hOffset;
             if (dbg.get(19))
             {
                 g.setColor(Color.red);
-                g.fillOval(img.getWidth() / 2, img.getHeight() / 2, img.getWidth() / 2 - 5, img.getHeight() / 2 - 5);
+                g.fillOval(imgWidth / 2, imgHeight / 2, imgWidth / 2 - 5, imgHeight / 2 - 5);
                 g.setColor(Color.BLACK);
                 g.drawString("DataImage - Drawing!", 40, 40);
             }
@@ -57,18 +60,18 @@ public class DataImage extends threadImage
             if (dbg.get(11))
             {
                 g.setColor(Color.BLACK);
-                g.drawString("hMin="+hMin, 0, img.getHeight() - hScaleHeight);
-                g.drawString("hMax="+hMax, img.getWidth() - 60, img.getHeight() - hScaleHeight);
+                g.drawString("hMin="+hMin, 0, diagHeight);
+                g.drawString("hMax="+hMax, imgWidth - 60, diagHeight);
                 for(int hIdx = hMin + hStep; hIdx < hMax; hIdx += hStep)
-                    g.drawString("hIdx="+hIdx, w * (hIdx-hMin) / hNum, h - hScaleHeight);
+                    g.drawString("hIdx="+hIdx, imgWidth * (hIdx-hMin) / hNum, diagHeight);
             }
             DataCache_ChannelBase chHor = dcl.getHorizontalAxle();
             g.setColor(Color.BLACK);
-            g.drawString(chHor.getName(), img.getWidth() / 2 - 16, img.getHeight());
+            g.drawString(chHor.getName(), imgWidth / 2 - 16, imgHeight);
             for(int hIdx = hMin + hStep; hIdx < hMax; hIdx += hStep)
             {
                 try {
-                    g.drawString(""+chHor.getDouble(hIdx), w * (hIdx-hMin) / hNum, h - hScaleHeight / 2);
+                    g.drawString(""+chHor.getDouble(hIdx), imgWidth * (hIdx-hMin) / hNum, imgHeight - hScaleHeight / 2);
                 } catch (Exception e) {
                     //e.printStackTrace();
                 }
@@ -78,10 +81,8 @@ public class DataImage extends threadImage
                 DataChannelListItem dcli = dcl.get(i);
                 DataChannelGroup dcg = dcl.getGroup(dcli.group);
                 Color color = dcli.color;
-                final double vScale = (h - hScaleHeight);
-                final int vOffset = h - hScaleHeight;
                 int x0 = 0;
-                int y0 = (int)(((dcli.getDouble(hMin) - dcg.offset) * dcg.factor) * vScale + 0.5);
+                int y0 = (int)(((dcli.getDouble(hMin) - dcg.offset) * dcg.factor) * diagHeight + 0.5);
                 if (dbg.get(11))
                 {
                     g.setColor(Color.BLACK);
@@ -99,8 +100,8 @@ public class DataImage extends threadImage
                 for(int hIdx = hMin + 1; hIdx < hMax; hIdx++)
                 {
                     double val = dcli.getDouble(hIdx);
-                    int x = (hIdx - hMin) * w / hNum;
-                    int y = vOffset - (int)((((val - dcg.offset) * dcg.factor) * vScale) + 0.5);
+                    int x = (hIdx - hMin) * imgWidth / hNum;
+                    int y = diagHeight - (int)((((val - dcg.offset) * dcg.factor) * diagHeight) + 0.5);
                     g.drawOval(x - 1, y - 1, 3, 3);
                     g.drawLine(x0, y0, x, y);
                     x0 = x;
