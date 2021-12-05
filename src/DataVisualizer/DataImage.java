@@ -25,8 +25,17 @@ public class DataImage extends threadImage
         repaint();
     }
 
+    public int getY(DataChannelGroup dcg, double val) {
+        return diagHeight - (int)(((val - dcg.offset) * dcg.factor) * img.getHeight() + 0.5);
+    }
+
+    public int getY(DataChannelListItem dcli, double val) {
+        DataChannelGroup dcg = dcl.getGroup(dcli.group);
+        return getY(dcg, val);
+    }
+
     public int getY(DataChannelListItem dcli, DataChannelGroup dcg, int hPos) {
-        return diagHeight - (int)(((dcli.getDouble(hPos) - dcg.offset) * dcg.factor) * img.getHeight() + 0.5);
+        return getY(dcg, dcli.getDouble(hPos));
     }
 
     public int getY(DataChannelListItem dcli, int hPos) {
