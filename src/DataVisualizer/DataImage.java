@@ -42,7 +42,7 @@ public class DataImage extends threadImage
             }
         }
         {
-            final int hScaleHeight = 20;
+            final int hScaleHeight = 16;
             if (dbg.get(19))
             {
                 g.setColor(Color.red);
@@ -53,21 +53,22 @@ public class DataImage extends threadImage
             final int hMin = dcl.getDataPointIndexMin();
             final int hMax = dcl.getDataPointIndexMax();
             final int hNum = hMax - hMin;
+            final int hStep = (hMax - hMin) / 10;
             if (dbg.get(11))
             {
                 g.setColor(Color.BLACK);
-                g.drawString("hMin="+hMin, 0, img.getHeight() - 10);
-                g.drawString("hMax="+hMax, img.getWidth() - 60, img.getHeight() - 10);
+                g.drawString("hMin="+hMin, 0, img.getHeight() - hScaleHeight);
+                g.drawString("hMax="+hMax, img.getWidth() - 60, img.getHeight() - hScaleHeight);
+                for(int hIdx = hMin + hStep; hIdx < hMax; hIdx += hStep)
+                    g.drawString("hIdx="+hIdx, w * (hIdx-hMin) / hNum, h - hScaleHeight);
             }
-            final int hStep = (hMax - hMin) / 10;
             DataCache_ChannelBase chHor = dcl.getHorizontalAxle();
             g.setColor(Color.BLACK);
-            g.drawString(chHor.getName(), 0, img.getHeight() - 20);
+            g.drawString(chHor.getName(), img.getWidth() / 2 - 16, img.getHeight());
             for(int hIdx = hMin + hStep; hIdx < hMax; hIdx += hStep)
             {
-                g.drawString("hIdx="+hIdx, w * (hIdx-hMin) / hNum, h - (hScaleHeight / 2));
                 try {
-                    g.drawString(""+chHor.getDouble(hIdx), w * (hIdx-hMin) / hNum, h - hScaleHeight);
+                    g.drawString(""+chHor.getDouble(hIdx), w * (hIdx-hMin) / hNum, h - hScaleHeight / 2);
                 } catch (Exception e) {
                     //e.printStackTrace();
                 }
