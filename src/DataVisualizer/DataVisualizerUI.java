@@ -2,6 +2,8 @@ package dataVisualizer;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
@@ -46,6 +48,24 @@ public class DataVisualizerUI extends javax.swing.JFrame
             jMenu3.add(jMenuItem);
           }
         }
+
+        addKeyListener(new KeyListener()
+        {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                dbg.println(9, "DataVisualizerUI.KeyListener e="+e.toString());
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                dbg.println(9, "DataVisualizerUI.KeyListener e="+e.toString());
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                dbg.println(9, "DataVisualizerUI.KeyListener e="+e.toString());
+            }
+        });
 
         setLocation(DataVisualizerPrefs.get("MainWindowX", 0), DataVisualizerPrefs.get("MainWindowY", 0));
         setSize(DataVisualizerPrefs.get("MainWindowW", 600), DataVisualizerPrefs.get("MainWindowH", 400));
