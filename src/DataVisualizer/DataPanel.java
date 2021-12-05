@@ -48,6 +48,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         dataChannelList.addActionListener(this);
         windowIdx = windowIdxMax;
         windowIdxMax++;
+        for (int i = 0; i < cursors.length; i++)
+            cursors[i] = new Cursor(this);
         dataImage = new DataImage(this, dataFile, dcl);
 
         //Register for mouse-wheel events on the map area.
@@ -131,6 +133,15 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         if (e.getID() == MouseEvent.MOUSE_PRESSED)
         {
             dbg.println(9, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
+            if (e.getButton() == MouseEvent.BUTTON1)
+            {
+                int x = e.getX();
+                if (x > dataImage.hOffset)
+                {
+                    cursors[0].hPos = (x - dataImage.hOffset) * (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) / dataImage.diagramWidth + dataChannelList.getDataPointIndexMin();
+                    repaint();
+                }
+            }else
             if (e.getButton() == MouseEvent.BUTTON3)
                 popup.show(this, e.getX(), e.getY());
         }else
@@ -210,8 +221,15 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         {
           dbg.dprintf(21, "dataPanel - paintComponent(%d, %d)\n", 0, 0);
           g.drawImage(dataImage.getImage(), 0, 0, null);
+
+          // cursor drawing
+          if (cursors[0].hPos >= 0)
+          {
+              g.setColor(Color.BLUE);
+              final int x = (cursors[0].hPos - dataChannelList.getDataPointIndexMin()) * dataImage.diagramWidth / (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) + dataImage.hOffset;
+              g.drawLine(x, 0, x, getHeight());
+          }
         }
-        // cursor drawing
         g.setColor(Color.BLACK);
         if (dbg.get(19))
             g.drawString("dataPanel ctr=" + ctr, 5, 10);
@@ -233,6 +251,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     MyPopupMenu popup;
     int windowIdx;
     static int windowIdxMax = 0;
+    Cursor[] cursors = new Cursor[2];
+    Cursor cursorLast = null;
 
     /**
      * 

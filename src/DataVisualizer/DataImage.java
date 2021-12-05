@@ -44,8 +44,8 @@ public class DataImage extends threadImage
         {
             final int hScaleHeight = 16;
             final int diagHeight = imgHeight - hScaleHeight;
-            final int hOffset = 40;
-            final int diagWidth = imgWidth - hOffset;
+            hOffset = 40;
+            diagramWidth = imgWidth - hOffset;
             if (dbg.get(19))
             {
                 g.setColor(Color.red);
@@ -81,7 +81,7 @@ public class DataImage extends threadImage
                 DataChannelListItem dcli = dcl.get(i);
                 DataChannelGroup dcg = dcl.getGroup(dcli.group);
                 Color color = dcli.color;
-                int x0 = 0;
+                int x0 = hOffset;
                 int y0 = (int)(((dcli.getDouble(hMin) - dcg.offset) * dcg.factor) * diagHeight + 0.5);
                 if (dbg.get(11))
                 {
@@ -100,7 +100,7 @@ public class DataImage extends threadImage
                 for(int hIdx = hMin + 1; hIdx < hMax; hIdx++)
                 {
                     double val = dcli.getDouble(hIdx);
-                    int x = (hIdx - hMin) * imgWidth / hNum;
+                    int x = (hIdx - hMin) * diagramWidth / hNum + hOffset;
                     int y = diagHeight - (int)((((val - dcg.offset) * dcg.factor) * diagHeight) + 0.5);
                     g.drawOval(x - 1, y - 1, 3, 3);
                     g.drawLine(x0, y0, x, y);
@@ -113,4 +113,6 @@ public class DataImage extends threadImage
     }
     DataCache_File file;
     DataChannelList dcl;
+    int hOffset = 0;
+    int diagramWidth = 1;
 }
