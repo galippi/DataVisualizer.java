@@ -142,7 +142,7 @@ public class DataChannelList {
             if (addGroup(groupName))
             {
                 DataChannelGroup cgm = groupMap.get(groupName);
-                if (groupName != cgm.name)
+                if (!groupName.equals(cgm.name))
                 {
                     dbg.println(1, "DataChannelList.updateGroupData cg != cgm name="+groupName+" signal="+dcli.getSignalName());
                     System.exit(2);
