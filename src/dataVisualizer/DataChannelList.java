@@ -180,6 +180,8 @@ public class DataChannelList {
                 cg.valMax = valMax;
                 cg.factor = 1.0 / (cg.valMax - cg.valMin) / groupCnt;
                 cg.offset = cg.valMin - (grpIdx / cg.factor / groupCnt);
+                cg.ySize = 1.0 / groupCnt;
+                cg.yOffset = grpIdx * cg.ySize;
             }
             grpIdx++;
         }
@@ -204,5 +206,9 @@ public class DataChannelList {
 
     public DataChannelGroup getGroup(String groupName) {
         return groupMap.get(groupName);
+    }
+
+    public Vector<DataChannelGroup> getGroups() {
+        return groups;
     }
 }

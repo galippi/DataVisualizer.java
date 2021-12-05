@@ -17,4 +17,6 @@ public class DataChannelGroup {
     double factor = -1e99;
     double valMin = 1e99;
     double valMax = -1e99;
+    double yOffset;
+    double ySize;
 }

@@ -2,6 +2,7 @@ package dataVisualizer;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -9,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.AffineTransform;
 
 import dataCache.DataCache_File;
 import utils.dbg;
@@ -271,6 +273,33 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                   }
               }
           }
+          Graphics2D g2 = (Graphics2D)g;
+          AffineTransform defaultAt = g2.getTransform();
+          AffineTransform at = AffineTransform.getQuadrantRotateInstance(3);
+          g2.setTransform(at);
+          g.setColor(Color.BLACK);
+          //g2.drawString("Vertical string", -100, 10);
+          java.util.Vector<DataChannelGroup> groups = dataChannelList.getGroups();
+          for(DataChannelGroup cg: groups)
+          {
+              final int xStep = 10;
+              int x = xStep;
+              for (int i = 0; i < dataChannelList.size(); i++)
+              {
+                  DataChannelListItem dcli = dataChannelList.get(i);
+                  if (cg.name.equals(dcli.group))
+                  {
+                      g.setColor(dcli.color);
+                      java.awt.FontMetrics metrics = g.getFontMetrics();
+                      String signalName = dcli.getSignalName();
+                      int textWidth = metrics.stringWidth(signalName);
+                      //dbg.println(9, signalName + "=" + textWidth);
+                      g2.drawString(signalName, -((int)((1.0 - (cg.ySize / 2 + cg.yOffset)) * getHeight()) + (textWidth / 2)), x);
+                      x += xStep;
+                  }
+              }
+          }
+          g2.setTransform(defaultAt);
         }
         g.setColor(Color.BLACK);
         if (dbg.get(19))
