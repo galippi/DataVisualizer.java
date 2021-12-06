@@ -116,14 +116,67 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         }
 
     public void mouseWheelMovedHandler(MouseWheelEvent e) {
-        dbg.println(19, "mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
-        /*
-         * double zoom_new = (e.getWheelRotation() < 0) ? (gu.zoom * zoom_factor) :
-         * (gu.zoom / zoom_factor); if (((zoom_new > 40) || (e.getWheelRotation() < 0))
-         * && ((zoom_new < 13000) || (e.getWheelRotation() > 0))) { // limit the zooming
-         * gu.Zoom(e.getX(), e.getY(), zoom_new); repaint(); }
-         */
-        repaint();
+        dbg.println(19, "DataPanel.mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
+        int xPosMiddle = e.getX();
+        int hPosMiddle = dataImage.getHPos(xPosMiddle);
+        int hPosMin = dataImage.dcl.pointIndexMin;
+        int hPosMax = dataImage.dcl.pointIndexMax;
+        int dH = (hPosMax - hPosMin);
+        int hMax = -1;
+        try
+        {
+            hMax = dataFile.getLength();
+        } catch (Exception e1)
+        {
+            dbg.println(1, "DataPanel.mouseWheelMovedHandler e="+e1.toString());
+            return; /* do nothing */
+        }
+        if (e.getWheelRotation() < 0)
+        { // zoom in
+            if (dH < 250)
+                return; // over zoomed -> do nothing
+            int hPosMinNew = hPosMiddle - (dH / 4);
+            int hPosMaxNew = hPosMiddle + (dH / 4);
+            if (hPosMinNew < 0)
+            {
+                hPosMaxNew = hPosMaxNew + (-hPosMinNew);
+                hPosMinNew = 0;
+            }
+            if (hPosMaxNew >= hMax)
+            {
+                int diff = hPosMaxNew - hMax + 1;
+                hPosMaxNew -= diff;
+                hPosMinNew -= diff;
+            }
+            if (hPosMinNew < 0)
+                hPosMinNew = 0;
+            if (hPosMaxNew >= hMax)
+                hPosMaxNew = hMax - 1;
+            dataImage.dcl.pointIndexMin = hPosMinNew;
+            dataImage.dcl.pointIndexMax = hPosMaxNew;
+        }else
+        { // zoom out
+            int hPosMinNew = hPosMiddle - dH;
+            int hPosMaxNew = hPosMiddle + dH;
+            if (hPosMinNew < 0)
+            {
+                hPosMaxNew = hPosMaxNew + (-hPosMinNew);
+                hPosMinNew = 0;
+            }
+            if (hPosMaxNew >= hMax)
+            {
+                int diff = hPosMaxNew - hMax + 1;
+                hPosMaxNew -= diff;
+                hPosMinNew -= diff;
+            }
+            if (hPosMinNew < 0)
+                hPosMinNew = 0;
+            if (hPosMaxNew >= hMax)
+                hPosMaxNew = hMax - 1;
+            dataImage.dcl.pointIndexMin = hPosMinNew;
+            dataImage.dcl.pointIndexMax = hPosMaxNew;
+        }
+        dataImage.repaint();
     }
 
     //  public void zoomHandler(ZoomEvent e) {
