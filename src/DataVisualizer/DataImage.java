@@ -25,6 +25,12 @@ public class DataImage extends threadImage
         repaint();
     }
 
+    public int getHPos(int xPos)
+    {
+        int hNum = dcl.pointIndexMax - dcl.pointIndexMin;
+        return ((xPos - hOffset) * hNum / diagramWidth) + dcl.pointIndexMin;
+    }
+
     public int getY(DataChannelGroup dcg, double val) {
         return diagHeight - (int)(((val - dcg.offset) * dcg.factor) * img.getHeight() + 0.5);
     }
