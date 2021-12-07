@@ -117,10 +117,8 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     Vector<DataPanel> dataPanels = new Vector<>();
     DataCache_File file;
     DataVisualizerLayoutFileLoader dvlf;
+    boolean cursorsTogether = true;
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -1520781722850105662L;
 
     public DataVisualizerUI getMainFrame() {
@@ -173,4 +171,20 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     }
 
     Color bgColor = DataVisualizerPrefs.getBackgroundColor(new Color(0, 0, 0));
+
+    void setDataCursor(int cursorIdx, int x)
+    {
+        for (DataPanel dataPanel: dataPanels)
+        {
+            dataPanel.setDataCursor(cursorIdx, x);
+        }
+    }
+
+    public void setHorizontalZoom(int hPosMinNew, int hPosMaxNew)
+    {
+        for (DataPanel dataPanel: dataPanels)
+        {
+            dataPanel.setHorizontalZoom(hPosMinNew, hPosMaxNew);
+        }
+    }
 }

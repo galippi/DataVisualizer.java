@@ -133,12 +133,14 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
             dbg.println(1, "DataPanel.mouseWheelMovedHandler e="+e1.toString());
             return; /* do nothing */
         }
+        int hPosMinNew;
+        int hPosMaxNew;
         if (e.getWheelRotation() < 0)
         { // zoom in
             if (dH < 250)
                 return; // over zoomed -> do nothing
-            int hPosMinNew = hPosMiddle - (dH / 4);
-            int hPosMaxNew = hPosMiddle + (dH / 4);
+            hPosMinNew = hPosMiddle - (dH / 4);
+            hPosMaxNew = hPosMiddle + (dH / 4);
             if (hPosMinNew < 0)
             {
                 hPosMaxNew = hPosMaxNew + (-hPosMinNew);
@@ -154,12 +156,10 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                 hPosMinNew = 0;
             if (hPosMaxNew >= hMax)
                 hPosMaxNew = hMax - 1;
-            dataImage.dcl.pointIndexMin = hPosMinNew;
-            dataImage.dcl.pointIndexMax = hPosMaxNew;
         }else
         { // zoom out
-            int hPosMinNew = hPosMiddle - dH;
-            int hPosMaxNew = hPosMiddle + dH;
+            hPosMinNew = hPosMiddle - dH;
+            hPosMaxNew = hPosMiddle + dH;
             if (hPosMinNew < 0)
             {
                 hPosMaxNew = hPosMaxNew + (-hPosMinNew);
@@ -175,10 +175,14 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                 hPosMinNew = 0;
             if (hPosMaxNew >= hMax)
                 hPosMaxNew = hMax - 1;
-            dataImage.dcl.pointIndexMin = hPosMinNew;
-            dataImage.dcl.pointIndexMax = hPosMaxNew;
         }
-        dataImage.repaint();
+        dataImage.dcl.pointIndexMin = hPosMinNew;
+        dataImage.dcl.pointIndexMax = hPosMaxNew;
+        if (parent.cursorsTogether)
+        {
+            parent.setHorizontalZoom(hPosMinNew, hPosMaxNew);
+        }else
+            dataImage.repaint();
     }
 
     //  public void zoomHandler(ZoomEvent e) {
@@ -240,7 +244,16 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                     {
                         cursorLast.hPos = dataImage.getHPos(x);
                         cursorLast.xPos = x;
-                        repaint();
+                        if ((parent.cursorsTogether) && ((cursorLast == cursors[0]) || (cursorLast == cursors[1])))
+                        {
+                            int cursorIdx;
+                            if (cursorLast == cursors[0])
+                                cursorIdx = 0;
+                            else
+                                cursorIdx = 1;
+                            parent.setDataCursor(cursorIdx, x);
+                        }else
+                            repaint();
                     }
                 }
             }
@@ -255,7 +268,12 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                     { // set the reading cursor
                         cursors[0].xPos = x;
                         cursors[0].hPos = dataImage.getHPos(x);
-                        repaint();
+                        if (parent.cursorsTogether)
+                        {
+                            int cursorIdx = 0;
+                            parent.setDataCursor(cursorIdx, x);
+                        }else
+                            repaint();
                     }else
                     { // zoom the window
                         int hMax = -1;
@@ -292,7 +310,11 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                             hPosMaxNew = hMax - 1;
                         dataImage.dcl.pointIndexMin = hPosMinNew;
                         dataImage.dcl.pointIndexMax = hPosMaxNew;
-                        dataImage.repaint();
+                        if (parent.cursorsTogether)
+                        {
+                            parent.setHorizontalZoom(hPosMinNew, hPosMaxNew);
+                        }else
+                            dataImage.repaint();
                     }
                 }
                 cursorLast = null;
@@ -304,8 +326,21 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                 break;
         }
     }
-    boolean m_capture = false;
-    int x_start, y_start;
+
+    void setDataCursor(int cursorIdx, int x)
+    {
+        cursors[cursorIdx].xPos = x;
+        cursors[cursorIdx].hPos = dataImage.getHPos(x);
+        repaint();
+    }
+
+
+    public void setHorizontalZoom(int hPosMinNew, int hPosMaxNew)
+    {
+        dataImage.dcl.pointIndexMin = hPosMinNew;
+        dataImage.dcl.pointIndexMax = hPosMaxNew;
+        dataImage.repaint();
+    }
 
     void popupMenuHandler(java.awt.event.ActionEvent event)
     {
@@ -465,8 +500,5 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     Cursor cursorLast = null;
     final int maxSignalCountToBeDisplayedByCursor = 2;
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1062958030431493625L;
 }
