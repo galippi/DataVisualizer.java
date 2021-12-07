@@ -201,10 +201,12 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                     {
                         if (cursors[i].xPos >= 0)
                         {
-                            int dx = e.getX() - cursors[i].xPos;
+                            int dx = x - cursors[i].xPos;
                             if (dx < 0)
                                 dx = -dx;
-                            if (dx < cursorDistance )
+                            int h0 = dataImage.getHPos(x);
+                            int h1 = cursors[i].hPos;
+                            if ((dx < cursorDistance) || (Math.abs(h1 - h0) < 2))
                                 cursorLast = cursors[i];
                         }
                     }
@@ -277,7 +279,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                         int hPosMinNew = dataImage.getHPos(zoomCursors[0].xPos);
                         int hPosMaxNew = dataImage.getHPos(zoomCursors[1].xPos);
                         int dH = hPosMaxNew - hPosMinNew;
-                        if (dH < 50)
+                        if (dH < 20)
                         {
                             cursorLast = null;
                             zoomCursors[0].xPos = -9999;
@@ -374,6 +376,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
               g.setColor(Color.BLUE);
               final int x = (cursors[0].hPos - dataChannelList.getDataPointIndexMin()) * dataImage.diagramWidth / (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) + dataImage.hOffset;
               g.drawLine(x, 0, x, getHeight());
+              cursors[0].xPos = x;
               if (dataChannelList.size() <= maxSignalCountToBeDisplayedByCursor)
               { // displaying signal value
                   for (int i = 0; i < dataChannelList.size(); i++)
