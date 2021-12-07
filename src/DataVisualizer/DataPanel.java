@@ -323,7 +323,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                 break;
             case MouseEvent.MOUSE_MOVED:
                 if ((cursors[0].hPos >= 0) && (Math.abs(cursors[0].xPos - x) < cursorDistance))
-                    this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+                    this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.MOVE_CURSOR));
                 else
                     this.setCursor(cursorDefault);
                 break;
