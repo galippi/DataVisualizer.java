@@ -52,6 +52,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         windowIdxMax++;
         for (int i = 0; i < cursors.length; i++)
             cursors[i] = new Cursor(this);
+        for (int i = 0; i < zoomCursors.length; i++)
+            zoomCursors[i] = new Cursor(this);
         dataImage = new DataImage(this, dataFile, dcl);
 
         //Register for mouse-wheel events on the map area.
@@ -185,6 +187,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
 
     public void mouseHandler(MouseEvent e) {
         dbg.println(19, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
+        final int cursorDistance = 10;
+        final int x = e.getX();
         switch (e.getID())
         {
             case MouseEvent.MOUSE_PRESSED:
@@ -192,11 +196,33 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                 dbg.println(19, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
                 if (e.getButton() == MouseEvent.BUTTON1)
                 {
-                    int x = e.getX();
-                    if (x > dataImage.hOffset)
+                    cursorLast = null;
+                    for (int i = 0; i < cursors.length; i++)
                     {
-                        cursors[0].hPos = (x - dataImage.hOffset) * (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) / dataImage.diagramWidth + dataChannelList.getDataPointIndexMin();
-                        cursorLast = cursors[0];
+                        if (cursors[i].xPos >= 0)
+                        {
+                            int dx = e.getX() - cursors[i].xPos;
+                            if (dx < 0)
+                                dx = -dx;
+                            if (dx < cursorDistance )
+                                cursorLast = cursors[i];
+                        }
+                    }
+                    if (cursorLast != null)
+                    {
+                        if (x >= dataImage.hOffset)
+                        {
+                            cursorLast.xPos = x;
+                            cursorLast.hPos = dataImage.getHPos(x);
+                            repaint();
+                        }
+                    }else
+                    {
+                        zoomCursors[0].xPos = x;
+                        zoomCursors[1].xPos = x;
+                        cursorLast = zoomCursors[1];
+                        // invalidate data cursor
+                        cursors[0].hPos = -1;
                         repaint();
                     }
                 }else
@@ -204,22 +230,72 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                     popup.show(this, e.getX(), e.getY());
             }
             break;
-            case MouseEvent.MOUSE_RELEASED:
-                cursorLast = null;
-                break;
             case MouseEvent.MOUSE_DRAGGED:
             {
                 if (cursorLast != null)
                 {
-                    int x = e.getX();
                     if (x > dataImage.hOffset)
                     {
-                        cursorLast.hPos = (x - dataImage.hOffset) * (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) / dataImage.diagramWidth + dataChannelList.getDataPointIndexMin();
+                        cursorLast.hPos = dataImage.getHPos(x);
+                        cursorLast.xPos = x;
                         repaint();
                     }
                 }
             }
             break;
+            case MouseEvent.MOUSE_RELEASED:
+                if (cursorLast == zoomCursors[1])
+                {
+                    int dx = zoomCursors[1].xPos - zoomCursors[0].xPos;
+                    if (dx < 0)
+                        dx = -dx;
+                    if (dx < cursorDistance)
+                    { // set the reading cursor
+                        cursors[0].xPos = x;
+                        cursors[0].hPos = dataImage.getHPos(x);
+                        repaint();
+                    }else
+                    { // zoom the window
+                        int hMax = -1;
+                        try
+                        {
+                            hMax = dataFile.getLength();
+                        } catch (Exception e1)
+                        {
+                            dbg.println(1, "DataPanel.mouseHandler dataFile.getLength e="+e1.toString());
+                            cursorLast = null;
+                            zoomCursors[0].xPos = -9999;
+                            repaint();
+                            return; /* do nothing */
+                        }
+                        if (zoomCursors[1].xPos < zoomCursors[0].xPos)
+                        {
+                            Cursor tmp = zoomCursors[1];
+                            zoomCursors[1] = zoomCursors[0];
+                            zoomCursors[0] = tmp;
+                        }
+                        int hPosMinNew = dataImage.getHPos(zoomCursors[0].xPos);
+                        int hPosMaxNew = dataImage.getHPos(zoomCursors[1].xPos);
+                        int dH = hPosMaxNew - hPosMinNew;
+                        if (dH < 50)
+                        {
+                            cursorLast = null;
+                            zoomCursors[0].xPos = -9999;
+                            repaint();
+                            return; // over zoomed -> do nothing
+                        }
+                        if (hPosMinNew < 0)
+                            hPosMinNew = 0;
+                        if (hPosMaxNew >= hMax)
+                            hPosMaxNew = hMax - 1;
+                        dataImage.dcl.pointIndexMin = hPosMinNew;
+                        dataImage.dcl.pointIndexMax = hPosMaxNew;
+                        dataImage.repaint();
+                    }
+                }
+                cursorLast = null;
+                zoomCursors[0].xPos = -9999;
+                break;
             case MouseEvent.MOUSE_MOVED:
                 break;
             default:
@@ -325,6 +401,12 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                       g.drawString(valStr, xVal + 1, yVal - 2);
                   }
               }
+          }else
+          if (zoomCursors[0].xPos >= 0)
+          { // draw zoom cursors
+              g.setColor(Color.darkGray);
+              g.drawLine(zoomCursors[0].xPos, 0, zoomCursors[0].xPos, getHeight());
+              g.drawLine(zoomCursors[1].xPos, 0, zoomCursors[1].xPos, getHeight());
           }
           Graphics2D g2 = (Graphics2D)g;
           AffineTransform defaultAt = g2.getTransform();
@@ -376,6 +458,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     int windowIdx;
     static int windowIdxMax = 0;
     Cursor[] cursors = new Cursor[2];
+    Cursor[] zoomCursors = new Cursor[2];
     Cursor cursorLast = null;
     final int maxSignalCountToBeDisplayedByCursor = 2;
 
