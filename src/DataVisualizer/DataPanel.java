@@ -55,6 +55,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         for (int i = 0; i < zoomCursors.length; i++)
             zoomCursors[i] = new Cursor(this);
         dataImage = new DataImage(this, dataFile, dcl);
+        cursorDefault = getCursor();
 
         //Register for mouse-wheel events on the map area.
         addMouseWheelListener(new MouseWheelListener() {
@@ -321,6 +322,10 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                 zoomCursors[0].xPos = -9999;
                 break;
             case MouseEvent.MOUSE_MOVED:
+                if ((cursors[0].hPos >= 0) && (Math.abs(cursors[0].xPos - x) < cursorDistance))
+                    this.setCursor(java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR));
+                else
+                    this.setCursor(cursorDefault);
                 break;
             default:
                 break;
@@ -499,6 +504,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     Cursor[] zoomCursors = new Cursor[2];
     Cursor cursorLast = null;
     final int maxSignalCountToBeDisplayedByCursor = 2;
+    private java.awt.Cursor cursorDefault;
 
     private static final long serialVersionUID = 1062958030431493625L;
 }
