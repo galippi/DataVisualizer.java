@@ -89,6 +89,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
     DataFile dataFile;
     private void openDataFile(String fileName)
     {
+        dataPanelMain.saveDataLayoutFile();
         dataFile = null;
         dataPanelMain.reinit();
         DataFile dataFileTemp = new DataFile(fileName);
