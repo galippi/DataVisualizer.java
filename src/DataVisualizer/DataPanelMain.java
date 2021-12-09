@@ -20,7 +20,9 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
 
     public void reinit()
     {
+        file = null;
         dataPanels.clear();
+        dvlf = null;
         updateLayout();
     }
 
@@ -28,7 +30,6 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     {
         dbg.println(9, "DataPanelMain.loadFile " + filename);
         reinit();
-        dvlf = null;
         file = new DataCache_File();
         file.addActionListener(this);
         file.open(filename);
