@@ -38,6 +38,11 @@ public class DataVisualizerLayoutFileLoader {
             status = Status.LoadingError;
             return;
         }
+        try {
+            cursorsMoveTogether = jsonObject.getBoolean("CursorsMoveTogether");
+        } catch (Exception e) {
+            dbg.dprintf(2, "Exception DataVisualizerLayoutFileLoader - unable to get CursorsMoveTogether (%s)!\n", layoutFileName);
+        }
         status = Status.LoadingOk;
     }
 
@@ -65,6 +70,7 @@ public class DataVisualizerLayoutFileLoader {
         } catch (Exception e) {
             dbg.println(1, "DataVisualizerLayoutFileLoader.ctor file.getLength() exception e=" + e.toString());
         }
+        jsonObject.put("CursorsMoveTogether", cursorsMoveTogether);
     }
 
     public int size()
@@ -136,7 +142,7 @@ public class DataVisualizerLayoutFileLoader {
         }
     }
 
-    public static void saveLayoutFile(String filename, Vector<DataChannelListProvider> dataPanels)
+    public static void saveLayoutFile(String filename, Vector<DataChannelListProvider> dataPanels, boolean cursorsMoveTogether)
     {
         JSONObject json = new JSONObject();
         //json.put("numOfWindows", dataPanels.size());
@@ -167,6 +173,7 @@ public class DataVisualizerLayoutFileLoader {
         json.put("pointIndexMin", 0);
         try {
             json.put("pointIndexMax", dataPanels.get(0).getDataChannelList().file.getLength());
+            json.put("CursorsMoveTogether", cursorsMoveTogether);
         } catch (Exception e) {
             dbg.dprintf(1, "DataVisualizerLayoutFileLoader.saveLayoutFile file.getLength() exception e=%s!\n", e.toString());
         }
@@ -182,4 +189,5 @@ public class DataVisualizerLayoutFileLoader {
             dbg.dprintf(1, "Exception DataVisualizerLayoutFileLoader.saveLayoutFile(%s) e=%s!\n", filename, e.toString());
         }
     }
+    public boolean cursorsMoveTogether;
 }

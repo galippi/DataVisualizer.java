@@ -77,6 +77,9 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
                 panel.setSize(getWidth(), getHeight() / num);
                 add(panel);
             }
+            cursorsTogether = dvlf.cursorsMoveTogether;
+            parent.m_ViewCursorModeTogether.setState(cursorsTogether);
+            parent.m_ViewCursorModeTogether.setEnabled(true);
         }else
             if (parent.m_ViewChannel != null)
                 parent.m_ViewChannel.setEnabled(false);
@@ -150,7 +153,8 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         Vector<DataChannelListProvider> dataPanelsLocal = new Vector<>();
         for (DataPanel dataPanel : dataPanels)
             dataPanelsLocal.add(dataPanel);
-        DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal);
+        //cursorsTogether = parent.m_ViewCursorModeTogether.getState();
+        DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal, cursorsTogether);
     }
 
     public void createNewWindow() {
@@ -186,5 +190,10 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         {
             dataPanel.setHorizontalZoom(hPosMinNew, hPosMaxNew);
         }
+    }
+
+    public void setCursorsTogether(boolean state)
+    {
+        cursorsTogether = state;
     }
 }

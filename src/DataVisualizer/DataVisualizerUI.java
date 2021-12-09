@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -178,6 +179,15 @@ public class DataVisualizerUI extends javax.swing.JFrame
           }
         });
         jMenuView.add(m_ViewChannel);
+        m_ViewCursorModeTogether = new JCheckBoxMenuItem("Move data cursors together");
+        m_ViewCursorModeTogether.setState(true);
+        m_ViewCursorModeTogether.setEnabled(false);
+        m_ViewCursorModeTogether.addActionListener(new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+              dataPanelMain.setCursorsTogether(m_ViewCursorModeTogether.getState());
+          }
+        });
+        jMenuView.add(m_ViewCursorModeTogether);
         JMenuItem m_ViewPreferences = new javax.swing.JMenuItem("Preferences");
         m_ViewPreferences.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -277,8 +287,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private DataPanelMain dataPanelMain;
     javax.swing.JMenuItem m_ViewChannel;
-    /**
-     * 
-     */
+    JCheckBoxMenuItem m_ViewCursorModeTogether;
+
     private static final long serialVersionUID = 4985856149217047613L;
 }
