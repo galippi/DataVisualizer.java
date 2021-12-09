@@ -32,7 +32,7 @@ public class DataImage extends threadImage
     }
 
     public int getY(DataChannelGroup dcg, double val) {
-        return diagHeight - (int)(((val - dcg.offset) * dcg.factor) * img.getHeight() + 0.5);
+        return diagHeight - (int)(((val - dcg.offset) * dcg.factor) * diagHeight + 0.5);
     }
 
     public int getY(DataChannelListItem dcli, double val) {
