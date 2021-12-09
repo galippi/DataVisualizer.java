@@ -479,6 +479,11 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
           }
           g2.setTransform(defaultAt);
         }
+        if (dbg.get(19))
+        {
+            g.setColor(Color.ORANGE);
+            g.drawRect(0, 0, getWidth(), getHeight());
+        }
         g.setColor(Color.BLACK);
         if (dbg.get(19))
             g.drawString("dataPanel ctr=" + ctr, 5, 10);

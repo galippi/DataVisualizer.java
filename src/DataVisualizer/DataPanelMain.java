@@ -100,6 +100,11 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
             g.setColor(Color.GREEN);
             g.fillOval(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 5, getHeight() / 2 - 5);
         }
+        if (dbg.get(19))
+        {
+            g.setColor(Color.BLUE);
+            g.drawRect(0, 0, getWidth(), getHeight());
+        }
         ctr++;
         // cursor drawing
         g.setColor(Color.BLACK);
