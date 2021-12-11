@@ -178,7 +178,13 @@ public class DataChannelList {
                 }
                 cg.valMin = valMin;
                 cg.valMax = valMax;
-                cg.factor = 1.0 / (cg.valMax - cg.valMin) / groupCnt;
+                double deltaVal = (cg.valMax - cg.valMin);
+                if (Math.abs(deltaVal) < 1e-19)
+                {
+                    deltaVal = 1;
+                    cg.valMax = cg.valMin + deltaVal;
+                }
+                cg.factor = 1.0 / deltaVal / groupCnt;
                 cg.offset = cg.valMin - (grpIdx / cg.factor / groupCnt);
                 cg.ySize = 1.0 / groupCnt;
                 cg.yOffset = grpIdx * cg.ySize;
