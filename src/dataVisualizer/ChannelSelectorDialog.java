@@ -310,7 +310,7 @@ JComboBox<String> cb;
 
     public void fillRowData()
     {
-        String filterStr = signalNameFilterText.getText();
+        String filterStr = signalNameFilterText.getText().toLowerCase();
         if (filterStr.isEmpty())
             filterStr = null;
         boolean filterActive = signalVisibilityFilter.isSelected();
@@ -402,7 +402,8 @@ JComboBox<String> cb;
 
     private boolean filterSignalName(String name, String filterStr)
     {
-        return name.contains(filterStr);
+        String nameLowerCase = name.toLowerCase();
+        return nameLowerCase.contains(filterStr);
     }
 
     void okHandler()
