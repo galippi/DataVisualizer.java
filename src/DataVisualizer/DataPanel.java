@@ -31,16 +31,6 @@ class MyPopupMenu extends java.awt.PopupMenu
   int y;
 }
 
-//class EventHandler<T>
-//{
-//  
-//}
-//
-//class ZoomEvent
-//{
-//  
-//}
-
 public class DataPanel extends javax.swing.JPanel implements ActionListener, DataChannelListProvider
 {
     public DataPanel(DataPanelMain _parent, DataCache_File _file, DataChannelList dcl) {
@@ -388,6 +378,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
 
+        final int windowHeight = getHeight();
+
         boolean repaintNeeded = false;
         dbg.println(9, "DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax);
         //g.setColor(Color.BLUE);
@@ -451,6 +443,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
               g.drawLine(zoomCursors[0].xPos, 0, zoomCursors[0].xPos, getHeight());
               g.drawLine(zoomCursors[1].xPos, 0, zoomCursors[1].xPos, getHeight());
           }
+          // drawing legend
           Graphics2D g2 = (Graphics2D)g;
           AffineTransform defaultAt = g2.getTransform();
           AffineTransform at = AffineTransform.getQuadrantRotateInstance(3);
@@ -462,6 +455,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
           {
               final int xStep = 10;
               int x = xStep;
+              double vMin = 1e99;
+              double vMax = -1e99;
               for (int i = 0; i < dataChannelList.size(); i++)
               {
                   DataChannelListItem dcli = dataChannelList.get(i);
@@ -474,7 +469,37 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                       //dbg.println(9, signalName + "=" + textWidth);
                       g2.drawString(signalName, -((int)((1.0 - (cg.ySize / 2 + cg.yOffset)) * getHeight()) + (textWidth / 2)), x);
                       x += xStep;
+                      double vMinSignal = vMin;
+                      double vMaxSignal = vMax;
+                      try {
+                          vMinSignal = dcli.ch.getDoubleMin();
+                          vMaxSignal = dcli.ch.getDoubleMax();
+                      } catch (Exception e) {
+                          // TODO Auto-generated catch block
+                          e.printStackTrace();
+                      }
+                      if (vMin > vMinSignal)
+                          vMin = vMinSignal;
+                      if (vMax < vMaxSignal)
+                          vMax = vMaxSignal;
                   }
+              }
+              // drawing vertical axle
+              int verticalStep = 10;
+              double dv = (vMax - vMin);
+              if (Math.abs(dv) < 1e-19)
+              {
+                  dv = 1;
+                  vMax = vMin + dv;
+                  verticalStep = 2;
+              }
+              g2.drawLine(-dataImage.getY(cg, vMin), x, -dataImage.getY(cg, vMax), x);
+              dv = dv / verticalStep;
+              double val = vMin;
+              for(int y = 0; y < verticalStep; val += dv, y++)
+              {
+                  final int scaleSize = 3;
+                  g2.drawLine(-dataImage.getY(cg, val), x - scaleSize, -dataImage.getY(cg, val), x + scaleSize);
               }
           }
           g2.setTransform(defaultAt);
