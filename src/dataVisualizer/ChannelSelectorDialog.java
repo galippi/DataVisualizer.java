@@ -280,27 +280,6 @@ JComboBox<String> cb;
             signalDataIsUpdated = false;
         }
         fillRowData();
-//        if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED)
-//        { // hide all not visible signals
-//            DefaultTableModel model = (DefaultTableModel)myTable.getModel();
-//            //for (int i = 0; i < myTable.getRowCount(); i++)
-//            for (int i = myTable.getRowCount() - 1; i >= 0; i--)
-//            {
-//                if (!myTable.isSignalVisible(i))
-//                {
-//                    //myTable.setRowHeight(0);
-//                    model.removeRow(i);
-//                }
-//            }
-//        }else
-//        { // show all signals
-//            if (signalDataIsUpdated)
-//            {
-//                updateLocalColArray();
-//                signalDataIsUpdated = false;
-//            }
-//            fillRowData();
-//        }
     }
 
     private void updateLocalColArray()
@@ -473,6 +452,17 @@ JComboBox<String> cb;
             jcSignalGroup.addItem(groupNames[i]);
         }
         jcSignalGroup.setSelectedItem(groupName);
+        lGroupName.setText(groupName);
+        DataChannelGroup group = colArray.groupMap.get(groupName);
+        if (group != null)
+        {
+            tGroupFactor.setText(""+group.factor);
+            tGroupOffset.setText(""+group.offset); 
+        }else
+        {
+            tGroupFactor.setText("");
+            tGroupOffset.setText(""); 
+        }
     }
 
     private void updateSignalGroupName(String groupName) {
