@@ -1,9 +1,12 @@
 package dataVisualizer;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
+
+import javax.swing.JSplitPane;
 
 import dataCache.DataCache_File;
 import dataCache.DataCache_State;
@@ -71,13 +74,25 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
             }
             int num = dataPanels.size();
             parent.m_ViewChannel.setEnabled(num == 1 ? true : false);
+            javax.swing.JComponent prev = null;
             for (int i = 0; i < num; i++)
             {
                 DataPanelContainer panel = dataPanels.get(i);
-                panel.setLocation(0, i * getHeight() / num);
-                panel.setSize(getWidth(), getHeight() / num);
-                add(panel);
+                //panel.setLocation(0, i * getHeight() / num);
+                //panel.setSize(getWidth(), getHeight() / num);
+                //add(panel);
+                if (prev != null)
+                {
+                    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, prev, panel);
+                    prev = splitPane;
+                    splitPane.setDividerLocation(150);
+                    //splitPane.setResizeWeight(0.5);
+                }else
+                    prev = panel;
             }
+            this.setLayout(new BorderLayout());
+            add(prev, BorderLayout.CENTER);
+            parent.revalidate();
             cursorsTogether = dvlf.cursorsMoveTogether;
             parent.m_ViewCursorModeTogether.setState(cursorsTogether);
             parent.m_ViewCursorModeTogether.setEnabled(true);
