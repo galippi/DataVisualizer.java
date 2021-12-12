@@ -237,7 +237,13 @@ public class ChannelListEditorTable extends JTable {
 
     public void setSignalGroupName(String groupName) {
         int row = getSelectedRow();
+        if (groupName == null || row < 0)
+            return;
         setValueAt(groupName, row, colGroupName);
+        if (groupName.equals(hidden.name))
+            setValueAt(false, row, colVisibility);
+        else
+            setValueAt(true, row, colVisibility);
     }
 
     public void askSignalColor() {

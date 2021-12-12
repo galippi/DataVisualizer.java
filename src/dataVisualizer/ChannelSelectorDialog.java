@@ -166,6 +166,7 @@ JComboBox<String> cb;
     jcSignalGroup = new JComboBox<String>();
     jcSignalGroup.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e) {
+            dbg.println(9, "ChannelSelectorDialog.jcSignalGroup.actionPerformed e="+e.toString());
             String groupName = (String)jcSignalGroup.getSelectedItem();
             updateSignalGroupName(groupName);
             signalDataIsUpdated = true;
@@ -448,6 +449,7 @@ JComboBox<String> cb;
 
     void setSignalProperties(String name, Color color, String groupName, String[] groupNames)
     {
+        dbg.println(11, "ChannelSelectorDialog.setSignalProperties name="+name);
         lSignalName.setText(name);
         jpSignalColor.setBackground(color);
         jcSignalGroup.removeAllItems();
@@ -470,6 +472,7 @@ JComboBox<String> cb;
     }
 
     private void updateSignalGroupName(String groupName) {
+        dbg.println(11, "ChannelSelectorDialog.updateSignalGroupName groupName="+groupName);
         myTable.setSignalGroupName(groupName);
     }
 
