@@ -13,7 +13,6 @@ public class DataChannelList {
     DataCache_ChannelBase horizontalAxle;
     Vector<DataChannelListItem> dataChannels = new Vector<>();
     TreeMap<String, DataChannelListItem> mapName = new TreeMap<>();
-    Vector<DataChannelListUpdateCallback> updateCallbacks = new Vector<>();
     Vector<ActionListener> actionListeners = new Vector<>();
     DataCache_File file;
     int groupCnt = -1;
@@ -95,12 +94,9 @@ public class DataChannelList {
     {
         horizontalAxle = file.getChannel(colName);
     }
+
     public void updateCallbacksExecute()
     {
-        for(int i = 0; i < updateCallbacks.size(); i++)
-        {
-            updateCallbacks.get(i).callBack(this);
-        }
         for(ActionListener al: actionListeners)
         {
             al.actionPerformed(null);
