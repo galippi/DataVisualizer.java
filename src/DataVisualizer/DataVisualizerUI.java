@@ -215,8 +215,8 @@ public class DataVisualizerUI extends javax.swing.JFrame
     private void m_ViewChannelActionPerformed(java.awt.event.ActionEvent evt)
     {
         dbg.println(9, "m_ViewChannelActionPerformed");
-        DataPanel dataPanel = dataPanelMain.dataPanels.get(0);
-        ChannelSelectorDialog csd = new ChannelSelectorDialog(this, dataPanelMain.file, dataPanel.dataChannelList);
+        DataPanelContainer dataPanel = dataPanelMain.dataPanels.get(0);
+        ChannelSelectorDialog csd = new ChannelSelectorDialog(this, dataPanelMain.file, dataPanel.getDataChannelList());
         csd.setVisible(true);
     }
 

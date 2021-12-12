@@ -58,7 +58,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
                     for (int i = 0; i < dvlf.size(); i++)
                     {
                         try {
-                            dataPanels.add(new DataPanel(this, file, dvlf.getDataChannelList(i, file)));
+                            dataPanels.add(new DataPanelContainer(this, file, dvlf.getDataChannelList(i, file)));
                         } catch (Exception e) {
                             dbg.dprintf(1, "Exception: updateLayout i=%d!\n", i);
                         }
@@ -73,7 +73,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
             parent.m_ViewChannel.setEnabled(num == 1 ? true : false);
             for (int i = 0; i < num; i++)
             {
-                DataPanel panel = dataPanels.get(i);
+                DataPanelContainer panel = dataPanels.get(i);
                 panel.setLocation(0, i * getHeight() / num);
                 panel.setSize(getWidth(), getHeight() / num);
                 add(panel);
@@ -123,7 +123,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     }
     int ctr = 0;
 
-    Vector<DataPanel> dataPanels = new Vector<>();
+    Vector<DataPanelContainer> dataPanels = new Vector<>();
     DataCache_File file;
     DataVisualizerLayoutFileLoader dvlf;
     boolean cursorsTogether = true;
@@ -157,14 +157,14 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
             return;
         }
         Vector<DataChannelListProvider> dataPanelsLocal = new Vector<>();
-        for (DataPanel dataPanel : dataPanels)
+        for (DataPanelContainer dataPanel : dataPanels)
             dataPanelsLocal.add(dataPanel);
         //cursorsTogether = parent.m_ViewCursorModeTogether.getState();
         DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal, cursorsTogether);
     }
 
     public void createNewWindow() {
-        dataPanels.add(new DataPanel(this, file, new DataChannelList(file)));
+        dataPanels.add(new DataPanelContainer(this, file, new DataChannelList(file)));
         updateLayout();
     }
 
@@ -176,15 +176,15 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     public void setBackgroundColor(Color backgroundColor)
     {
         bgColor = backgroundColor;
-        for (DataPanel dataPanel : dataPanels)
-            dataPanel.dataImage.repaint();
+        for (DataPanelContainer dataPanel : dataPanels)
+            dataPanel.repaintRequest();
     }
 
     Color bgColor = DataVisualizerPrefs.getBackgroundColor(new Color(0, 0, 0));
 
     void setDataCursor(int cursorIdx, int x)
     {
-        for (DataPanel dataPanel: dataPanels)
+        for (DataPanelContainer dataPanel: dataPanels)
         {
             dataPanel.setDataCursor(cursorIdx, x);
         }
@@ -192,7 +192,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
 
     public void setHorizontalZoom(int hPosMinNew, int hPosMaxNew)
     {
-        for (DataPanel dataPanel: dataPanels)
+        for (DataPanelContainer dataPanel: dataPanels)
         {
             dataPanel.setHorizontalZoom(hPosMinNew, hPosMaxNew);
         }
