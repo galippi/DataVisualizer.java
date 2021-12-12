@@ -25,7 +25,7 @@ class MyTableModel extends javax.swing.table.DefaultTableModel {
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         dbg.println(9, "isCellEditable rowIndex=" + rowIndex + " columnIndex=" + columnIndex);
-        return false;
+        return (columnIndex == 3);
     }
 
     /**
@@ -82,16 +82,35 @@ class Groups
 
 public class ChannelListEditorTable extends JTable {
     DataChannelGroup hidden = new DataChannelGroup(Groups.notVisible);
-    static final String[] columnNames = new String[]{"Signal name", "Signal color", "Group name"};
+    static final String[] columnNames = new String[]{"Signal name", "Signal color", "Group name", "Visibility"};
     static final int colSignalName = 0;
     static final int colSignalColor = 1;
     static final int colGroupName = 2;
+    static final int colVisibility = 3;
     ChannelSelectorDialog parent;
     Groups groupNames;
 
     public ChannelListEditorTable(ChannelSelectorDialog _parent, DataCache_File file, DataChannelList colArray)
     {
-        super(new MyTableModel(0, columnNames.length));
+        super(new MyTableModel(0, columnNames.length) {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                Class clazz;
+                switch (columnIndex) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        clazz = String.class;
+                        break;
+                    case colVisibility:
+                        clazz = Boolean.class;
+                        break;
+                    default:
+                        clazz = Integer.class;
+              }
+              return clazz;
+            }
+        });
         parent = _parent;
 
         groupNames = new Groups(colArray);
@@ -170,6 +189,20 @@ public class ChannelListEditorTable extends JTable {
                     {
                         askSignalColor();
                     }
+                }else
+                {
+                    if (colAtPoint == colVisibility)
+                    {
+                        Boolean val = (Boolean)getValueAt(rowAtPoint, colVisibility);
+                        if (val)
+                        {
+                            setValueAt(getValueAt(rowAtPoint, colSignalName), rowAtPoint, colGroupName);
+                        }else
+                        {
+                            setValueAt(hidden.name, rowAtPoint, colGroupName);
+                        }
+                    }
+                    updateParent(rowAtPoint);
                 }
             }
         }

@@ -323,18 +323,22 @@ JComboBox<String> cb;
                 DataChannelListItem dcli = colArrayLocal.get(chName);
                 Color color;
                 DataChannelGroup dcg;
+                boolean isVisible;
                 if (dcli != null)
                 {
                     color = dcli.color;
                     dcg = colArrayLocal.getGroup(dcli.group);
+                    isVisible = true;
                 }else
                 {
                     color = Color.WHITE;
                     dcg = myTable.hidden;
+                    isVisible = false;
                 }
                 myTable.setValueAt(chName, rowIdx, myTable.colSignalName);
                 myTable.setValueAt(color, rowIdx, myTable.colSignalColor);
                 myTable.setValueAt(dcg.name, rowIdx, myTable.colGroupName);
+                myTable.setValueAt(isVisible, rowIdx, myTable.colVisibility);
                 rowIdx++;
             }
         }
