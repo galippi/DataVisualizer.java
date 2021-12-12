@@ -11,11 +11,16 @@ import utils.dbg;
 
 public class DataPanelContainer extends javax.swing.JPanel implements DataChannelListProvider
 {
+    static int windowIdxMax = 0;
+    int windowIdx;
     DataPanelContainer(DataPanelMain parent, DataCache_File file, DataChannelList dcl)
     {
         super(new BorderLayout());
+        windowIdx = windowIdxMax;
+        windowIdxMax++;
         dataPanelLegend = new DataPanelLegend(parent, file, dcl);
-        dataPanel = new DataPanel(parent, file, dcl);
+        //dataPanelLegend = new DataPanelLegendValue(parent, file, dcl);
+        dataPanel = new DataPanel(this, parent, file, dcl);
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dataPanelLegend, dataPanel);
         splitPane.setOneTouchExpandable(true);
         splitPane.setContinuousLayout(true);
@@ -29,6 +34,10 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
         parent.revalidate();
     }
 
+    public int getWindowIdx() {
+        return windowIdx;
+    }
+
     @Override
     public DataChannelList getDataChannelList() {
         return dataPanel.getDataChannelList();
@@ -38,8 +47,9 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
         dataPanel.dataImage.repaint();
     }
 
-    public void setDataCursor(int cursorIdx, int x) {
+    public void setDataCursor(int cursorIdx, int x, int hPos) {
         dataPanel.setDataCursor(cursorIdx, x);
+        dataPanelLegend.setDataCursor(hPos);
     }
 
     public void setHorizontalZoom(int hPosMinNew, int hPosMaxNew) {

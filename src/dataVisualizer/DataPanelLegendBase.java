@@ -15,5 +15,9 @@ public class DataPanelLegendBase extends JPanel
         dataChannelList = dcl;
     }
 
+    public void setDataCursor(int cursorIdx) {
+        // do nothing
+    }
+
     private static final long serialVersionUID = 5780266995631515871L;
 }

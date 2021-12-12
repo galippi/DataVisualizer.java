@@ -33,7 +33,9 @@ class MyPopupMenu extends java.awt.PopupMenu
 
 public class DataPanel extends javax.swing.JPanel implements ActionListener, DataChannelListProvider
 {
-    public DataPanel(DataPanelMain _parent, DataCache_File _file, DataChannelList dcl) {
+    DataPanelContainer dpc;
+    public DataPanel(DataPanelContainer dpc, DataPanelMain _parent, DataCache_File _file, DataChannelList dcl) {
+        this.dpc = dpc;
         parent = _parent;
         dataFile = _file;
         dataChannelList = dcl;
@@ -235,16 +237,15 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                     {
                         cursorLast.hPos = dataImage.getHPos(x);
                         cursorLast.xPos = x;
-                        if ((parent.cursorsTogether) && ((cursorLast == cursors[0]) || (cursorLast == cursors[1])))
+                        if ((cursorLast == cursors[0]) || (cursorLast == cursors[1]))
                         {
                             int cursorIdx;
                             if (cursorLast == cursors[0])
                                 cursorIdx = 0;
                             else
                                 cursorIdx = 1;
-                            parent.setDataCursor(cursorIdx, x);
-                        }else
-                            repaint();
+                            parent.setDataCursor(getWindowIdx(), cursorIdx, x, cursorLast.hPos);
+                        }
                     }
                 }
             }
@@ -259,12 +260,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                     { // set the reading cursor
                         cursors[0].xPos = x;
                         cursors[0].hPos = dataImage.getHPos(x);
-                        if (parent.cursorsTogether)
-                        {
-                            int cursorIdx = 0;
-                            parent.setDataCursor(cursorIdx, x);
-                        }else
-                            repaint();
+                        parent.setDataCursor(getWindowIdx(), 0, x, cursors[0].hPos);
                     }else
                     { // zoom the window
                         int hMax = -1;
@@ -322,13 +318,16 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         }
     }
 
+    private int getWindowIdx() {
+        return dpc.getWindowIdx();
+    }
+
     void setDataCursor(int cursorIdx, int x)
     {
         cursors[cursorIdx].xPos = x;
         cursors[cursorIdx].hPos = dataImage.getHPos(x);
         repaint();
     }
-
 
     public void setHorizontalZoom(int hPosMinNew, int hPosMaxNew)
     {

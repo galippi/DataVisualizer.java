@@ -182,11 +182,12 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
 
     Color bgColor = DataVisualizerPrefs.getBackgroundColor(new Color(0, 0, 0));
 
-    void setDataCursor(int cursorIdx, int x)
+    void setDataCursor(int windowIdx, int cursorIdx, int x, int hPos)
     {
         for (DataPanelContainer dataPanel: dataPanels)
         {
-            dataPanel.setDataCursor(cursorIdx, x);
+            if ((cursorsTogether) || (dataPanel.windowIdx == windowIdx))
+                dataPanel.setDataCursor(cursorIdx, x, hPos);
         }
     }
 
