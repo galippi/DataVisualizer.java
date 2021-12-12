@@ -1,21 +1,15 @@
 package dataVisualizer;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-
-import javax.swing.JPanel;
 
 import dataCache.DataCache_File;
 import utils.dbg;
 
-public class DataPanelLegend extends JPanel {
-    DataChannelList dataChannelList;
-    DataPanelMain parent;
+public class DataPanelLegend extends DataPanelLegendBase {
     public DataPanelLegend(DataPanelMain parent, DataCache_File file, DataChannelList dcl)
     {
-        this.parent = parent;
-        dataChannelList = dcl;
+        super(parent, file, dcl);
     }
 
     int diagHeight = 1;

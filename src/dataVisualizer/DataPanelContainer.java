@@ -31,9 +31,7 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
 
     @Override
     public DataChannelList getDataChannelList() {
-        dbg.println(1, "DataPanelContainer.getDataChannelList not implemented code!");
-        System.exit(1);
-        return null;
+        return dataPanel.getDataChannelList();
     }
 
     public void repaintRequest() {
@@ -64,7 +62,7 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
         }
     }
 
-    DataPanelLegend dataPanelLegend;
+    DataPanelLegendBase dataPanelLegend;
     DataPanel dataPanel;
     JSplitPane splitPane;
 
