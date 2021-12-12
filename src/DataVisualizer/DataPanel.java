@@ -409,7 +409,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
               final int x = (cursors[0].hPos - dataChannelList.getDataPointIndexMin()) * dataImage.diagramWidth / (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) + dataImage.hOffset;
               g.drawLine(x, 0, x, getHeight());
               cursors[0].xPos = x;
-              if (dataChannelList.size() <= maxSignalCountToBeDisplayedByCursor)
+              if (dataChannelList.size() <= DataVisualizerPrefs.getDataCursorMaxChannel())
               { // displaying signal value
                   for (int i = 0; i < dataChannelList.size(); i++)
                   {
@@ -473,7 +473,6 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     Cursor[] cursors = new Cursor[2];
     Cursor[] zoomCursors = new Cursor[2];
     Cursor cursorLast = null;
-    final int maxSignalCountToBeDisplayedByCursor = 2;
     private java.awt.Cursor cursorDefault;
 
     private static final long serialVersionUID = 1062958030431493625L;

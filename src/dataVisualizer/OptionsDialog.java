@@ -49,6 +49,7 @@ public class OptionsDialog extends JDialog {
   final int colDebugLevel = 1;
   final int rowBackgroundColor = 1;
   final int colBackgroundColor = 1;
+  final int rowDataCursorMaxChannel = 2;
 
   DataVisualizerUI parent;
 
@@ -59,12 +60,13 @@ public class OptionsDialog extends JDialog {
     this.setTitle("Options");
 
     //create table with data
-    table = new JTable(new DefaultTableModel(2, 2) {
+    table = new JTable(new DefaultTableModel(3, 2) {
         @Override
         public boolean isCellEditable(int row, int column)
         {
             return (column == 1);
         }
+        private static final long serialVersionUID = 2641690847759012960L;
     });
     javax.swing.table.TableColumnModel columnModel = table.getColumnModel();
     for (int i = 0; i < columnNames.length; i++)
@@ -80,6 +82,8 @@ public class OptionsDialog extends JDialog {
     table.setValueAt("" + dbg.get(), 0, 1);
     table.setValueAt("Background color", 1, 0);
     table.setValueAt(DataVisualizerPrefs.getBackgroundColor(new Color(0, 0, 0)), 1, 1);
+    table.setValueAt("Maximum number of channels", rowDataCursorMaxChannel, 0);
+    table.setValueAt(DataVisualizerPrefs.getDataCursorMaxChannel(), rowDataCursorMaxChannel, 1);
 
     table.addMouseListener(new MouseListener() {
         @Override
@@ -192,9 +196,19 @@ public class OptionsDialog extends JDialog {
     boolean closable = true;
     int level = -1;
     Color backgroundColor = null;
+    int dataCursorMaxChannel = 0;
     try {
       level = Integer.parseInt((String) table.getValueAt(rowDebugLevel, colDebugLevel));
       backgroundColor = (Color)table.getValueAt(rowBackgroundColor, colBackgroundColor);
+      dataCursorMaxChannel = Integer.parseInt((String) table.getValueAt(rowDataCursorMaxChannel, 1));
+    }catch (NumberFormatException e)
+    {
+      dbg.println(2, "OptionDialog.okHandler.NumberFormatException="+e.toString());
+      closable = false;
+    }
+
+    try {
+        
     }catch (NumberFormatException e)
     {
       dbg.println(2, "OptionDialog.okHandler.NumberFormatException="+e.toString());
@@ -208,6 +222,8 @@ public class OptionsDialog extends JDialog {
 
         DataVisualizerPrefs.putBackgroundColor(backgroundColor);
         parent.setBackgroundColor(backgroundColor);
+
+        DataVisualizerPrefs.putDataCursorMaxChannel(dataCursorMaxChannel);
 
         DataVisualizerPrefs.put("OptionsDialogX", getX());
         DataVisualizerPrefs.put("OptionsDialogY", getY());

@@ -102,5 +102,17 @@ public class DataVisualizerPrefs {
       put(backgroundColorPrefsStr, backgroundColor);
   }
 
+  static final String dataCursorMaxChannelPrefsStr = "DataCursorMaxChannel";
+  static int dataCursorMaxChannel = -1;
+  public static int getDataCursorMaxChannel() {
+      if (dataCursorMaxChannel < 0)
+          dataCursorMaxChannel = get(dataCursorMaxChannelPrefsStr, 2);
+      return dataCursorMaxChannel;
+  }
+  public static void putDataCursorMaxChannel(int val) {
+      dataCursorMaxChannel = val;
+      put(dataCursorMaxChannelPrefsStr, val);
+  }
+
   static final String root = "DataVisualizer";
 }
