@@ -382,6 +382,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
 
         boolean repaintNeeded = false;
         dbg.println(9, "DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax);
+        Graphics2D g2 = (Graphics2D)g;
         //g.setColor(Color.BLUE);
         //g.fillRect(0, 0, getWidth(), getHeight());
         ctr++;
@@ -443,66 +444,6 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
               g.drawLine(zoomCursors[0].xPos, 0, zoomCursors[0].xPos, getHeight());
               g.drawLine(zoomCursors[1].xPos, 0, zoomCursors[1].xPos, getHeight());
           }
-          // drawing legend
-          Graphics2D g2 = (Graphics2D)g;
-          AffineTransform defaultAt = g2.getTransform();
-          AffineTransform at = AffineTransform.getQuadrantRotateInstance(3);
-          g2.setTransform(at);
-          g.setColor(Color.BLACK);
-          //g2.drawString("Vertical string", -100, 10);
-          java.util.Vector<DataChannelGroup> groups = dataChannelList.getGroups();
-          for(DataChannelGroup cg: groups)
-          {
-              final int xStep = 10;
-              int x = xStep;
-              double vMin = 1e99;
-              double vMax = -1e99;
-              for (int i = 0; i < dataChannelList.size(); i++)
-              {
-                  DataChannelListItem dcli = dataChannelList.get(i);
-                  if (cg.name.equals(dcli.group))
-                  {
-                      g.setColor(dcli.color);
-                      java.awt.FontMetrics metrics = g.getFontMetrics();
-                      String signalName = dcli.getSignalName();
-                      int textWidth = metrics.stringWidth(signalName);
-                      //dbg.println(9, signalName + "=" + textWidth);
-                      g2.drawString(signalName, -((int)((1.0 - (cg.ySize / 2 + cg.yOffset)) * getHeight()) + (textWidth / 2)), x);
-                      x += xStep;
-                      double vMinSignal = vMin;
-                      double vMaxSignal = vMax;
-                      try {
-                          vMinSignal = dcli.ch.getDoubleMin();
-                          vMaxSignal = dcli.ch.getDoubleMax();
-                      } catch (Exception e) {
-                          // TODO Auto-generated catch block
-                          e.printStackTrace();
-                      }
-                      if (vMin > vMinSignal)
-                          vMin = vMinSignal;
-                      if (vMax < vMaxSignal)
-                          vMax = vMaxSignal;
-                  }
-              }
-              // drawing vertical axle
-              int verticalStep = 10;
-              double dv = (vMax - vMin);
-              if (Math.abs(dv) < 1e-19)
-              {
-                  dv = 1;
-                  vMax = vMin + dv;
-                  verticalStep = 2;
-              }
-              g2.drawLine(-dataImage.getY(cg, vMin), x, -dataImage.getY(cg, vMax), x);
-              dv = dv / verticalStep;
-              double val = vMin;
-              for(int y = 0; y < verticalStep; val += dv, y++)
-              {
-                  final int scaleSize = 3;
-                  g2.drawLine(-dataImage.getY(cg, val), x - scaleSize, -dataImage.getY(cg, val), x + scaleSize);
-              }
-          }
-          g2.setTransform(defaultAt);
         }
         if (dbg.get(19))
         {

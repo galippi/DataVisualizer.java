@@ -67,7 +67,7 @@ public class DataImage extends threadImage
         }
         {
             diagHeight = imgHeight - hScaleHeight;
-            hOffset = 40;
+            hOffset = 0;
             diagramWidth = imgWidth - hOffset;
             if (dbg.get(19))
             {
