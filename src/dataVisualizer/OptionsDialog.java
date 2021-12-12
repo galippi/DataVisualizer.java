@@ -83,7 +83,7 @@ public class OptionsDialog extends JDialog {
     table.setValueAt("Background color", 1, 0);
     table.setValueAt(DataVisualizerPrefs.getBackgroundColor(new Color(0, 0, 0)), 1, 1);
     table.setValueAt("Maximum number of channels", rowDataCursorMaxChannel, 0);
-    table.setValueAt(DataVisualizerPrefs.getDataCursorMaxChannel(), rowDataCursorMaxChannel, 1);
+    table.setValueAt("" + DataVisualizerPrefs.getDataCursorMaxChannel(), rowDataCursorMaxChannel, 1);
 
     table.addMouseListener(new MouseListener() {
         @Override
@@ -201,14 +201,6 @@ public class OptionsDialog extends JDialog {
       level = Integer.parseInt((String) table.getValueAt(rowDebugLevel, colDebugLevel));
       backgroundColor = (Color)table.getValueAt(rowBackgroundColor, colBackgroundColor);
       dataCursorMaxChannel = Integer.parseInt((String) table.getValueAt(rowDataCursorMaxChannel, 1));
-    }catch (NumberFormatException e)
-    {
-      dbg.println(2, "OptionDialog.okHandler.NumberFormatException="+e.toString());
-      closable = false;
-    }
-
-    try {
-        
     }catch (NumberFormatException e)
     {
       dbg.println(2, "OptionDialog.okHandler.NumberFormatException="+e.toString());
