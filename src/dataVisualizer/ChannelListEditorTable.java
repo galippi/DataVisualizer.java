@@ -182,7 +182,8 @@ public class ChannelListEditorTable extends JTable {
             dbg.dprintf(9, "  rowAtPoint=%d colAtPoint=%d\n", rowAtPoint, colAtPoint);
             if (rowAtPoint >= 0) {
                 setRowSelectionInterval(rowAtPoint, rowAtPoint);
-                updateParent(rowAtPoint);
+                if ((colAtPoint != colVisibility) || (evt.getButton() != MouseEvent.BUTTON1))
+                    updateParent(rowAtPoint);
                 if (evt.getButton() == MouseEvent.BUTTON3)
                 {
                     if (colAtPoint == colSignalColor)
@@ -194,15 +195,20 @@ public class ChannelListEditorTable extends JTable {
                     if (colAtPoint == colVisibility)
                     {
                         Boolean val = (Boolean)getValueAt(rowAtPoint, colVisibility);
+                        dbg.println(11, "ChannelListEditorTable.mouseHandler colVisibility val="+val);
+                        String groupName;
                         if (val)
                         {
-                            setValueAt(getValueAt(rowAtPoint, colSignalName), rowAtPoint, colGroupName);
+                            groupName = (String)getValueAt(rowAtPoint, colSignalName);
+                            setValueAt(groupName, rowAtPoint, colGroupName);
                         }else
                         {
-                            setValueAt(hidden.name, rowAtPoint, colGroupName);
+                            groupName = hidden.name;
+                            setValueAt(groupName, rowAtPoint, colGroupName);
                         }
+                        updateParent(rowAtPoint);
+                        //parent.updateSelectedGroupName(groupName);
                     }
-                    updateParent(rowAtPoint);
                 }
             }
         }
