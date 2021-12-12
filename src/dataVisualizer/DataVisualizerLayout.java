@@ -22,7 +22,7 @@ public class DataVisualizerLayout {
             }
             if (dvlfi.size() < 1)
             {
-                dbg.dprintf(1, "DataVisualizerLayout.checkConsistency dvlfi.size(%d)=%d!\n", i, dvlf.size());
+                dbg.dprintf(1, "DataVisualizerLayout.checkConsistency dvlfi.size(%d)=%d!\n", i, dvlfi.size());
                 return false;
             }
             for (int j = 0; j < dvlfi.size(); j++)
