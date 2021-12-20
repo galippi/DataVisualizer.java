@@ -13,6 +13,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 
 import dataCache.DataCache_File;
+import utils.Sprintf;
 import utils.dbg;
 
 class MyPopupMenu extends java.awt.PopupMenu
@@ -418,7 +419,12 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                       String unit = dcli.ch.getUnit();
                       if (!unit.isEmpty())
                           unit = " " + unit;
-                      String valStr = " " + val + unit + " ";
+                      String valStr = " ";
+                      if ((Math.abs(val - (int)val) < 1e-12) && (Math.abs(val) < 1000000))
+                          valStr = valStr + (int)val;
+                      else
+                          valStr = valStr + Sprintf.sprintf("%4.2f", val);
+                      valStr = valStr + unit + " ";
                       g.setColor(dcli.color);
                       java.awt.FontMetrics metrics = g.getFontMetrics();
                       int fontHgt = metrics.getHeight();
