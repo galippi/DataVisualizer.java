@@ -28,6 +28,7 @@ public class DataPanelLegend extends DataPanelLegendBase {
         g.setColor(Color.BLACK);
         //g2.drawString("Vertical string", -100, 10);
         java.util.Vector<DataChannelGroup> groups = dataChannelList.getGroups();
+        java.awt.FontMetrics metrics = g.getFontMetrics();
         for(DataChannelGroup cg: groups)
         {
             final int xStep = 10;
@@ -40,7 +41,6 @@ public class DataPanelLegend extends DataPanelLegendBase {
                 if (cg.name.equals(dcli.group))
                 {
                     g.setColor(dcli.color);
-                    java.awt.FontMetrics metrics = g.getFontMetrics();
                     String signalName = dcli.getSignalName();
                     int textWidth = metrics.stringWidth(signalName);
                     //dbg.println(9, signalName + "=" + textWidth);
@@ -62,22 +62,42 @@ public class DataPanelLegend extends DataPanelLegendBase {
                 }
             }
             // drawing vertical axle
-            int verticalStep = 10;
-            double dv = (vMax - vMin);
-            if (Math.abs(dv) < 1e-19)
-            {
-                dv = 1;
-                vMax = vMin + dv;
-                verticalStep = 2;
+            ScaleData sd = new ScaleData(vMin, vMax, 2, 10, false);
+            int verticalStep = sd.num;
+            double dv = sd.step;
+            boolean scaleValInteger;
+            if (sd.num * sd.step >= 100)
+                scaleValInteger = true;
+            else
+                scaleValInteger = false;
+            final int scaleValWidth = 30;
+            if (sd.scale != 0)
+            { // draw scale factor
+                String scaleFactor = "x 1e" + sd.scale;
+                int textWidth = metrics.stringWidth(scaleFactor);
+                int y = -(int)((1.0 - (cg.ySize / 2 + cg.yOffset)) * getHeight());
+                g2.drawString(scaleFactor, y + (textWidth / 2), x);
+                x += 8;
             }
-            g2.drawLine(-getY(cg, vMin), x, -getY(cg, vMax), x);
-            dv = dv / verticalStep;
+            final int scaleLineX = x + scaleValWidth;
             double val = vMin;
-            for(int y = 0; y < verticalStep; val += dv, y++)
+            for(int j = 0; j < verticalStep; val += dv, j++)
             {
+                int y = -getY(cg, val);
+                String scaleVal;
+                if (scaleValInteger)
+                    scaleVal = "" + (int)val;
+                else
+                    scaleVal = "" + val;
+                int textWidth = metrics.stringWidth(scaleVal);
+                g2.setTransform(defaultAt);
+                g2.drawString(scaleVal, scaleLineX - textWidth, -y);
+                g2.setTransform(at);
                 final int scaleSize = 3;
-                g2.drawLine(-getY(cg, val), x - scaleSize, -getY(cg, val), x + scaleSize);
+                g2.drawLine(y, scaleLineX - scaleSize, y, scaleLineX + scaleSize);
             }
+            x += scaleValWidth;
+            g2.drawLine(-getY(cg, vMin), x, -getY(cg, vMax), x);
         }
         g2.setTransform(defaultAt);
         if (dbg.get(19))
