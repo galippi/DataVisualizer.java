@@ -31,7 +31,7 @@ public class DataPanelLegend extends DataPanelLegendBase
         //g2.drawString("Vertical string", -100, 10);
         java.util.Vector<DataChannelGroup> groups = dataChannelList.getGroups();
         java.awt.FontMetrics metrics = g.getFontMetrics();
-        int scaleMax = Math.max(2, Math.min(10, (getHeight() / 20) / groups.size()));
+        int scaleMax = Math.max(2, Math.min(10, (diagHeight / 20) / groups.size()));
         for(DataChannelGroup cg: groups)
         {
             final int xStep = 10;
@@ -47,7 +47,7 @@ public class DataPanelLegend extends DataPanelLegendBase
                     String signalName = dcli.getSignalName();
                     int textWidth = metrics.stringWidth(signalName);
                     //dbg.println(9, signalName + "=" + textWidth);
-                    g2.drawString(signalName, -((int)((1.0 - (cg.ySize / 2 + cg.yOffset)) * getHeight()) + (textWidth / 2)), x);
+                    g2.drawString(signalName, -((int)((1.0 - (cg.ySize / 2 + cg.yOffset)) * diagHeight) + (textWidth / 2)), x);
                     x += xStep;
                     double vMinSignal = vMin;
                     double vMaxSignal = vMax;
@@ -78,7 +78,8 @@ public class DataPanelLegend extends DataPanelLegendBase
             { // draw scale factor
                 String scaleFactor = "x 1e" + sd.scale;
                 int textWidth = metrics.stringWidth(scaleFactor);
-                int y = -(int)((1.0 - (cg.ySize / 2 + cg.yOffset)) * getHeight());
+                //int y = -(int)((1.0 - (cg.ySize / 2 + cg.yOffset)) * diagHeight);
+                int y = getY(cg, (vMin + vMax) / 2);
                 g2.drawString(scaleFactor, y + (textWidth / 2), x);
                 x += 8;
             }
@@ -106,11 +107,11 @@ public class DataPanelLegend extends DataPanelLegendBase
         if (dbg.get(19))
         {
             g.setColor(Color.RED);
-            g.fillRect(0, 0, getWidth(), getHeight());
+            g.fillRect(0, 0, getWidth(), diagHeight);
             //g2.setBackground(Color.GREEN);
-            //g.clearRect(0, 0, getWidth(), getHeight());
+            //g.clearRect(0, 0, getWidth(), diagHeight);
             g.setColor(Color.GREEN);
-            g.fillOval(getWidth() / 2, getHeight() / 2, getWidth() / 2 - 5, getHeight() / 2 - 5);
+            g.fillOval(getWidth() / 2, diagHeight / 2, getWidth() / 2 - 5, diagHeight / 2 - 5);
         }
     }
 
