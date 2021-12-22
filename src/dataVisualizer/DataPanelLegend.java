@@ -6,7 +6,8 @@ import java.awt.geom.AffineTransform;
 import dataCache.DataCache_File;
 import utils.dbg;
 
-public class DataPanelLegend extends DataPanelLegendBase {
+public class DataPanelLegend extends DataPanelLegendBase
+{
     public DataPanelLegend(DataPanelMain parent, DataCache_File file, DataChannelList dcl)
     {
         super(parent, file, dcl);
@@ -117,6 +118,12 @@ public class DataPanelLegend extends DataPanelLegendBase {
 
     private int getY(DataChannelGroup dcg, double val) {
         return diagHeight - (int)(((val - dcg.offset) * dcg.factor) * diagHeight + 0.5);
+    }
+
+    @Override
+    public void dataChannelListChangeEventHandler(DataChannelList dcl)
+    {
+        repaint();
     }
 
     private static final long serialVersionUID = 6804775315236158088L;

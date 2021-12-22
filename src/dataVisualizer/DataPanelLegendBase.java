@@ -3,8 +3,9 @@ package dataVisualizer;
 import javax.swing.JPanel;
 
 import dataCache.DataCache_File;
+import dataVisualizer.interfaces.DataChannelListChangeEventHandler;
 
-public class DataPanelLegendBase extends JPanel
+public abstract class DataPanelLegendBase extends JPanel implements DataChannelListChangeEventHandler
 {
     DataChannelList dataChannelList;
     DataPanelMain parent;
@@ -13,6 +14,7 @@ public class DataPanelLegendBase extends JPanel
     {
         this.parent = parent;
         dataChannelList = dcl;
+        dataChannelList.addDataChannelListChangeEventHandler(this);
     }
 
     public void setDataCursor(int cursorIdx) {

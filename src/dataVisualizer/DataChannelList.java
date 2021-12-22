@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import dataCache.DataCache_File;
+import dataVisualizer.interfaces.DataChannelListChangeEventHandler;
 import utils.dbg;
 import dataCache.DataCache_ChannelBase;
 
@@ -18,6 +19,7 @@ public class DataChannelList {
     int groupCnt = -1;
     Vector<DataChannelGroup> groups = new Vector<>();
     TreeMap<String, DataChannelGroup> groupMap = new TreeMap<>();
+    Vector<DataChannelListChangeEventHandler> dclceHandlers = new Vector<>();
 
     public DataChannelList(DataCache_File _file)
     {
@@ -187,6 +189,15 @@ public class DataChannelList {
             }
             grpIdx++;
         }
+        for(DataChannelListChangeEventHandler dclceHandler:dclceHandlers)
+        {
+            dclceHandler.dataChannelListChangeEventHandler(this);
+        }
+    }
+
+    public void addDataChannelListChangeEventHandler(DataChannelListChangeEventHandler handler)
+    {
+        dclceHandlers.add(handler);
     }
 
     public DataChannelList copy()
