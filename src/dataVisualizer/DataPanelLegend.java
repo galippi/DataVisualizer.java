@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.geom.AffineTransform;
 
 import dataCache.DataCache_File;
+import utils.Sprintf;
 import utils.dbg;
 
 public class DataPanelLegend extends DataPanelLegendBase
@@ -30,6 +31,7 @@ public class DataPanelLegend extends DataPanelLegendBase
         //g2.drawString("Vertical string", -100, 10);
         java.util.Vector<DataChannelGroup> groups = dataChannelList.getGroups();
         java.awt.FontMetrics metrics = g.getFontMetrics();
+        int scaleMax = Math.max(2, Math.min(10, (getHeight() / 20) / groups.size()));
         for(DataChannelGroup cg: groups)
         {
             final int xStep = 10;
@@ -63,7 +65,7 @@ public class DataPanelLegend extends DataPanelLegendBase
                 }
             }
             // drawing vertical axle
-            ScaleData sd = new ScaleData(vMin, vMax, 2, 10, false);
+            ScaleData sd = new ScaleData(vMin, vMax, 2, scaleMax, false);
             int verticalStep = sd.num;
             double dv = sd.step;
             boolean scaleValInteger;
@@ -82,17 +84,17 @@ public class DataPanelLegend extends DataPanelLegendBase
             }
             final int scaleLineX = x + scaleValWidth;
             double val = vMin;
-            for(int j = 0; j < verticalStep; val += dv, j++)
+            for(int j = 0; j <= verticalStep; val += dv, j++)
             {
                 int y = -getY(cg, val);
                 String scaleVal;
                 if (scaleValInteger)
                     scaleVal = "" + (int)val;
                 else
-                    scaleVal = "" + val;
+                    scaleVal = Sprintf.sprintf("%4.2f", val);
                 int textWidth = metrics.stringWidth(scaleVal);
                 g2.setTransform(defaultAt);
-                g2.drawString(scaleVal, scaleLineX - textWidth, -y);
+                g2.drawString(scaleVal, scaleLineX - textWidth - 2, -y + 4);
                 g2.setTransform(at);
                 final int scaleSize = 3;
                 g2.drawLine(y, scaleLineX - scaleSize, y, scaleLineX + scaleSize);
