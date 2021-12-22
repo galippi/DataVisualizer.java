@@ -476,6 +476,10 @@ JComboBox<String> cb;
         myTable.setSignalGroupName(groupName);
     }
 
+    public void updateSelectedGroupName(String groupName) {
+        jcSignalGroup.setSelectedItem(groupName);
+    }
+
     JLabel lSignalName;
     JPanel jpSignalColor;
     JComboBox<String> jcSignalGroup;
