@@ -10,9 +10,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
 
 import dataCache.DataCache_File;
+import dataVisualizer.interfaces.DataChannelListChangeEventHandler;
 import utils.Sprintf;
 import utils.dbg;
 
@@ -32,7 +32,7 @@ class MyPopupMenu extends java.awt.PopupMenu
   int y;
 }
 
-public class DataPanel extends javax.swing.JPanel implements ActionListener, DataChannelListProvider
+public class DataPanel extends javax.swing.JPanel implements ActionListener, DataChannelListProvider, DataChannelListChangeEventHandler
 {
     DataPanelContainer dpc;
     public DataPanel(DataPanelContainer dpc, DataPanelMain _parent, DataCache_File _file, DataChannelList dcl) {
@@ -41,6 +41,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         dataFile = _file;
         dataChannelList = dcl;
         dataChannelList.addActionListener(this);
+        dataChannelList.addDataChannelListChangeEventHandler(this);
         windowIdx = windowIdxMax;
         windowIdxMax++;
         for (int i = 0; i < cursors.length; i++)
@@ -466,6 +467,13 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     public DataChannelList getDataChannelList()
     {
         return dataChannelList;
+    }
+
+    @Override
+    public void dataChannelListChangeEventHandler(DataChannelList dcl)
+    {
+        dataImage.repaint();
+        repaint();
     }
 
     DataPanelMain parent;

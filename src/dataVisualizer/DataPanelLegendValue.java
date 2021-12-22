@@ -61,9 +61,20 @@ public class DataPanelLegendValue extends DataPanelLegendBase
         updateSignalValues(hPos);
     }
 
+    int hPosLast = -1;
     private void updateSignalValues(int hPos)
     {
         dbg.println(9, "DataPanelLegendValue.updateSignalValues hPos="+hPos);
+        hPosLast = hPos;
+        if (hPosLast < 0)
+        {
+            // fill table empty
+            for (int i = 0; i < dataChannelList.size(); i++)
+            {
+                table.setValueAt("", i, colValue);
+            }
+            return;
+        }
         for (int i = 0; i < dataChannelList.size(); i++)
         {
             String value;
@@ -75,6 +86,15 @@ public class DataPanelLegendValue extends DataPanelLegendBase
             }
             table.setValueAt(value, i, colValue);
         }
+    }
+
+    @Override
+    public void dataChannelListChangeEventHandler(DataChannelList dcl)
+    {
+        repaint();
+        fillSignalList();
+        if (hPosLast >= 0)
+            updateSignalValues(hPosLast);
     }
 
     private static final long serialVersionUID = -1531090392973265388L;
