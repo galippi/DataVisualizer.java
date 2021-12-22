@@ -95,7 +95,8 @@ public class DataPanelLegend extends DataPanelLegendBase
                     scaleVal = Sprintf.sprintf("%4.2f", val);
                 int textWidth = metrics.stringWidth(scaleVal);
                 g2.setTransform(defaultAt);
-                g2.drawString(scaleVal, scaleLineX - textWidth - 2, -y + 4);
+                int scalePosY = Math.max(-y + 4, 0);
+                g2.drawString(scaleVal, scaleLineX - textWidth - 2, scalePosY);
                 g2.setTransform(at);
                 final int scaleSize = 3;
                 g2.drawLine(y, scaleLineX - scaleSize, y, scaleLineX + scaleSize);
