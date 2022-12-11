@@ -84,7 +84,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
           dbg.dprintf(9, "  idx=%d file=%s\n", idx, file);
           openDataFile(file);
         }
-      }
+    }
 
     DataFile dataFile;
     private void openDataFile(String fileName)
