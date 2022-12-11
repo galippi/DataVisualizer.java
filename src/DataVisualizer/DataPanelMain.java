@@ -84,21 +84,35 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
                 if (prev != null)
                 {
                     JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, prev, panel);
-                    prev = splitPane;
-                    splitPane.setDividerLocation(150);
-                    //splitPane.setResizeWeight(0.5);
+                    //splitPane.setDividerLocation(150);
+                    splitPane.setResizeWeight(1.0 - (1.0 / (i + 1)));
+                    if (true)
+                    {
+                        //splitPane.setMinimumSize(new java.awt.Dimension(100, 100));
+                        prev = splitPane;
+                    }else
+                    {
+                        javax.swing.JPanel collector = new javax.swing.JPanel();
+                        collector.add(splitPane, BorderLayout.CENTER);
+                        prev = collector;
+                    }
                 }else
                     prev = panel;
             }
             this.setLayout(new BorderLayout());
             add(prev, BorderLayout.CENTER);
+            //parent.setMinimumSize(new java.awt.Dimension(400, 50 * (num == 0 ? 1 : num)));
+            parent.setMinimumSize(new java.awt.Dimension(400, 50 * num));
             parent.revalidate();
             cursorsTogether = dvlf.cursorsMoveTogether;
             parent.m_ViewCursorModeTogether.setState(cursorsTogether);
             parent.m_ViewCursorModeTogether.setEnabled(true);
         }else
+        {
+            parent.setMinimumSize(new java.awt.Dimension(400, 100));
             if (parent.m_ViewChannel != null)
                 parent.m_ViewChannel.setEnabled(false);
+        }
         //pack();
         //doLayout();
         repaint();

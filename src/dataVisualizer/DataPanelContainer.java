@@ -24,13 +24,15 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dataPanelLegend, dataPanel);
         splitPane.setOneTouchExpandable(true);
         splitPane.setContinuousLayout(true);
-        splitPane.setDividerLocation(150);
-        splitPane.setResizeWeight(0.5);
+        //splitPane.setDividerLocation(150);
+        splitPane.setResizeWeight(0.0);
         //Provide minimum sizes for the two components in the split pane
         dataPanelLegend.setMinimumSize(new Dimension(100, 50));
         dataPanelLegend.setMaximumSize(new Dimension(200, 9999));
-        dataPanel.setMinimumSize(new Dimension(400, 200));
+        dataPanel.setMinimumSize(new Dimension(200, 50));
+        splitPane.setMinimumSize(new Dimension(200, 100));
         add(splitPane, BorderLayout.CENTER);
+        //setMinimumSize(new Dimension(400, 50));
         parent.revalidate();
     }
 
