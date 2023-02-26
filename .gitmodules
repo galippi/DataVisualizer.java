@@ -4,6 +4,12 @@
 [submodule "src/diaDat"]
 	path = src/diaDat
 	url = s:\\git\\DiaDat.java.git
+[submodule "src/lippiWare/blfHandler"]
+	path = src/lippiWare/blfHandler
+	url = S:\\git\\BlfHandler.java.git
+[submodule "src/lippiWare/pythonStruct"]
+	path = src/lippiWare/pythonStruct
+	url = S:\\git\\pythonStruct.java.git
 [submodule "src/lippiWare/utils"]
 	path = src/lippiWare/utils
 	url = s:\\git\\utils.java
