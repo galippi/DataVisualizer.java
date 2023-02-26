@@ -5,7 +5,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import utils.dbg;
 
 public class DataPanelLegendValue extends DataPanelLegendBase
@@ -22,7 +22,7 @@ public class DataPanelLegendValue extends DataPanelLegendBase
 
     JTable table;
 
-    public DataPanelLegendValue(DataPanelMain parent, DataCache_File file, DataChannelList dcl)
+    public DataPanelLegendValue(DataPanelMain parent, DataCache_FileBase file, DataChannelList dcl)
     {
         super(parent, file, dcl);
 

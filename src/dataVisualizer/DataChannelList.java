@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import dataVisualizer.interfaces.DataChannelListChangeEventHandler;
 import utils.dbg;
 import dataCache.DataCache_ChannelBase;
@@ -15,13 +15,13 @@ public class DataChannelList {
     Vector<DataChannelListItem> dataChannels = new Vector<>();
     TreeMap<String, DataChannelListItem> mapName = new TreeMap<>();
     Vector<ActionListener> actionListeners = new Vector<>();
-    DataCache_File file;
+    DataCache_FileBase file;
     int groupCnt = -1;
     Vector<DataChannelGroup> groups = new Vector<>();
     TreeMap<String, DataChannelGroup> groupMap = new TreeMap<>();
     Vector<DataChannelListChangeEventHandler> dclceHandlers = new Vector<>();
 
-    public DataChannelList(DataCache_File _file)
+    public DataChannelList(DataCache_FileBase _file)
     {
         file = _file;
         clear();
@@ -35,7 +35,7 @@ public class DataChannelList {
         updateGroupData();
     }
 
-    public DataChannelList(DataCache_File _file, Vector<DataChannelListItem> dcl, String horizontalAxleChannelName, int piMin, int piMax)
+    public DataChannelList(DataCache_FileBase _file, Vector<DataChannelListItem> dcl, String horizontalAxleChannelName, int piMin, int piMax)
     {
         file = _file;
         clear();

@@ -3,7 +3,7 @@ package dataVisualizer;
 import java.awt.Color;
 
 import dataCache.DataCache_ChannelBase;
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import utils.Sprintf;
 import utils.dbg;
 import utils.threadImage;
@@ -11,7 +11,7 @@ import utils.threadImage;
 public class DataImage extends threadImage
 {
     DataPanel parent;
-    public DataImage(DataPanel _parent, DataCache_File _file, DataChannelList _dcl)
+    public DataImage(DataPanel _parent, DataCache_FileBase _file, DataChannelList _dcl)
     {
       super(_parent);
       parent = _parent;
@@ -133,7 +133,7 @@ public class DataImage extends threadImage
         }
         g.dispose();
     }
-    DataCache_File file;
+    DataCache_FileBase file;
     DataChannelList dcl;
     int hOffset = 0;
     int diagramWidth = 1;

@@ -8,7 +8,8 @@ import java.util.Vector;
 
 import javax.swing.JSplitPane;
 
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
+import dataCache.DataCache_FileDiaDat;
 import dataCache.DataCache_State;
 import dataVisualizer.DataVisualizerLayoutFileLoader.Status;
 import utils.dbg;
@@ -33,13 +34,13 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     {
         dbg.println(9, "DataPanelMain.loadFile " + filename);
         reinit();
-        file = new DataCache_File();
+        file = new DataCache_FileDiaDat();
         file.addActionListener(this);
         file.open(filename);
         updateLayout();
     }
 
-    public DataCache_File getDataFile()
+    public DataCache_FileBase getDataFile()
     {
         return file;
     }
@@ -153,7 +154,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     int ctr = 0;
 
     Vector<DataPanelContainer> dataPanels = new Vector<>();
-    DataCache_File file;
+    DataCache_FileBase file;
     DataVisualizerLayoutFileLoader dvlf;
     boolean cursorsTogether = true;
 

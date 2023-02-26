@@ -37,7 +37,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import dataCache.DataCache_ChannelBase;
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import utils.dbg;
 
 /**
@@ -52,7 +52,7 @@ public class ChannelSelectorDialog extends JDialog {
 
 JComboBox<String> cb;
 
-    DataCache_File file;
+    DataCache_FileBase file;
     DataChannelList colArray;
     DataChannelList colArrayLocal; // this will store the visibility data before ok key
     ChannelListEditorTable myTable;
@@ -63,7 +63,7 @@ JComboBox<String> cb;
     private JTextField tGroupOffset; 
     boolean signalDataIsUpdated = false;
 
-  ChannelSelectorDialog(JFrame parent, DataCache_File _file, DataChannelList _colArray)
+  ChannelSelectorDialog(JFrame parent, DataCache_FileBase _file, DataChannelList _colArray)
   {
     super(parent, Dialog.ModalityType.APPLICATION_MODAL);
     file = _file;

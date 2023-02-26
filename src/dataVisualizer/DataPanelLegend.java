@@ -3,13 +3,13 @@ package dataVisualizer;
 import java.awt.Color;
 import java.awt.geom.AffineTransform;
 
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import utils.Sprintf;
 import utils.dbg;
 
 public class DataPanelLegend extends DataPanelLegendBase
 {
-    public DataPanelLegend(DataPanelMain parent, DataCache_File file, DataChannelList dcl)
+    public DataPanelLegend(DataPanelMain parent, DataCache_FileBase file, DataChannelList dcl)
     {
         super(parent, file, dcl);
     }

@@ -11,7 +11,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import dataVisualizer.interfaces.DataChannelListChangeEventHandler;
 import utils.Sprintf;
 import utils.dbg;
@@ -35,7 +35,7 @@ class MyPopupMenu extends java.awt.PopupMenu
 public class DataPanel extends javax.swing.JPanel implements ActionListener, DataChannelListProvider, DataChannelListChangeEventHandler
 {
     DataPanelContainer dpc;
-    public DataPanel(DataPanelContainer dpc, DataPanelMain _parent, DataCache_File _file, DataChannelList dcl) {
+    public DataPanel(DataPanelContainer dpc, DataPanelMain _parent, DataCache_FileBase _file, DataChannelList dcl) {
         this.dpc = dpc;
         parent = _parent;
         dataFile = _file;
@@ -479,7 +479,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     DataPanelMain parent;
     DataImage dataImage;
     boolean repaintNeeded;
-    DataCache_File dataFile;
+    DataCache_FileBase dataFile;
     public DataChannelList dataChannelList;
     MyPopupMenu popup;
     int windowIdx;

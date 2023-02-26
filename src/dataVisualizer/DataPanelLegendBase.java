@@ -2,7 +2,7 @@ package dataVisualizer;
 
 import javax.swing.JPanel;
 
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import dataVisualizer.interfaces.DataChannelListChangeEventHandler;
 
 public abstract class DataPanelLegendBase extends JPanel implements DataChannelListChangeEventHandler
@@ -10,7 +10,7 @@ public abstract class DataPanelLegendBase extends JPanel implements DataChannelL
     DataChannelList dataChannelList;
     DataPanelMain parent;
 
-    public DataPanelLegendBase(DataPanelMain parent, DataCache_File file, DataChannelList dcl)
+    public DataPanelLegendBase(DataPanelMain parent, DataCache_FileBase file, DataChannelList dcl)
     {
         this.parent = parent;
         dataChannelList = dcl;

@@ -6,14 +6,14 @@ import java.awt.Dimension;
 
 import javax.swing.JSplitPane;
 
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import utils.dbg;
 
 public class DataPanelContainer extends javax.swing.JPanel implements DataChannelListProvider
 {
     static int windowIdxMax = 0;
     int windowIdx;
-    DataPanelContainer(DataPanelMain parent, DataCache_File file, DataChannelList dcl)
+    DataPanelContainer(DataPanelMain parent, DataCache_FileBase file, DataChannelList dcl)
     {
         super(new BorderLayout());
         windowIdx = windowIdxMax;

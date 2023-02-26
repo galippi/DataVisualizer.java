@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import utils.dbg;
 
 class MyTableModel extends javax.swing.table.DefaultTableModel {
@@ -90,7 +90,7 @@ public class ChannelListEditorTable extends JTable {
     ChannelSelectorDialog parent;
     Groups groupNames;
 
-    public ChannelListEditorTable(ChannelSelectorDialog _parent, DataCache_File file, DataChannelList colArray)
+    public ChannelListEditorTable(ChannelSelectorDialog _parent, DataCache_FileBase file, DataChannelList colArray)
     {
         super(new MyTableModel(0, columnNames.length) {
             @Override

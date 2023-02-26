@@ -3,7 +3,7 @@ package dataVisualizer;
 import java.awt.Color;
 
 import dataCache.DataCache_ChannelBase;
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import utils.dbg;
 
 public class DataChannelListItem {
@@ -15,7 +15,7 @@ public class DataChannelListItem {
         color = getNextColor();
     }
 
-    public DataChannelListItem(DataCache_File dcf, String chName, double factor, double offset, Color _color, String groupName) throws Exception {
+    public DataChannelListItem(DataCache_FileBase dcf, String chName, double factor, double offset, Color _color, String groupName) throws Exception {
         ch = dcf.getChannel(chName);
         if (ch == null)
             throw new Exception("DataChannelListItem.ctor chName="+chName+"!");

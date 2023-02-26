@@ -2,18 +2,16 @@ package dataVisualizer;
 
 import java.awt.Color;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.Vector;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import dataCache.DataCache_ChannelBase;
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import utils.FileNameExtension;
 import utils.dbg;
 
@@ -46,7 +44,7 @@ public class DataVisualizerLayoutFileLoader {
         status = Status.LoadingOk;
     }
 
-    public DataVisualizerLayoutFileLoader(DataCache_File file) {
+    public DataVisualizerLayoutFileLoader(DataCache_FileBase file) {
         jsonObject = new JSONObject();
         JSONArray windows = new JSONArray();
         jsonObject.put("windows", windows);
@@ -78,7 +76,7 @@ public class DataVisualizerLayoutFileLoader {
         return jsonObject.getJSONArray("windows").length();
     }
 
-    public DataChannelList getDataChannelList(int windowIdx, DataCache_File dcf) throws Exception
+    public DataChannelList getDataChannelList(int windowIdx, DataCache_FileBase dcf) throws Exception
     {
         JSONObject window = (JSONObject)jsonObject.getJSONArray("windows").get(windowIdx);
         JSONArray channels = (JSONArray)window.getJSONArray("channels");

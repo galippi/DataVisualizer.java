@@ -1,10 +1,10 @@
 package dataVisualizer;
 
-import dataCache.DataCache_File;
+import dataCache.DataCache_FileBase;
 import utils.dbg;
 
 public class DataVisualizerLayout {
-    static boolean checkConsistency(DataCache_File dcf, DataVisualizerLayoutFileLoader dvlf)
+    static boolean checkConsistency(DataCache_FileBase dcf, DataVisualizerLayoutFileLoader dvlf)
     {
         if (dvlf.size() < 1)
         {
