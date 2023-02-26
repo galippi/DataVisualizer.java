@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.geom.AffineTransform;
 
 import dataCache.DataCache_FileBase;
-import utils.Sprintf;
-import utils.dbg;
+import lippiWare.utils.Sprintf;
+import lippiWare.utils.dbg;
 
 public class DataPanelLegend extends DataPanelLegendBase
 {

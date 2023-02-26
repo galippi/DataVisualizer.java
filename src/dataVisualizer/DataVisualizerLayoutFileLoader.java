@@ -12,8 +12,8 @@ import org.json.JSONTokener;
 
 import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_FileBase;
-import utils.FileNameExtension;
-import utils.dbg;
+import lippiWare.utils.FileNameExtension;
+import lippiWare.utils.dbg;
 
 public class DataVisualizerLayoutFileLoader {
     Status status = Status.Loading;

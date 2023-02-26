@@ -1,7 +1,7 @@
 package dataVisualizer;
 
 import dataCache.DataCache_FileBase;
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 public class DataVisualizerLayout {
     static boolean checkConsistency(DataCache_FileBase dcf, DataVisualizerLayoutFileLoader dvlf)

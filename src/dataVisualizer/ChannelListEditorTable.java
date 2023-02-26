@@ -14,7 +14,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableColumn;
 
 import dataCache.DataCache_FileBase;
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 class MyTableModel extends javax.swing.table.DefaultTableModel {
     public MyTableModel(int rowNum, int colNum)

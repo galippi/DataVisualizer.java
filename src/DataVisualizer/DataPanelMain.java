@@ -12,7 +12,7 @@ import dataCache.DataCache_FileBase;
 import dataCache.DataCache_FileDiaDat;
 import dataCache.DataCache_State;
 import dataVisualizer.DataVisualizerLayoutFileLoader.Status;
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 public class DataPanelMain extends javax.swing.JPanel implements ActionListener {
     public DataPanelMain(DataVisualizerUI _parent)

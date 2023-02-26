@@ -10,7 +10,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 class DataFile
 {

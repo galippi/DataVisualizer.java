@@ -13,8 +13,8 @@ import java.awt.event.MouseWheelListener;
 
 import dataCache.DataCache_FileBase;
 import dataVisualizer.interfaces.DataChannelListChangeEventHandler;
-import utils.Sprintf;
-import utils.dbg;
+import lippiWare.utils.Sprintf;
+import lippiWare.utils.dbg;
 
 class MyPopupMenu extends java.awt.PopupMenu
 {

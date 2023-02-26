@@ -4,6 +4,6 @@
 [submodule "src/diaDat"]
 	path = src/diaDat
 	url = s:\\git\\DiaDat.java.git
-[submodule "src/utils"]
-	path = src/utils
+[submodule "src/lippiWare/utils"]
+	path = src/lippiWare/utils
 	url = s:\\git\\utils.java

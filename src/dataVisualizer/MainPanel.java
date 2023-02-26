@@ -2,7 +2,7 @@ package dataVisualizer;
 
 import java.awt.Color;
 
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 public class MainPanel extends javax.swing.JPanel
 {

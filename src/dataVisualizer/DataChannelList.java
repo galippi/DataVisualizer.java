@@ -7,7 +7,7 @@ import java.util.Vector;
 
 import dataCache.DataCache_FileBase;
 import dataVisualizer.interfaces.DataChannelListChangeEventHandler;
-import utils.dbg;
+import lippiWare.utils.dbg;
 import dataCache.DataCache_ChannelBase;
 
 public class DataChannelList {

@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import dataCache.DataCache_FileBase;
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 public class DataPanelLegendValue extends DataPanelLegendBase
 {

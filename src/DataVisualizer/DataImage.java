@@ -4,9 +4,9 @@ import java.awt.Color;
 
 import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_FileBase;
-import utils.Sprintf;
-import utils.dbg;
-import utils.threadImage;
+import lippiWare.utils.Sprintf;
+import lippiWare.utils.dbg;
+import lippiWare.utils.threadImage;
 
 public class DataImage extends threadImage
 {

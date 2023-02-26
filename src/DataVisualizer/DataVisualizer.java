@@ -1,6 +1,6 @@
 package dataVisualizer;
 
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 public class DataVisualizer
 {

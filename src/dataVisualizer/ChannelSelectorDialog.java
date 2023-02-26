@@ -38,7 +38,7 @@ import javax.swing.table.DefaultTableModel;
 
 import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_FileBase;
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 /**
  *

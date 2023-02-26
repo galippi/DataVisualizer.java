@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_FileBase;
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 public class DataChannelListItem {
     public DataChannelListItem(DataCache_ChannelBase _ch)

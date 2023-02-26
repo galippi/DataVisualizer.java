@@ -7,7 +7,7 @@ import java.awt.Dimension;
 import javax.swing.JSplitPane;
 
 import dataCache.DataCache_FileBase;
-import utils.dbg;
+import lippiWare.utils.dbg;
 
 public class DataPanelContainer extends javax.swing.JPanel implements DataChannelListProvider
 {
