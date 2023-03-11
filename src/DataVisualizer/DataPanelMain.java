@@ -9,6 +9,7 @@ import java.util.Vector;
 import javax.swing.JSplitPane;
 
 import dataCache.DataCache_FileBase;
+import dataCache.DataCache_FileCanBlf;
 import dataCache.DataCache_FileDiaDat;
 import dataCache.DataCache_State;
 import dataVisualizer.DataVisualizerLayoutFileLoader.Status;
@@ -34,7 +35,12 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
     {
         dbg.println(9, "DataPanelMain.loadFile " + filename);
         reinit();
-        file = new DataCache_FileDiaDat();
+        if (DataCache_FileDiaDat.fastCheck(filename))
+            file = new DataCache_FileDiaDat();
+        else if (DataCache_FileCanBlf.fastCheck(filename))
+            file = new DataCache_FileCanBlf();
+        else
+            throw new Error("Not supported file format '" + filename + "'!");
         file.addActionListener(this);
         file.open(filename);
         updateLayout();

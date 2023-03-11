@@ -235,7 +235,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
 
         fc.setFileFilter(
                 new javax.swing.filechooser.FileNameExtensionFilter(
-                    "CSV table file", "csv"));
+                    "Vector BLF", "blf"));
 
         //In response to a button click:
         int returnVal = fc.showOpenDialog(this);
