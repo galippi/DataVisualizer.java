@@ -95,7 +95,7 @@ public class ChannelListEditorTable extends JTable {
         super(new MyTableModel(0, columnNames.length) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                Class clazz;
+                Class<?> clazz;
                 switch (columnIndex) {
                     case 0:
                     case 1:
@@ -110,6 +110,8 @@ public class ChannelListEditorTable extends JTable {
               }
               return clazz;
             }
+
+            private static final long serialVersionUID = -6841685126925516711L;
         });
         parent = _parent;
 

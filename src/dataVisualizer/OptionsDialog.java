@@ -142,8 +142,8 @@ public class OptionsDialog extends JDialog {
     cp.setLayout(new BoxLayout(cp, BoxLayout.Y_AXIS));
     cp.add(bOkCancel, BorderLayout.SOUTH);
 
-    Point pt = parent.getLocationOnScreen();
-    int pw = parent.getWidth();
+    //Point pt = parent.getLocationOnScreen();
+    //int pw = parent.getWidth();
     //setBounds(pt.x + pw / 2 - 150, pt.y + 200, 400, 400);
     setLocation(DataVisualizerPrefs.get("OptionsDialogX", 0), DataVisualizerPrefs.get("OptionsDialogY", 0));
     setSize(DataVisualizerPrefs.get("OptionsDialogW", 350), DataVisualizerPrefs.get("OptionsDialogH", 300));

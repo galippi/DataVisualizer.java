@@ -122,7 +122,7 @@ JComboBox<String> cb;
         }
     });
 
-    JPanel jpanel = new JPanel();
+    //JPanel jpanel = new JPanel();
     JScrollPane scrollableTable = new JScrollPane(myTable);
     //JScrollPane scrollableTable = myTable;
 
@@ -336,10 +336,10 @@ JComboBox<String> cb;
                     dcg = myTable.hidden;
                     isVisible = false;
                 }
-                myTable.setValueAt(chName, rowIdx, myTable.colSignalName);
-                myTable.setValueAt(color, rowIdx, myTable.colSignalColor);
-                myTable.setValueAt(dcg.name, rowIdx, myTable.colGroupName);
-                myTable.setValueAt(isVisible, rowIdx, myTable.colVisibility);
+                myTable.setValueAt(chName,    rowIdx, ChannelListEditorTable.colSignalName);
+                myTable.setValueAt(color,     rowIdx, ChannelListEditorTable.colSignalColor);
+                myTable.setValueAt(dcg.name,  rowIdx, ChannelListEditorTable.colGroupName);
+                myTable.setValueAt(isVisible, rowIdx, ChannelListEditorTable.colVisibility);
                 rowIdx++;
             }
         }

@@ -6,7 +6,6 @@ import lippiWare.utils.dbg;
 
 public class MainPanel extends javax.swing.JPanel
 {
-
     public MainPanel()
     {
         super();
@@ -27,4 +26,5 @@ public class MainPanel extends javax.swing.JPanel
         g.drawString("MainPanel ctr=" + ctr, 5, 10);
     }
     int ctr = 0;
+    private static final long serialVersionUID = 3056582303989070070L;
 }

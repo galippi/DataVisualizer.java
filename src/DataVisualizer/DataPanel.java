@@ -30,6 +30,7 @@ class MyPopupMenu extends java.awt.PopupMenu
   }
   int x;
   int y;
+  private static final long serialVersionUID = 1493714264465501020L;
 }
 
 public class DataPanel extends javax.swing.JPanel implements ActionListener, DataChannelListProvider, DataChannelListChangeEventHandler
@@ -67,9 +68,6 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
           }
         });      //Register for mouse events on the map area.
         addMouseListener(new MouseListener() {
-          public void mouseMoved(MouseEvent e) {
-            mouseHandler(e);
-          }
           public void mouseClicked(MouseEvent e) {
             mouseHandler(e);
           }
@@ -341,7 +339,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     void popupMenuHandler(java.awt.event.ActionEvent event)
     {
       dbg.println(9, "popupMenuHandler event="+event.toString());
-      java.awt.Point pt = new java.awt.Point(popup.x, popup.y);
+      //java.awt.Point pt = new java.awt.Point(popup.x, popup.y);
       //int colAtPoint = columnAtPoint(pt);
       //int rowAtPoint = rowAtPoint(pt);
       dbg.println(9, "popupMenuHandler windowIdx="+windowIdx+" event.getActionCommand="+event.getActionCommand());
@@ -379,11 +377,11 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
 
-        final int windowHeight = getHeight();
+        //final int windowHeight = getHeight();
 
         boolean repaintNeeded = false;
         dbg.println(9, "DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax);
-        Graphics2D g2 = (Graphics2D)g;
+        //Graphics2D g2 = (Graphics2D)g;
         //g.setColor(Color.BLUE);
         //g.fillRect(0, 0, getWidth(), getHeight());
         ctr++;
