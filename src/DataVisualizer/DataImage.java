@@ -120,14 +120,20 @@ public class DataImage extends threadImage
                     g.drawString(dbgStr, 0, i * 12 + 50);
                 }
                 g.setColor(color);
-                for(int hIdx = hMin + 1; hIdx < hMax; hIdx++)
+                if (dcli.isTimeBasedChannel())
                 {
-                    int x = (hIdx - hMin) * diagramWidth / hNum + hOffset;
-                    int y = getY(dcli, dcg, hIdx);
-                    g.drawOval(x - 1, y - 1, 3, 3);
-                    g.drawLine(x0, y0, x, y);
-                    x0 = x;
-                    y0 = y;
+                    for(int hIdx = hMin + 1; hIdx < hMax; hIdx++)
+                    {
+                        int x = (hIdx - hMin) * diagramWidth / hNum + hOffset;
+                        int y = getY(dcli, dcg, hIdx);
+                        g.drawOval(x - 1, y - 1, 3, 3);
+                        g.drawLine(x0, y0, x, y);
+                        x0 = x;
+                        y0 = y;
+                    }
+                }else
+                {
+                    throw new Error("Not yet implemented!");
                 }
             }
         }

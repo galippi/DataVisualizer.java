@@ -49,6 +49,10 @@ public class DataChannelListItem {
             group = groupName;
     }
 
+    public boolean isTimeBasedChannel() {
+        return ch.isTimeBasedChannel();
+    }
+
     DataCache_ChannelBase ch;
     Color color;
     String group;
