@@ -1,5 +1,7 @@
 package dataVisualizer;
 
+import java.awt.Component;
+
 import lippiWare.utils.dbg;
 
 public class DataVisualizer
@@ -48,5 +50,10 @@ public class DataVisualizer
               }
           });
     }
+
+    public static Component getMainFrame() {
+        return frame;
+    }
+
     static DataVisualizerUI frame;
 }
