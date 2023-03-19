@@ -3,7 +3,9 @@ package dataVisualizer;
 import java.awt.Color;
 
 import dataCache.DataCache_ChannelBase;
+import dataCache.DataCache_ChannelBasePointBased;
 import dataCache.DataCache_FileBase;
+import dataCache.DataPointBase;
 import lippiWare.utils.Sprintf;
 import lippiWare.utils.dbg;
 import lippiWare.utils.threadImage;
@@ -104,8 +106,6 @@ public class DataImage extends threadImage
                 DataChannelListItem dcli = dcl.get(i);
                 DataChannelGroup dcg = dcl.getGroup(dcli.group);
                 Color color = dcli.color;
-                int x0 = hOffset;
-                int y0 = getY(dcli, dcg, hMin);
                 if (dbg.get(11))
                 {
                     g.setColor(Color.BLACK);
@@ -122,6 +122,8 @@ public class DataImage extends threadImage
                 g.setColor(color);
                 if (dcli.isTimeBasedChannel())
                 {
+                    int x0 = hOffset;
+                    int y0 = getY(dcli, dcg, hMin);
                     for(int hIdx = hMin + 1; hIdx < hMax; hIdx++)
                     {
                         int x = (hIdx - hMin) * diagramWidth / hNum + hOffset;
@@ -133,7 +135,46 @@ public class DataImage extends threadImage
                     }
                 }else
                 {
-                    throw new Error("Not yet implemented!");
+                    try {
+                        double tMin = chHor.getDouble(hMin);
+                        double tMax = chHor.getDouble(hMax - 1);
+                        double dt = tMax - tMin;
+                        dbg.println(19, "DataImage point based tMin=" + tMin + " tMax=" + tMax);
+                        DataCache_ChannelBasePointBased dclip = (DataCache_ChannelBasePointBased)dcli.ch;
+                        int idxMin = dclip.getPointIdx(tMin);
+                        int idxMax = dclip.getPointIdx(tMax);
+                        dbg.println(19, "DataImage point based idxMin=" + idxMin + " idxMax=" + idxMax);
+                        if (idxMin < 0) {
+                            if (idxMax < 0)
+                                throw new Error("DataImage point based drawing time conversion error " + dcli.getSignalName());
+                            idxMin = 0;
+                        }
+                        if (idxMax > idxMin) {
+                            DataPointBase pt = dclip.getPoint(idxMin);
+                            int x0 = (int)((pt.t - tMin) * diagramWidth / dt) + hOffset;
+                            int y0 = getY(dcg, pt.getDouble());
+                            idxMin++;
+                            while(idxMin <= idxMax) {
+                                pt = dclip.getPoint(idxMin);
+                                int x = (int)((pt.t - tMin) * diagramWidth / dt) + hOffset;
+                                int y = getY(dcg, pt.getDouble());
+                                g.drawOval(x - 1, y - 1, 3, 3);
+                                g.drawLine(x0, y0, x, y);
+                                x0 = x;
+                                y0 = y;
+                                idxMin++;
+                            }
+                        }else {
+                            DataPointBase pt = dclip.getPoint(idxMin);
+                            int x = (int)((pt.t - tMin) * diagramWidth / dt) + hOffset;
+                            int y = getY(dcg, pt.getDouble());
+                            g.drawOval(x - 1, y - 1, 3, 3);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        dbg.println(3, "DataImage point based drawing e=" + e.toString());
+                    }
+                    //throw new Error("Not yet implemented!");
                 }
             }
         }
