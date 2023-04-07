@@ -98,6 +98,19 @@ public class DataVisualizerLayoutFileLoader {
         return new DataChannelList(dcf, dcl, horizontalAxleChannelName, piMin, piMax);
     }
 
+    public String getDbcName(int chIdx, int fileIdx)
+    {
+        try {
+            JSONArray channels = jsonObject.getJSONArray("CanChannels");
+            JSONArray channel = channels.getJSONArray(chIdx);
+            JSONObject dbc = channel.getJSONObject(fileIdx);
+            return dbc.getString("name");
+        }catch (Exception e)
+        {
+            return null;
+        }
+    }
+
     public enum Status
     {
         Loading,
