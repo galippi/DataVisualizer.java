@@ -47,7 +47,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
                 m_RecentFileActionPerformed(evt);
               }
             });
-            jMenu3.add(jMenuItem);
+            jMenuRecentFiles.add(jMenuItem);
           }
         }
 
@@ -135,22 +135,18 @@ public class DataVisualizerUI extends javax.swing.JFrame
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        JMenuBar jMenuBar1 = new javax.swing.JMenuBar();
-        JMenu jMenu1 = new javax.swing.JMenu();
-        JMenuItem m_FileOpen = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        JMenuItem m_FileExit = new javax.swing.JMenuItem();
+        JMenuBar jMenuBarMainMenu = new javax.swing.JMenuBar();
 
-        jMenu1.setText("File");
+        JMenu jMenuFile = new javax.swing.JMenu("File");
 
+        JMenuItem m_FileOpen = new javax.swing.JMenuItem("File open");
         m_FileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        m_FileOpen.setText("File open");
         m_FileOpen.addActionListener(new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             m_FileOpenActionPerformed(evt);
           }
         });
-        jMenu1.add(m_FileOpen);
+        jMenuFile.add(m_FileOpen);
 
         m_DataSourceConfig = new javax.swing.JMenuItem("Configure data source");
         m_DataSourceConfig.setEnabled(false);
@@ -159,23 +155,24 @@ public class DataVisualizerUI extends javax.swing.JFrame
               m_DataSourceConfigActionPerformed(evt);
             }
           });
-        jMenu1.add(m_DataSourceConfig);
+        jMenuFile.add(m_DataSourceConfig);
 
-        jMenu1.add(new javax.swing.JPopupMenu.Separator());
+        jMenuFile.add(new javax.swing.JPopupMenu.Separator());
 
-        jMenu3.setText("Recent Files");
-        jMenu3.setToolTipText("");
-        jMenu3.setActionCommand("recentFiles");
-        jMenu1.add(jMenu3);
+        jMenuRecentFiles = new javax.swing.JMenu();
+        jMenuRecentFiles.setText("Recent Files");
+        jMenuRecentFiles.setToolTipText("");
+        jMenuRecentFiles.setActionCommand("recentFiles");
+        jMenuFile.add(jMenuRecentFiles);
 
+        JMenuItem m_FileExit = new javax.swing.JMenuItem("Exit");
         m_FileExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
-        m_FileExit.setText("Exit");
         m_FileExit.addActionListener(new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent evt) {
             m_FileExitActionPerformed(evt);
           }
         });
-        jMenu1.add(m_FileExit);
+        jMenuFile.add(m_FileExit);
 
         JMenu jMenuView = new javax.swing.JMenu("View");
         m_ViewChannel = new javax.swing.JMenuItem("Channels");
@@ -207,12 +204,12 @@ public class DataVisualizerUI extends javax.swing.JFrame
         JMenuItem m_HelpAbout = new javax.swing.JMenuItem("About");
         jMenuHelp.add(m_HelpAbout);
 
-        jMenuBar1.add(jMenu1);
-        jMenuBar1.add(jMenuView);
-        jMenuBar1.add(new javax.swing.JMenu("Window"));
-        jMenuBar1.add(jMenuHelp);
+        jMenuBarMainMenu.add(jMenuFile);
+        jMenuBarMainMenu.add(jMenuView);
+        jMenuBarMainMenu.add(new javax.swing.JMenu("Window"));
+        jMenuBarMainMenu.add(jMenuHelp);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(jMenuBarMainMenu);
 
         add(dataPanelMain);
     }
@@ -290,7 +287,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenuRecentFiles;
     JMenuItem m_DataSourceConfig;
     private DataPanelMain dataPanelMain;
     javax.swing.JMenuItem m_ViewChannel;
