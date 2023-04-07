@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import lippiWare.utils.dbg;
@@ -134,8 +135,8 @@ public class DataVisualizerUI extends javax.swing.JFrame
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        JMenuBar jMenuBar1 = new javax.swing.JMenuBar();
+        JMenu jMenu1 = new javax.swing.JMenu();
         m_FileOpen = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenu3 = new javax.swing.JMenu();
@@ -156,6 +157,16 @@ public class DataVisualizerUI extends javax.swing.JFrame
           }
         });
         jMenu1.add(m_FileOpen);
+
+        m_DataSourceConfig = new javax.swing.JMenuItem("Configure data source");
+        m_DataSourceConfig.setEnabled(false);
+        m_DataSourceConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+              m_DataSourceConfigActionPerformed(evt);
+            }
+          });
+        jMenu1.add(m_DataSourceConfig);
+
         jMenu1.add(jSeparator1);
 
         jMenu3.setText("Recent Files");
@@ -210,6 +221,11 @@ public class DataVisualizerUI extends javax.swing.JFrame
         setJMenuBar(jMenuBar1);
 
         add(dataPanelMain);
+    }
+
+    protected void m_DataSourceConfigActionPerformed(ActionEvent evt) {
+        // TODO Auto-generated method stub
+        
     }
 
     private void m_ViewChannelActionPerformed(java.awt.event.ActionEvent evt)
@@ -280,12 +296,13 @@ public class DataVisualizerUI extends javax.swing.JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenu jMenu1;
+    //private javax.swing.JMenuBar jMenuBar1;
+    //private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenuView;
     private javax.swing.JMenuItem m_FileExit;
     private javax.swing.JMenuItem m_FileOpen;
+    JMenuItem m_DataSourceConfig;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private DataPanelMain dataPanelMain;
     javax.swing.JMenuItem m_ViewChannel;
