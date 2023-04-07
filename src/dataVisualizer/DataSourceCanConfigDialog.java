@@ -6,15 +6,18 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import lippiWare.utils.dbg;
 
@@ -28,6 +31,14 @@ public class DataSourceCanConfigDialog extends JDialog {
         parent = (DataPanelMain)o;
 
         JLabel l = new JLabel("lll");
+
+        DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode("Channels");
+        JTree tree = new JTree(treeRoot);
+        Vector<Integer> channels = parent.file.getDataSourceChannelIndexArray();
+        for(int i = 0; i < channels.size(); i++) {
+            String chName = "Ch " + channels.get(i).intValue();
+            treeRoot.add(new DefaultMutableTreeNode(chName));
+        }
 
         JButton bOk = new JButton("OK");
         bOk.setHorizontalAlignment(SwingConstants.LEFT);
@@ -54,14 +65,19 @@ public class DataSourceCanConfigDialog extends JDialog {
         SpringLayout layout = new SpringLayout();
         cp.setLayout(layout);
         cp.add(l);
+        cp.add(tree);
         cp.add(bOkCancel);
 
         layout.putConstraint(SpringLayout.NORTH, l, 4, SpringLayout.NORTH, cp);
         layout.putConstraint(SpringLayout.WEST,  l, 5, SpringLayout.WEST,  cp);
 
-        layout.putConstraint(SpringLayout.NORTH,             bOkCancel, 5, SpringLayout.SOUTH, l);
+        layout.putConstraint(SpringLayout.NORTH, tree, 4, SpringLayout.SOUTH, l);
+        layout.putConstraint(SpringLayout.WEST,  tree, 5, SpringLayout.WEST,  cp);
+        layout.putConstraint(SpringLayout.EAST,  tree, 5, SpringLayout.EAST,  cp);
+
+        layout.putConstraint(SpringLayout.NORTH,             bOkCancel, 5, SpringLayout.SOUTH,              tree);
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, bOkCancel,  0, SpringLayout.HORIZONTAL_CENTER, cp);
-        layout.putConstraint(SpringLayout.SOUTH,             bOkCancel, -5, SpringLayout.SOUTH, cp);
+        layout.putConstraint(SpringLayout.SOUTH,             bOkCancel, -5, SpringLayout.SOUTH,             cp);
 
         pack();
 
