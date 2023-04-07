@@ -1,6 +1,5 @@
 package dataVisualizer;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -10,19 +9,25 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import lippiWare.utils.dbg;
@@ -36,11 +41,23 @@ class TreeNodeChannel extends DefaultMutableTreeNode {
 }
 
 class TreeNodeDbc extends DefaultMutableTreeNode {
-    public TreeNodeDbc(String name) {
-        super(name);
+    public TreeNodeDbc(DbcData dbc) {
+        super(dbc);
     }
 
     private static final long serialVersionUID = 6008994166012788905L;
+}
+
+class DbcData {
+    public DbcData(String _name, String _path) {
+        name = _name;
+        path = _path;
+    }
+    public String toString() {
+        return name;
+    }
+    String name;
+    String path;
 }
 
 public class DataSourceCanConfigDialog extends JDialog {
@@ -69,7 +86,9 @@ public class DataSourceCanConfigDialog extends JDialog {
             int fileIdx = 0;
             while ((dbc = dvlf.getDbcName(chIdx, fileIdx)) != null)
             {
-                TreeNodeDbc dbcNode = new TreeNodeDbc(dbc);
+                File f = new File(dbc);
+                DbcData dd = new DbcData(f.getName(), dbc);
+                TreeNodeDbc dbcNode = new TreeNodeDbc(dd);
                 node.add(dbcNode);
                 fileIdx++;
             }
@@ -168,10 +187,22 @@ public class DataSourceCanConfigDialog extends JDialog {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                         tree.getLastSelectedPathComponent();
                 dbg.println(9, " node=" + ((node == null) ? "(null)" : node.toString()));
-                if (node.getClass() == TreeNodeChannel.class)
-                    dbg.println(9, " node=TreeNodeChannel");
-                else if (node.getClass() == TreeNodeDbc.class)
-                    dbg.println(9, " node=TreeNodeDbc");
+                Class<?> className = node.getClass();
+                if ((className == TreeNodeChannel.class) || (className == TreeNodeDbc.class)) {
+                    JPopupMenu pmenu = new JPopupMenu("DBC menu");
+                    JMenuItem mItem;
+                    pmenu.add(mItem = new JMenuItem("Add DBC file"));
+                    mItem.addActionListener(popupMenuListener);
+                    if (node.getClass() == TreeNodeChannel.class)
+                        dbg.println(9, " node=TreeNodeChannel");
+                    else if (node.getClass() == TreeNodeDbc.class) {
+                        dbg.println(9, " node=TreeNodeDbc");
+                        DbcData dd = (DbcData)node.getUserObject();
+                        pmenu.add(mItem = new JMenuItem("Remove DBC file " + dd.name));
+                        mItem.addActionListener(popupMenuListener);
+                    }
+                    pmenu.show(tree, e.getX(), e.getY());
+                }
             }
         }
     }
@@ -197,6 +228,49 @@ public class DataSourceCanConfigDialog extends JDialog {
               KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
               JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
+
+    protected void popupMenuHandler(ActionEvent event) {
+        dbg.println(9, "Popup menu item ["
+                + event.getActionCommand() + "] was pressed.");
+        String command = event.getActionCommand();
+        if (command.equals("Add DBC file"))
+        {
+            final JFileChooser fc = new JFileChooser();
+            fc.setFileFilter(
+                    new javax.swing.filechooser.FileNameExtensionFilter(
+                        "Vector DBC file", "dbc"));
+            int returnVal = fc.showOpenDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION)
+            {
+                java.io.File f = fc.getSelectedFile();
+                dbg.println(9, "Add file " + f.getName() + ".");
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                        tree.getLastSelectedPathComponent();
+                if (node.getClass() == TreeNodeDbc.class)
+                    node = (DefaultMutableTreeNode) node.getParent();
+                try {
+                    DbcData dd = new DbcData(f.getName(), f.getCanonicalPath());
+                    node.add(new TreeNodeDbc(dd));
+                    DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+                    model.reload();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    dbg.println(1, "DataSourceCanConfigDialog.popupMenuHandler exception e=" + e.toString());
+                }
+            }
+        }else if (command.startsWith("Remove DBC file ")) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                    tree.getLastSelectedPathComponent();
+            DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+            model.removeNodeFromParent(node);
+        }
+    }
+
+    java.awt.event.ActionListener popupMenuListener = new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent event) {
+            popupMenuHandler(event);
+        }
+    };
 
     DataPanelMain parent;
     JTree tree;
