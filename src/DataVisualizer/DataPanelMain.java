@@ -180,6 +180,8 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
                 dbg.println(9, "DataPanelMain.actionPerformed dvlf error!");
                 dvlf = new DataVisualizerLayoutFileLoader(file);
             }
+            boolean layoutIsUsed = file.setLayout(dvlf);
+            parent.m_DataSourceConfig.setEnabled(layoutIsUsed);
             updateLayout();
         }else
             dvlf = null;

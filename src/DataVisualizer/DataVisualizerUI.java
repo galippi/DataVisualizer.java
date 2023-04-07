@@ -92,6 +92,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
     {
         dataPanelMain.saveDataLayoutFile();
         dataFile = null;
+        m_DataSourceConfig.setEnabled(false);
         dataPanelMain.reinit();
         setTitle("DataVisualizer - loading file " + fileName);
         DataFile dataFileTemp = new DataFile(fileName);
