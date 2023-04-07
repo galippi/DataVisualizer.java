@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -216,8 +217,9 @@ public class DataVisualizerUI extends javax.swing.JFrame
     }
 
     protected void m_DataSourceConfigActionPerformed(ActionEvent evt) {
-        // TODO Auto-generated method stub
-        
+        dbg.println(9, "m_DataSourceConfigActionPerformed");
+        JDialog dlg = dataPanelMain.file.getDataSourceConfigDlg(dataPanelMain);
+        dlg.setVisible(true);
     }
 
     private void m_ViewChannelActionPerformed(java.awt.event.ActionEvent evt)
