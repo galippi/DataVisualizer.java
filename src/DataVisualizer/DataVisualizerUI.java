@@ -137,15 +137,9 @@ public class DataVisualizerUI extends javax.swing.JFrame
 
         JMenuBar jMenuBar1 = new javax.swing.JMenuBar();
         JMenu jMenu1 = new javax.swing.JMenu();
-        m_FileOpen = new javax.swing.JMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        JMenuItem m_FileOpen = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        m_FileExit = new javax.swing.JMenuItem();
-        //jMenu2 = new javax.swing.JMenu();
-        //jMenu4 = new javax.swing.JMenu();
-        //jMenuItem1 = new javax.swing.JMenuItem();
-        //jMenuItem2 = new javax.swing.JMenuItem();
-        //jMenu5 = new javax.swing.JMenu();
+        JMenuItem m_FileExit = new javax.swing.JMenuItem();
 
         jMenu1.setText("File");
 
@@ -167,7 +161,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
           });
         jMenu1.add(m_DataSourceConfig);
 
-        jMenu1.add(jSeparator1);
+        jMenu1.add(new javax.swing.JPopupMenu.Separator());
 
         jMenu3.setText("Recent Files");
         jMenu3.setToolTipText("");
@@ -183,7 +177,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
         });
         jMenu1.add(m_FileExit);
 
-        jMenuView = new javax.swing.JMenu("View");
+        JMenu jMenuView = new javax.swing.JMenu("View");
         m_ViewChannel = new javax.swing.JMenuItem("Channels");
         m_ViewChannel.setEnabled(false);
         m_ViewChannel.addActionListener(new java.awt.event.ActionListener() {
@@ -296,14 +290,8 @@ public class DataVisualizerUI extends javax.swing.JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    //private javax.swing.JMenuBar jMenuBar1;
-    //private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenuView;
-    private javax.swing.JMenuItem m_FileExit;
-    private javax.swing.JMenuItem m_FileOpen;
     JMenuItem m_DataSourceConfig;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
     private DataPanelMain dataPanelMain;
     javax.swing.JMenuItem m_ViewChannel;
     JCheckBoxMenuItem m_ViewCursorModeTogether;
