@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import org.json.JSONArray;
@@ -98,7 +100,44 @@ public class DataVisualizerLayoutFileLoader {
         return new DataChannelList(dcf, dcl, horizontalAxleChannelName, piMin, piMax);
     }
 
+    public void setDbc(TreeMap<Integer, Vector<String>> map) {
+        //JSONArray channels = new JSONArray();
+        JSONObject channels = new JSONObject();
+        for (Map.Entry<Integer, Vector<String>>
+                 entry : map.entrySet())
+        {
+            JSONObject o = new JSONObject();
+            int chIdx = entry.getKey().intValue();
+            o.put("ChIdx", chIdx);
+            Vector<String> dbcs = entry.getValue();
+            JSONArray jsonDbcs = new JSONArray();
+            o.put("dbcs", jsonDbcs);
+            for (int i = 0; i < dbcs.size(); i++) {
+                JSONObject oDbc = new JSONObject();
+                oDbc.put("name", dbcs.get(i));
+                jsonDbcs.put(i, oDbc);
+            }
+            String chName = "" + chIdx;
+            channels.put(chName, o);
+        }
+        jsonObject.put("CanChannels", channels);
+    }
+
     public String getDbcName(int chIdx, int fileIdx)
+    {
+        try {
+            JSONObject channels = jsonObject.getJSONObject("CanChannels");
+            JSONObject channel = channels.getJSONObject("" + chIdx);
+            JSONArray dbcs = channel.getJSONArray("dbcs");
+            JSONObject dbc = dbcs.getJSONObject(fileIdx);
+            return dbc.getString("name");
+        }catch (Exception e)
+        {
+            return null;
+        }
+    }
+
+    public String getDbcName_(int chIdx, int fileIdx)
     {
         try {
             JSONArray channels = jsonObject.getJSONArray("CanChannels");
@@ -121,6 +160,19 @@ public class DataVisualizerLayoutFileLoader {
     {
         return status;
     }
+
+    public void saveLayoutFile(String filename) {
+        try {
+            filename = FileNameExtension.set(filename, fileNameExtension);
+            FileWriter myWriter = new FileWriter(filename);
+            myWriter.write(jsonObject.toString());
+            myWriter.close();
+            dbg.dprintf(9, "DataVisualizerLayoutFileLoader.saveLayoutFile(%s) done!\n", filename);
+        } catch (Exception e) {
+            dbg.dprintf(1, "Exception DataVisualizerLayoutFileLoader.saveLayoutFile(%s) e=%s!\n", filename, e.toString());
+        }
+    }
+
     public static void saveLayoutFile(String filename, DataChannelList dcl)
     {
         JSONObject json = new JSONObject();
@@ -200,5 +252,6 @@ public class DataVisualizerLayoutFileLoader {
             dbg.dprintf(1, "Exception DataVisualizerLayoutFileLoader.saveLayoutFile(%s) e=%s!\n", filename, e.toString());
         }
     }
+
     public boolean cursorsMoveTogether;
 }

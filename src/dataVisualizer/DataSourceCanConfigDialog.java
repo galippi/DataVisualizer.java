@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -33,8 +34,8 @@ import javax.swing.tree.TreePath;
 import lippiWare.utils.dbg;
 
 class TreeNodeChannel extends DefaultMutableTreeNode {
-    public TreeNodeChannel(String name) {
-        super(name);
+    public TreeNodeChannel(ChData cd) {
+        super(cd);
     }
 
     private static final long serialVersionUID = -612150313211373948L;
@@ -46,6 +47,16 @@ class TreeNodeDbc extends DefaultMutableTreeNode {
     }
 
     private static final long serialVersionUID = 6008994166012788905L;
+}
+
+class ChData {
+    public ChData(int _chIdx) {
+        chIdx = _chIdx;
+    }
+    public String toString() {
+        return "Ch " + chIdx;
+    }
+    int chIdx;
 }
 
 class DbcData {
@@ -79,8 +90,7 @@ public class DataSourceCanConfigDialog extends JDialog {
         Vector<Integer> channels = parent.file.getDataSourceChannelIndexArray();
         for(int i = 0; i < channels.size(); i++) {
             int chIdx = channels.get(i).intValue();
-            String chName = "Ch " + chIdx;
-            TreeNodeChannel node = new TreeNodeChannel(chName);
+            TreeNodeChannel node = new TreeNodeChannel(new ChData(chIdx));
             treeRoot.add(node);
             String dbc;
             int fileIdx = 0;
@@ -215,6 +225,25 @@ public class DataSourceCanConfigDialog extends JDialog {
         DataVisualizerPrefs.put("DataSourceCanConfigDialogY", getY());
         DataVisualizerPrefs.put("DataSourceCanConfigDialogH", getHeight());
         DataVisualizerPrefs.put("DataSourceCanConfigDialogW", getWidth());
+
+        TreeMap<Integer, Vector<String>> map = new TreeMap<>();
+        DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+        Object root = model.getRoot();
+        int rootItemNum = model.getChildCount(root);
+        for(int i = 0; i < rootItemNum; i++) {
+            Object channelNode = model.getChild(root, i);
+            int chIdx = ((ChData)((TreeNodeChannel)channelNode).getUserObject()).chIdx;
+            Vector<String> dbcs = new Vector<>();
+            int dbcNum = model.getChildCount(channelNode);
+            for (int dbcIdx = 0; dbcIdx < dbcNum; dbcIdx++)
+            {
+                Object dbcNode = model.getChild(channelNode, dbcIdx);
+                String dbcPath = ((DbcData)((TreeNodeDbc)dbcNode).getUserObject()).path;
+                dbcs.add(dbcPath);
+            }
+            map.put(Integer.valueOf(chIdx), dbcs);
+        }
+        parent.dvlf.setDbc(map);
     }
 
     void addEscapeListener() {

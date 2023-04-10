@@ -183,8 +183,11 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
             boolean layoutIsUsed = file.setLayout(dvlf);
             parent.m_DataSourceConfig.setEnabled(layoutIsUsed);
             updateLayout();
-        }else
+        }else {
+            dbg.println(1, "DataPanelMain.actionPerformed e=" + e.toString());
             dvlf = null;
+            javax.swing.JOptionPane.showMessageDialog(this, "Unable to load file " + file.getName() + "!\nDetailed info: " + e.toString());
+        }
     }
 
     public void saveDataLayoutFile() {
@@ -198,7 +201,8 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         for (DataPanelContainer dataPanel : dataPanels)
             dataPanelsLocal.add(dataPanel);
         //cursorsTogether = parent.m_ViewCursorModeTogether.getState();
-        DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal, cursorsTogether);
+        //DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal, cursorsTogether);
+        dvlf.saveLayoutFile(file.getName());
     }
 
     public void createNewWindow() {

@@ -121,7 +121,13 @@ public class DataVisualizerUI extends javax.swing.JFrame
                 }
                 DataVisualizerPrefs.putRecentFile(0, fileName);
             }
-            dataPanelMain.loadFile(fileName);
+            try {
+                dataPanelMain.loadFile(fileName);
+            } catch (Exception e)
+            {
+                dbg.println(1, "DataVisualizerUI.openDataFile load file exception e=" + e.toString());
+                javax.swing.JOptionPane.showMessageDialog(this, "Unable to load file " + fileName + "! Detailed info: " + e.toString());
+            }
         }
     }
 
