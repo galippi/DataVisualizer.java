@@ -130,6 +130,7 @@ public class DataSourceCanConfigDialog extends JDialog {
                 // do nothing
             }
         });
+        expandTree(tree);
         JScrollPane treePane = new JScrollPane(tree);
 
         JButton bOk = new JButton("OK");
@@ -182,6 +183,14 @@ public class DataSourceCanConfigDialog extends JDialog {
         this.setMinimumSize(new Dimension(350, 400));
 
         addEscapeListener();
+    }
+
+    static private void expandTree(JTree tree) {
+        int row = 0;
+        while (row < tree.getRowCount()) {
+            tree.expandRow(row);
+            row++;
+        }
     }
 
     protected void mouseHandler(MouseEvent e) {
@@ -282,6 +291,7 @@ public class DataSourceCanConfigDialog extends JDialog {
                     node.add(new TreeNodeDbc(dd));
                     DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
                     model.reload();
+                    expandTree(tree);
                 } catch (IOException e) {
                     e.printStackTrace();
                     dbg.println(1, "DataSourceCanConfigDialog.popupMenuHandler exception e=" + e.toString());
