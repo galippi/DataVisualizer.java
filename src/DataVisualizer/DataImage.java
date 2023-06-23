@@ -177,9 +177,9 @@ public class DataImage extends threadImage
                         int idxMin = dclip.getPointIdx(tMin);
                         int idxMax = dclip.getPointIdx(tMax);
                         dbg.println(19, "DataImage point based idxMin=" + idxMin + " idxMax=" + idxMax);
-                        if ((idxMax >= idxMin) && ((idxMin >= 0) || (idxMax <= maxIdx))) {
-                            idxMin = Math.max(idxMin, 0);
-                            idxMax = Math.min(idxMax, maxIdx);
+                        if ((idxMin < maxIdx) && (idxMax >= 0)) {
+                            idxMin = Math.max(idxMin - 1, 0);
+                            idxMax = Math.min(idxMax + 1, maxIdx);
                             DataPointBase pt = dclip.getPoint(idxMin);
                             int x0 = (int)((pt.t - tMin) * diagramWidth / dt) + hOffset;
                             int y0 = getY(dcg, pt.getDouble());
@@ -195,11 +195,6 @@ public class DataImage extends threadImage
                                 y0 = y;
                                 idxMin++;
                             }
-                        }else {
-                            DataPointBase pt = dclip.getPoint(idxMin);
-                            int x = (int)((pt.t - tMin) * diagramWidth / dt) + hOffset;
-                            int y = getY(dcg, pt.getDouble());
-                            g.drawOval(x - 1, y - 1, 3, 3);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
