@@ -81,7 +81,7 @@ public class DataImage extends threadImage
             final int hMin = dcl.getDataPointIndexMin();
             final int hMax = dcl.getDataPointIndexMax();
             final int hNum = hMax - hMin;
-            final int hStep = (hMax - hMin) / 10;
+            final int hStep = (hNum < 10) ? 1 : ((hMax - hMin) / 10);
             if (dbg.get(11))
             {
                 g.setColor(Color.BLACK);
@@ -93,12 +93,32 @@ public class DataImage extends threadImage
             DataCache_ChannelBase chHor = dcl.getHorizontalAxle();
             g.setColor(Color.BLACK);
             g.drawString(chHor.getName(), imgWidth / 2 - 16, imgHeight);
-            for(int hIdx = hMin + hStep; hIdx < hMax; hIdx += hStep)
+            int xLast = -9999;
+            double tMin, tMax;
+            try {
+                tMin = chHor.getDouble(hMin);
+                tMax = chHor.getDouble(hMax - 1);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                dbg.println(1, "DataImage.Draw execption tMin/tMax");
+                return;
+            }
+            double dt = tMax - tMin;
             {
-                try {
-                    g.drawString(""+chHor.getDouble(hIdx), imgWidth * (hIdx-hMin) / hNum, imgHeight - hScaleHeight / 2);
-                } catch (Exception e) {
-                    //e.printStackTrace();
+                int y = imgHeight - hScaleHeight / 2;
+                for(int hIdx = hMin; hIdx < hMax; hIdx += hStep)
+                {
+                    try {
+                        double t = chHor.getDouble(hIdx);
+                        double delta = t - tMin;
+                        int x = (int)((imgWidth * delta) / dt);
+                        if ((x - xLast) > 60) {
+                            g.drawString(""+ t, x, y);
+                            xLast = x;
+                        }
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                    }
                 }
             }
             for(int i = 0; i < dcl.size(); i++)
@@ -136,9 +156,6 @@ public class DataImage extends threadImage
                 }else
                 {
                     try {
-                        double tMin = chHor.getDouble(hMin);
-                        double tMax = chHor.getDouble(hMax - 1);
-                        double dt = tMax - tMin;
                         dbg.println(19, "DataImage point based tMin=" + tMin + " tMax=" + tMax);
                         DataCache_ChannelBasePointBased dclip = (DataCache_ChannelBasePointBased)dcli.ch;
                         int idxMin = dclip.getPointIdx(tMin);

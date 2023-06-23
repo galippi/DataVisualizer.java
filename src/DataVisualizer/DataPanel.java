@@ -11,6 +11,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
+import dataCache.DataCache_ChannelBase;
+import dataCache.DataCache_ChannelBasePointBased;
 import dataCache.DataCache_FileBase;
 import dataVisualizer.interfaces.DataChannelListChangeEventHandler;
 import lippiWare.utils.Sprintf;
@@ -373,92 +375,35 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         dataImage.repaint();
     }
 
-    @Override
-    public void paintComponent(java.awt.Graphics g) {
-        super.paintComponent(g);
+    Color getContrastColor(Color color, Color bgColor) {
+        int[] colorDiff = {
+            Math.abs(color.getRed() - bgColor.getRed()),
+            Math.abs(color.getGreen() - bgColor.getGreen()),
+            Math.abs(color.getBlue() - bgColor.getBlue()),
+        };
+        int colorDiffMax = Math_max(colorDiff);
+        if (colorDiffMax > 100)
+            return bgColor;
+        if (bgColor.getRed() < 100)
+            return new Color(255, bgColor.getGreen(), bgColor.getBlue());
+        if (bgColor.getRed() > 155)
+            return new Color(  0, bgColor.getGreen(), bgColor.getBlue());
+        if (bgColor.getGreen() < 100)
+            return new Color(bgColor.getRed(), 255, bgColor.getBlue());
+        if (bgColor.getGreen() > 155)
+            return new Color(bgColor.getRed(),   0, bgColor.getBlue());
+        if (bgColor.getBlue() < 100)
+            return new Color(bgColor.getRed(), bgColor.getGreen(), 255);
+        if (bgColor.getBlue() > 155)
+            return new Color(bgColor.getRed(), bgColor.getGreen(),   0);
+        throw new Error("getContrastColor - not yet implemented case!");
+    }
 
-        //final int windowHeight = getHeight();
-
-        boolean repaintNeeded = false;
-        dbg.println(9, "DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax);
-        //Graphics2D g2 = (Graphics2D)g;
-        //g.setColor(Color.BLUE);
-        //g.fillRect(0, 0, getWidth(), getHeight());
-        ctr++;
-        if (dataImage.setImage(getWidth(), getHeight()))
-        {
-            repaintNeeded = true;
-        }
-        if (repaintNeeded)
-            dataImage.repaint();
-        if (dbg.get(19))
-        {
-            String state = dataFile.getStateString();
-            g.setColor(Color.BLACK);
-            g.drawString(state, 5, getHeight() / 2);
-        }
-        if (dataImage.isReady())
-        {
-          dbg.dprintf(21, "dataPanel - paintComponent(%d, %d)\n", 0, 0);
-          g.drawImage(dataImage.getImage(), 0, 0, null);
-
-          // cursor drawing
-          if (cursors[0].hPos >= 0)
-          {
-              g.setColor(Color.BLUE);
-              final int x = (cursors[0].hPos - dataChannelList.getDataPointIndexMin()) * dataImage.diagramWidth / (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) + dataImage.hOffset;
-              g.drawLine(x, 0, x, getHeight());
-              cursors[0].xPos = x;
-              if (dataChannelList.size() <= DataVisualizerPrefs.getDataCursorMaxChannel())
-              { // displaying signal value
-                  for (int i = 0; i < dataChannelList.size(); i++)
-                  {
-                      DataChannelListItem dcli = dataChannelList.get(i);
-                      double val = dcli.getDouble(cursors[0].hPos);
-                      String unit = dcli.ch.getUnit();
-                      if (!unit.isEmpty())
-                          unit = " " + unit;
-                      String valStr = " ";
-                      if ((Math.abs(val - (int)val) < 1e-12) && (Math.abs(val) < 1000000))
-                          valStr = valStr + (int)val;
-                      else
-                          valStr = valStr + Sprintf.sprintf("%4.2f", val);
-                      valStr = valStr + unit + " ";
-                      g.setColor(dcli.color);
-                      java.awt.FontMetrics metrics = g.getFontMetrics();
-                      int fontHgt = metrics.getHeight();
-                      int textWidth = metrics.stringWidth(valStr);
-                      int xVal = x - (textWidth / 2);
-                      if (xVal < 0)
-                          xVal = 0;
-                      else if (xVal > (getWidth() - textWidth))
-                          xVal = (getWidth() - textWidth);
-                      int yVal = dataImage.getY(dcli, val) + (fontHgt / 2);
-                      if (yVal > (getHeight() - 10))
-                          yVal = getHeight() - 10;
-                      g.clearRect(xVal, yVal - fontHgt, textWidth, fontHgt);
-                      g.drawRect(xVal, yVal - fontHgt, textWidth + 1, fontHgt);
-                      g.drawString(valStr, xVal + 1, yVal - 2);
-                  }
-              }
-          }else
-          if (zoomCursors[0].xPos >= 0)
-          { // draw zoom cursors
-              g.setColor(Color.darkGray);
-              g.drawLine(zoomCursors[0].xPos, 0, zoomCursors[0].xPos, getHeight());
-              g.drawLine(zoomCursors[1].xPos, 0, zoomCursors[1].xPos, getHeight());
-          }
-        }
-        if (dbg.get(19))
-        {
-            g.setColor(Color.ORANGE);
-            g.drawRect(0, 0, getWidth(), getHeight());
-        }
-        g.setColor(Color.BLACK);
-        if (dbg.get(19))
-            g.drawString("dataPanel ctr=" + ctr, 5, 10);
-        if (dbg.get(9))
-            g.drawString("DataPanel - paintComponent windowIdx="+windowIdx+" windowIdxMax="+windowIdxMax, 5, 30);
+    private int Math_max(int[] values) {
+        int max = values[0];
+        for (int i = 1; i < values.length; i++)
+            max = Math.max(max, values[i]);
+        return max;
     }
     int ctr = 0;
 

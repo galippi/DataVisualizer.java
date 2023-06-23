@@ -28,7 +28,7 @@ public class DataChannelList {
         horizontalAxle = file.getIndexChannel();
         pointIndexMin = 0;
         try {
-            pointIndexMax = file.getLength();
+            pointIndexMax = file.getLength() - 1;
         } catch (Exception e) {
             dbg.dprintf(1, "file.getLength exception e=%s!\n", e.toString());
         }
@@ -47,7 +47,7 @@ public class DataChannelList {
         }
         horizontalAxle = file.getChannel(horizontalAxleChannelName);
         pointIndexMin = piMin;
-        pointIndexMax = piMax;
+        pointIndexMax = piMax - 1;
         updateGroupData();
     }
 
@@ -117,8 +117,30 @@ public class DataChannelList {
         return pointIndexMin;
     }
 
+    public double getDataPointTimeMin() {
+        DataCache_ChannelBase chHor = getHorizontalAxle();
+        try {
+            return chHor.getDouble(getDataPointIndexMin());
+        } catch (Exception e) {
+            e.printStackTrace();
+            dbg.println(1, "DataChannelList.getDataPointTimeMin exception=" + e.toString());
+            return -1e99;
+        }
+    }
+
     public int getDataPointIndexMax() {
         return pointIndexMax;
+    }
+
+    public double getDataPointTimeMax() {
+        DataCache_ChannelBase chHor = getHorizontalAxle();
+        try {
+            return chHor.getDouble(getDataPointIndexMax());
+        } catch (Exception e) {
+            e.printStackTrace();
+            dbg.println(1, "DataChannelList.getDataPointTimeMax exception=" + e.toString());
+            return -1e99;
+        }
     }
 
     int pointIndexMin = -1, pointIndexMax = -1;
@@ -223,5 +245,10 @@ public class DataChannelList {
 
     public Vector<DataChannelGroup> getGroups() {
         return groups;
+    }
+
+    public int getSelectedChIdx() {
+        // TODO - not yet implemented
+        return 0;
     }
 }

@@ -20,7 +20,10 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
         windowIdxMax++;
         dataPanelLegend = new DataPanelLegend(parent, file, dcl);
         //dataPanelLegend = new DataPanelLegendValue(parent, file, dcl);
-        dataPanel = new DataPanel(this, parent, file, dcl);
+        if (!file.isPointBasedFile())
+            dataPanel = new DataPanelTimeBased(this, parent, file, dcl);
+        else
+            dataPanel = new DataPanelPointBased(this, parent, file, dcl);
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dataPanelLegend, dataPanel);
         splitPane.setOneTouchExpandable(true);
         splitPane.setContinuousLayout(true);
