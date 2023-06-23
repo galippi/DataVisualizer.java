@@ -52,12 +52,12 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
         dataPanel.dataImage.repaint();
     }
 
-    public void setDataCursor(int cursorIdx, int x, int hPos) {
+    public void setDataCursor(int cursorIdx, int x, double hPos) {
         dataPanel.setDataCursor(cursorIdx, x);
         dataPanelLegend.setDataCursor(hPos);
     }
 
-    public void setHorizontalZoom(int hPosMinNew, int hPosMaxNew) {
+    public void setHorizontalZoom(double hPosMinNew, double hPosMaxNew) {
         dataPanel.setHorizontalZoom(hPosMinNew, hPosMaxNew);
     }
 

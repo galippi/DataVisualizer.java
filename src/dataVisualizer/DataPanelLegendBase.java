@@ -17,7 +17,7 @@ public abstract class DataPanelLegendBase extends JPanel implements DataChannelL
         dataChannelList.addDataChannelListChangeEventHandler(this);
     }
 
-    public void setDataCursor(int cursorIdx) {
+    public void setDataCursor(double cursorIdx) {
         // do nothing
     }
 

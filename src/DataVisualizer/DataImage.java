@@ -27,9 +27,9 @@ public class DataImage extends threadImage
         repaint();
     }
 
-    public int getHPos(int xPos)
+    public double getHPos(int xPos)
     {
-        int hNum = dcl.pointIndexMax - dcl.pointIndexMin;
+        double hNum = dcl.pointIndexMax - dcl.pointIndexMin;
         return ((xPos - hOffset) * hNum / diagramWidth) + dcl.pointIndexMin;
     }
 
@@ -78,11 +78,37 @@ public class DataImage extends threadImage
                 g.setColor(Color.BLACK);
                 g.drawString("DataImage - Drawing!", 40, 40);
             }
-            final int hMin = dcl.getDataPointIndexMin();
-            final int hMax = dcl.getDataPointIndexMax();
+            DataCache_ChannelBase chHor = dcl.getHorizontalAxle();
+            g.setColor(Color.BLACK);
+            g.drawString(chHor.getName(), imgWidth / 2 - 16, imgHeight);
+            int xLast = -9999;
+            double tMin, tMax;
+            int hMin;
+            int hMax;
+            try {
+                final int tIdxMax = dcl.file.getLength() - 1;
+                double tIdxLow = dcl.getDataPointIndexMin();
+                double tIdxHigh = dcl.getDataPointIndexMax();
+                int tIdxLowInt = Math.max((int)(tIdxLow + 0.5), 0);
+                tMin = chHor.getDouble(tIdxLowInt);
+                int tIdxHighInt = Math.min((int)(tIdxHigh + 0.5), tIdxMax);
+                tMax = chHor.getDouble(tIdxHighInt);
+                double dt = tMax - tMin;
+                int dIdxHighInt = tIdxHighInt - tIdxLowInt;
+                double factor = dt / dIdxHighInt;
+                tMin = tMin - (tIdxLowInt - tIdxLow) * factor;
+                tMax = tMax + (tIdxHigh - tIdxHighInt) * factor;
+                hMin = Math.max(tIdxLowInt, 0);
+                hMax = Math.min(tIdxHighInt, tIdxMax);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+                dbg.println(1, "DataImage.Draw execption tMin/tMax");
+                return;
+            }
             final int hNum = hMax - hMin;
             final int hStep = (hNum < 10) ? 1 : ((hMax - hMin) / 10);
-            if (dbg.get(11))
+            double dt = tMax - tMin;
+            if (dbg.get(9))
             {
                 g.setColor(Color.BLACK);
                 g.drawString("hMin="+hMin, 0, diagHeight);
@@ -90,28 +116,17 @@ public class DataImage extends threadImage
                 for(int hIdx = hMin + hStep; hIdx < hMax; hIdx += hStep)
                     g.drawString("hIdx="+hIdx, imgWidth * (hIdx-hMin) / hNum, diagHeight);
             }
-            DataCache_ChannelBase chHor = dcl.getHorizontalAxle();
-            g.setColor(Color.BLACK);
-            g.drawString(chHor.getName(), imgWidth / 2 - 16, imgHeight);
-            int xLast = -9999;
-            double tMin, tMax;
-            try {
-                tMin = chHor.getDouble(hMin);
-                tMax = chHor.getDouble(hMax - 1);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-                dbg.println(1, "DataImage.Draw execption tMin/tMax");
-                return;
-            }
-            double dt = tMax - tMin;
             {
                 int y = imgHeight - hScaleHeight / 2;
-                for(int hIdx = hMin; hIdx < hMax; hIdx += hStep)
+                for(int hIdx = hMin; hIdx <= hMax; hIdx += hStep)
                 {
                     try {
                         double t = chHor.getDouble(hIdx);
                         double delta = t - tMin;
                         int x = (int)((imgWidth * delta) / dt);
+                        if (x > (imgWidth - 40))
+                            x = (imgWidth - 40);
+                        dbg.println(9, "t=" + t + " x=" + x);
                         if ((x - xLast) > 60) {
                             g.drawString(""+ t, x, y);
                             xLast = x;
@@ -158,18 +173,17 @@ public class DataImage extends threadImage
                     try {
                         dbg.println(19, "DataImage point based tMin=" + tMin + " tMax=" + tMax);
                         DataCache_ChannelBasePointBased dclip = (DataCache_ChannelBasePointBased)dcli.ch;
+                        final int maxIdx = dclip.size() - 1;
                         int idxMin = dclip.getPointIdx(tMin);
                         int idxMax = dclip.getPointIdx(tMax);
                         dbg.println(19, "DataImage point based idxMin=" + idxMin + " idxMax=" + idxMax);
-                        if (idxMin < 0) {
-                            if (idxMax < 0)
-                                throw new Error("DataImage point based drawing time conversion error " + dcli.getSignalName());
-                            idxMin = 0;
-                        }
-                        if (idxMax > idxMin) {
+                        if ((idxMax >= idxMin) && ((idxMin >= 0) || (idxMax <= maxIdx))) {
+                            idxMin = Math.max(idxMin, 0);
+                            idxMax = Math.min(idxMax, maxIdx);
                             DataPointBase pt = dclip.getPoint(idxMin);
                             int x0 = (int)((pt.t - tMin) * diagramWidth / dt) + hOffset;
                             int y0 = getY(dcg, pt.getDouble());
+                            g.drawOval(x0 - 1, y0 - 1, 3, 3);
                             idxMin++;
                             while(idxMin <= idxMax) {
                                 pt = dclip.getPoint(idxMin);

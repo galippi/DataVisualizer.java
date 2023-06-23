@@ -35,7 +35,7 @@ public class DataChannelList {
         updateGroupData();
     }
 
-    public DataChannelList(DataCache_FileBase _file, Vector<DataChannelListItem> dcl, String horizontalAxleChannelName, int piMin, int piMax)
+    public DataChannelList(DataCache_FileBase _file, Vector<DataChannelListItem> dcl, String horizontalAxleChannelName, double piMin, double piMax)
     {
         file = _file;
         clear();
@@ -47,7 +47,7 @@ public class DataChannelList {
         }
         horizontalAxle = file.getChannel(horizontalAxleChannelName);
         pointIndexMin = piMin;
-        pointIndexMax = piMax - 1;
+        pointIndexMax = piMax;
         updateGroupData();
     }
 
@@ -113,14 +113,14 @@ public class DataChannelList {
         return true;
     }
 
-    public int getDataPointIndexMin() {
+    public double getDataPointIndexMin() {
         return pointIndexMin;
     }
 
     public double getDataPointTimeMin() {
         DataCache_ChannelBase chHor = getHorizontalAxle();
         try {
-            return chHor.getDouble(getDataPointIndexMin());
+            return chHor.getDouble((int)(getDataPointIndexMin() + 0.5));
         } catch (Exception e) {
             e.printStackTrace();
             dbg.println(1, "DataChannelList.getDataPointTimeMin exception=" + e.toString());
@@ -128,14 +128,14 @@ public class DataChannelList {
         }
     }
 
-    public int getDataPointIndexMax() {
+    public double getDataPointIndexMax() {
         return pointIndexMax;
     }
 
     public double getDataPointTimeMax() {
         DataCache_ChannelBase chHor = getHorizontalAxle();
         try {
-            return chHor.getDouble(getDataPointIndexMax());
+            return chHor.getDouble((int)(getDataPointIndexMax() + 0.5));
         } catch (Exception e) {
             e.printStackTrace();
             dbg.println(1, "DataChannelList.getDataPointTimeMax exception=" + e.toString());
@@ -143,7 +143,7 @@ public class DataChannelList {
         }
     }
 
-    int pointIndexMin = -1, pointIndexMax = -1;
+    double pointIndexMin = -1, pointIndexMax = -1;
     public DataCache_ChannelBase getHorizontalAxle() {
         return horizontalAxle;
     }

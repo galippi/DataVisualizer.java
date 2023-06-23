@@ -75,7 +75,7 @@ public class DataPanelPointBased extends DataPanel {
                   for (int i = 0; i < dataChannelList.size(); i++)
                   {
                       DataChannelListItem dcli = dataChannelList.get(i);
-                      double val = dcli.getDouble(cursors[0].hPos);
+                      double val = dcli.getDouble((int)(cursors[0].hPos + 0.5));
                       String unit = dcli.ch.getUnit();
                       if (!unit.isEmpty())
                           unit = " " + unit;

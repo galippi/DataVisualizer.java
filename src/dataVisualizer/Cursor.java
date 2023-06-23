@@ -7,6 +7,6 @@ public class Cursor {
     }
 
     DataPanel parent;
-    int hPos = -1;
+    double hPos = -1;
     int xPos = -9999;
 }

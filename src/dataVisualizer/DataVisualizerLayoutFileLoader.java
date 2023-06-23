@@ -66,7 +66,7 @@ public class DataVisualizerLayoutFileLoader {
         window.put("horizontalAxle", ch.getName());
         window.put("pointIndexMin", 0);
         try {
-            window.put("pointIndexMax", file.getLength());
+            window.put("pointIndexMax", file.getLength() - 1);
         } catch (Exception e) {
             dbg.println(1, "DataVisualizerLayoutFileLoader.ctor file.getLength() exception e=" + e.toString());
         }
@@ -95,8 +95,8 @@ public class DataVisualizerLayoutFileLoader {
             dcl.add(dcli);
         }
         String horizontalAxleChannelName = window.getString("horizontalAxle");
-        int piMin = window.getInt("pointIndexMin");
-        int piMax = window.getInt("pointIndexMax");
+        double piMin = window.getDouble("pointIndexMin");
+        double piMax = window.getDouble("pointIndexMax");
         return new DataChannelList(dcf, dcl, horizontalAxleChannelName, piMin, piMax);
     }
 

@@ -113,6 +113,9 @@ public class DataVisualizerPrefs {
       dataCursorMaxChannel = val;
       put(dataCursorMaxChannelPrefsStr, val);
   }
+  public static double getZoomOutLimit() {
+      return 0.5;
+  }
 
   static final String root = "DataVisualizer";
 }

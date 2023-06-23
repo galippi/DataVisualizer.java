@@ -200,9 +200,9 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         Vector<DataChannelListProvider> dataPanelsLocal = new Vector<>();
         for (DataPanelContainer dataPanel : dataPanels)
             dataPanelsLocal.add(dataPanel);
-        //cursorsTogether = parent.m_ViewCursorModeTogether.getState();
-        //DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal, cursorsTogether);
-        dvlf.saveLayoutFile(file.getName());
+        cursorsTogether = parent.m_ViewCursorModeTogether.getState();
+        DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal, cursorsTogether);
+        //dvlf.saveLayoutFile(file.getName());
     }
 
     public void createNewWindow() {
@@ -224,7 +224,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
 
     Color bgColor = DataVisualizerPrefs.getBackgroundColor(new Color(0, 0, 0));
 
-    void setDataCursor(int windowIdx, int cursorIdx, int x, int hPos)
+    void setDataCursor(int windowIdx, int cursorIdx, int x, double hPos)
     {
         for (DataPanelContainer dataPanel: dataPanels)
         {
@@ -233,7 +233,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         }
     }
 
-    public void setHorizontalZoom(int hPosMinNew, int hPosMaxNew)
+    public void setHorizontalZoom(double hPosMinNew, double hPosMaxNew)
     {
         for (DataPanelContainer dataPanel: dataPanels)
         {

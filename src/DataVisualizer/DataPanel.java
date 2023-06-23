@@ -115,10 +115,10 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     public void mouseWheelMovedHandler(MouseWheelEvent e) {
         dbg.println(19, "DataPanel.mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
         int xPosMiddle = e.getX();
-        int hPosMiddle = dataImage.getHPos(xPosMiddle);
-        int hPosMin = dataImage.dcl.pointIndexMin;
-        int hPosMax = dataImage.dcl.pointIndexMax;
-        int dH = (hPosMax - hPosMin);
+        double hPosMiddle = dataImage.getHPos(xPosMiddle);
+        double hPosMin = dataImage.dcl.pointIndexMin;
+        double hPosMax = dataImage.dcl.pointIndexMax;
+        double dH = (hPosMax - hPosMin);
         int hMax = -1;
         try
         {
@@ -128,12 +128,12 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
             dbg.println(1, "DataPanel.mouseWheelMovedHandler e="+e1.toString());
             return; /* do nothing */
         }
-        int hPosMinNew;
-        int hPosMaxNew;
+        double hPosMinNew;
+        double hPosMaxNew;
         if (e.getWheelRotation() < 0)
         { // zoom in
-            if (dH < 250)
-                return; // over zoomed -> do nothing
+            //if (dH < 250)
+            //    return; // over zoomed -> do nothing
             hPosMinNew = hPosMiddle - (dH / 4);
             hPosMaxNew = hPosMiddle + (dH / 4);
             if (hPosMinNew < 0)
@@ -143,7 +143,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
             }
             if (hPosMaxNew >= hMax)
             {
-                int diff = hPosMaxNew - hMax + 1;
+                double diff = hPosMaxNew - hMax + 1;
                 hPosMaxNew -= diff;
                 hPosMinNew -= diff;
             }
@@ -153,24 +153,23 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                 hPosMaxNew = hMax - 1;
         }else
         { // zoom out
+            final double zoomOutLimit = DataVisualizerPrefs.getZoomOutLimit();
             hPosMinNew = hPosMiddle - dH;
             hPosMaxNew = hPosMiddle + dH;
-            if (hPosMinNew < 0)
+            if (hPosMinNew < -zoomOutLimit)
             {
-                hPosMaxNew = hPosMaxNew + (-hPosMinNew);
-                hPosMinNew = 0;
+                hPosMinNew = -zoomOutLimit;
+                hPosMaxNew = hPosMinNew + 2 * dH;
             }
-            if (hPosMaxNew >= hMax)
+            if (hPosMaxNew >= (hMax + zoomOutLimit))
             {
-                int diff = hPosMaxNew - hMax + 1;
-                hPosMaxNew -= diff;
-                hPosMinNew -= diff;
+                hPosMaxNew = (hMax + zoomOutLimit);
+                hPosMinNew = hPosMaxNew - 2 * dH;
             }
-            if (hPosMinNew < 0)
-                hPosMinNew = 0;
-            if (hPosMaxNew >= hMax)
-                hPosMaxNew = hMax - 1;
+            hPosMinNew = Math.max(hPosMinNew, -zoomOutLimit);
+            hPosMaxNew = Math.min(hPosMaxNew, hMax + zoomOutLimit);
         }
+        dbg.println(9, " DataPanel.mouseWheelMovedHandler hPosMinNew="+hPosMinNew + " hPosMaxNew=" + hPosMaxNew);
         dataImage.dcl.pointIndexMin = hPosMinNew;
         dataImage.dcl.pointIndexMax = hPosMaxNew;
         if (parent.cursorsTogether)
@@ -203,8 +202,8 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                             int dx = x - cursors[i].xPos;
                             if (dx < 0)
                                 dx = -dx;
-                            int h0 = dataImage.getHPos(x);
-                            int h1 = cursors[i].hPos;
+                            double h0 = dataImage.getHPos(x);
+                            double h1 = cursors[i].hPos;
                             if ((dx < cursorDistance) || (Math.abs(h1 - h0) < 2))
                                 cursorLast = cursors[i];
                         }
@@ -283,9 +282,9 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                             zoomCursors[1] = zoomCursors[0];
                             zoomCursors[0] = tmp;
                         }
-                        int hPosMinNew = dataImage.getHPos(zoomCursors[0].xPos);
-                        int hPosMaxNew = dataImage.getHPos(zoomCursors[1].xPos);
-                        int dH = hPosMaxNew - hPosMinNew;
+                        double hPosMinNew = dataImage.getHPos(zoomCursors[0].xPos);
+                        double hPosMaxNew = dataImage.getHPos(zoomCursors[1].xPos);
+                        double dH = hPosMaxNew - hPosMinNew;
                         if (dH < 20)
                         {
                             cursorLast = null;
@@ -331,7 +330,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         repaint();
     }
 
-    public void setHorizontalZoom(int hPosMinNew, int hPosMaxNew)
+    public void setHorizontalZoom(double hPosMinNew, double hPosMaxNew)
     {
         dataImage.dcl.pointIndexMin = hPosMinNew;
         dataImage.dcl.pointIndexMax = hPosMaxNew;
