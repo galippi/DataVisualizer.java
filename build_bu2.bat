@@ -14,7 +14,7 @@ set CYGWIN=C:\KBApps\DevEnv\Cygwin\V2_3_1
 
 :: updating source list
 del /f /Q javafiles
-%CYGWIN%\bin\bash.exe -i -c "find src -iname '*.java' ! -name DataVisualizerLayoutFile_test.java >javafiles"
+%CYGWIN%\bin\bash.exe -i -c "find src -iname '*.java' ! -name DataVisualizerLayoutFile_test.java ! -name ScaleTest.java ! -name PythonStructUnitTest.java >javafiles"
 mkdir bin
 del /f /q /s *.class
 ::"C:\Program Files (x86)\Java\jdk1.7.0_11\bin\javac" -Werror -d bin -cp patzh-to-jar;path-to-jar2 @javafiles

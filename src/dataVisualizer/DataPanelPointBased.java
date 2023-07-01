@@ -50,13 +50,11 @@ public class DataPanelPointBased extends DataPanel {
           if (cursors[0].hPos >= 0)
           {
               g.setColor(Color.BLUE);
-              double tMin = dataChannelList.getDataPointTimeMin();
-              double tMax = dataChannelList.getDataPointTimeMax();
-              double dt = tMax - tMin;
-              double timeTreshold = (dt * 2) / wi; 
+              HPosData hPosData = DataImageUtil.calcBorders(dataChannelList);
+              double dt = hPosData.tMax - hPosData.tMin;
               //int ptMin = dataChannelList.getDataPointIndexMin();
               //int ptMax = dataChannelList.getDataPointIndexMax();
-              double t = tMin + (cursors[0].xPos * dt) / wi;
+              double t = hPosData.tMin + (cursors[0].xPos * dt) / wi;
               DataCache_ChannelBase chHor = dataChannelList.getHorizontalAxle();
               int ptIdx = chHor.getPointIdx(t);
               double tPt;
@@ -67,7 +65,7 @@ public class DataPanelPointBased extends DataPanel {
                   dbg.println(1, "DataPanelPointBased.paintComponent chHor.getDouble(" + ptIdx + ") exception=" + e.toString());
                   return;
               }
-              int x = (int)(((tPt - tMin) * wi) / dt);
+              int x = (int)(((tPt - hPosData.tMin) * wi) / dt);
               g.drawLine(x, 0, x, getHeight());
               cursors[0].xPos = x;
               if (dataChannelList.size() <= DataVisualizerPrefs.getDataCursorMaxChannel())
