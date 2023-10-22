@@ -45,7 +45,7 @@ public class DataPanelTimeBased extends DataPanel {
           if (cursors[0].hPos >= 0)
           {
               g.setColor(Color.BLUE);
-              int x = (cursors[0].hPos - dataChannelList.getDataPointIndexMin()) * dataImage.diagramWidth / (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) + dataImage.hOffset;
+              int x = (int)((cursors[0].hPos - dataChannelList.getDataPointIndexMin()) * dataImage.diagramWidth / (dataChannelList.getDataPointIndexMax() - dataChannelList.getDataPointIndexMin()) + dataImage.hOffset);
               g.drawLine(x, 0, x, getHeight());
               cursors[0].xPos = x;
               if (dataChannelList.size() <= DataVisualizerPrefs.getDataCursorMaxChannel())

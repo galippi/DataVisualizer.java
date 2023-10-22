@@ -42,6 +42,10 @@ public class DataChannelListItem {
         }
     }
 
+    public double getDouble(double hIdx) {
+        return getDouble((int)(hIdx + 0.5));
+    }
+
     public void update(Color _color, String groupName)
     {
         color = _color;
