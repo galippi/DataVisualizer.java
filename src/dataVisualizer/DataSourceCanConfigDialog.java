@@ -15,6 +15,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -73,6 +74,8 @@ class DbcData {
 }
 
 public class DataSourceCanConfigDialog extends JDialog {
+    private JComboBox signalSourceSelectorCb;
+
     public DataSourceCanConfigDialog(Object o) {
 
         if (o == null)
@@ -96,6 +99,10 @@ public class DataSourceCanConfigDialog extends JDialog {
         }
 
         JLabel l = new JLabel("lll");
+        String s[] = new String[] {"Raw signals only", "Logic signals only", "Both signals"};
+        signalSourceSelectorCb = new JComboBox<String>(s);
+        signalSourceSelectorCb.setSelectedIndex(0);
+
 
         DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode("Channels");
         tree = new JTree(treeRoot);
@@ -169,6 +176,8 @@ public class DataSourceCanConfigDialog extends JDialog {
         Container cp = getContentPane();
         SpringLayout layout = new SpringLayout();
         cp.setLayout(layout);
+
+        cp.add(signalSourceSelectorCb);
         cp.add(l);
         cp.add(treePane);
         cp.add(bOkCancel);
@@ -176,7 +185,11 @@ public class DataSourceCanConfigDialog extends JDialog {
         layout.putConstraint(SpringLayout.NORTH, l, 4, SpringLayout.NORTH, cp);
         layout.putConstraint(SpringLayout.WEST,  l, 5, SpringLayout.WEST,  cp);
 
-        layout.putConstraint(SpringLayout.NORTH, treePane, 4, SpringLayout.SOUTH, l);
+        layout.putConstraint(SpringLayout.NORTH, signalSourceSelectorCb, 4, SpringLayout.SOUTH, l);
+        layout.putConstraint(SpringLayout.WEST, signalSourceSelectorCb, 4, SpringLayout.WEST, cp);
+        layout.putConstraint(SpringLayout.EAST, signalSourceSelectorCb, 4, SpringLayout.EAST, cp);
+
+        layout.putConstraint(SpringLayout.NORTH, treePane, 4, SpringLayout.SOUTH, signalSourceSelectorCb);
         layout.putConstraint(SpringLayout.WEST,  treePane, 5, SpringLayout.WEST,  cp);
         layout.putConstraint(SpringLayout.EAST,  treePane, 5, SpringLayout.EAST,  cp);
 
