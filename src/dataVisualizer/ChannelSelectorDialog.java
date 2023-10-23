@@ -285,13 +285,11 @@ public class ChannelSelectorDialog extends JDialog {
 
     protected void configureDataSource() {
         dbg.println(9, "ChannelSelectorDialog.configureDataSource");
-        //this.setVisible(false);
         JDialog dlg = file.getDataSourceConfigDlg(this);
         dlg.setVisible(true);
     }
 
     public void dataSourceCanConfigDlgOkHandler() {
-        //this.setVisible(true);
         // TODO: not yet implemented
     }
 
