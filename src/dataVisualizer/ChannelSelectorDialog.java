@@ -38,6 +38,7 @@ import javax.swing.table.DefaultTableModel;
 
 import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_FileBase;
+import dataCache.DataCache_FileCan;
 import lippiWare.utils.dbg;
 
 /**
@@ -45,12 +46,9 @@ import lippiWare.utils.dbg;
  * @author liptakok
  */
 public class ChannelSelectorDialog extends JDialog {
-  /**
-     * 
-     */
     private static final long serialVersionUID = 3001210750112112397L;
 
-JComboBox<String> cb;
+    JComboBox<String> cb;
 
     DataCache_FileBase file;
     DataChannelList colArray;
@@ -121,6 +119,20 @@ JComboBox<String> cb;
             setVisible(false);
         }
     });
+
+    JButton bDataSourceConfigure = null;
+    try {
+        DataCache_FileCan fileConf = (DataCache_FileCan)file;
+        if (fileConf != null) {
+            bDataSourceConfigure = new JButton("Configure data source");
+            bDataSourceConfigure.setHorizontalAlignment(SwingConstants.CENTER);
+            bDataSourceConfigure.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    configureDataSource();
+                }
+            });
+        }
+    } catch (Exception e) { /* do nothing */ }
 
     //JPanel jpanel = new JPanel();
     JScrollPane scrollableTable = new JScrollPane(myTable);
@@ -204,6 +216,8 @@ JComboBox<String> cb;
 
     JPanel bOkCancel = new JPanel();
     bOkCancel.add(bOk);
+    if (bDataSourceConfigure != null)
+        bOkCancel.add(bDataSourceConfigure);
     bOkCancel.add(bCancel);
 
     Container cp = getContentPane();
@@ -267,9 +281,14 @@ JComboBox<String> cb;
     updateProperties();
   }
 
-  final void updateButtons()
-  {
-  }
+    protected void configureDataSource() {
+        dbg.println(9, "ChannelSelectorDialog.configureDataSource");
+        JDialog dlg = file.getDataSourceConfigDlg(this);
+        dlg.setVisible(true);
+    }
+
+    final void updateButtons() {
+    }
 
     private void signalVisibilityFilterIsChanged()
     {
