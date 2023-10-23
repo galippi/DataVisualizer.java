@@ -31,6 +31,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import dataCache.DataCache_FileBase;
 import lippiWare.utils.dbg;
 
 class TreeNodeChannel extends DefaultMutableTreeNode {
@@ -72,22 +73,33 @@ class DbcData {
 }
 
 public class DataSourceCanConfigDialog extends JDialog {
-
     public DataSourceCanConfigDialog(Object o) {
 
         if (o == null)
             return;
+        parent = (java.awt.Component)o;
 
         this.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 
-        parent = (DataPanelMain)o;
-        DataVisualizerLayoutFileLoader dvlf = parent.dvlf;
+        try {
+            parentPanel = (DataPanelMain)parent;
+            dvlf = parentPanel.dvlf;
+            file = parentPanel.file;
+        }catch (Exception e) {
+            try {
+                parentDlg = (ChannelSelectorDialog)parent;
+                dvlf = parentDlg.dvlf;
+                file = parentDlg.file;
+            }catch (Exception e2) {
+                throw new Error("DataSourceCanConfigDialog: Not yet implemented case!");
+            }
+        }
 
         JLabel l = new JLabel("lll");
 
         DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode("Channels");
         tree = new JTree(treeRoot);
-        Vector<Integer> channels = parent.file.getDataSourceChannelIndexArray();
+        Vector<Integer> channels = file.getDataSourceChannelIndexArray();
         for(int i = 0; i < channels.size(); i++) {
             int chIdx = channels.get(i).intValue();
             TreeNodeChannel node = new TreeNodeChannel(new ChData(chIdx));
@@ -252,7 +264,9 @@ public class DataSourceCanConfigDialog extends JDialog {
             }
             map.put(Integer.valueOf(chIdx), dbcs);
         }
-        parent.dvlf.setDbc(map);
+        dvlf.setDbc(map);
+        if (parentDlg != null)
+            parentDlg.dataSourceCanConfigDlgOkHandler();
     }
 
     void addEscapeListener() {
@@ -311,7 +325,12 @@ public class DataSourceCanConfigDialog extends JDialog {
         }
     };
 
-    DataPanelMain parent;
+    java.awt.Component parent = null;
+    DataPanelMain parentPanel = null;
+    ChannelSelectorDialog parentDlg = null;
+    DataCache_FileBase file;
+    DataVisualizerLayoutFileLoader dvlf;
+
     JTree tree;
 
     private static final long serialVersionUID = 3669321701872360642L;

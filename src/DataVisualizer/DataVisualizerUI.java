@@ -232,7 +232,7 @@ public class DataVisualizerUI extends javax.swing.JFrame
     {
         dbg.println(9, "m_ViewChannelActionPerformed");
         DataPanelContainer dataPanel = dataPanelMain.dataPanels.get(0);
-        ChannelSelectorDialog csd = new ChannelSelectorDialog(this, dataPanelMain.file, dataPanel.getDataChannelList());
+        ChannelSelectorDialog csd = new ChannelSelectorDialog(this, dataPanelMain.file, dataPanel.getDataChannelList(), dataPanelMain.dvlf);
         csd.setVisible(true);
     }
 

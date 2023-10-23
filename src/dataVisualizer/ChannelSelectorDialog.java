@@ -53,6 +53,7 @@ public class ChannelSelectorDialog extends JDialog {
     DataCache_FileBase file;
     DataChannelList colArray;
     DataChannelList colArrayLocal; // this will store the visibility data before ok key
+    DataVisualizerLayoutFileLoader dvlf;
     ChannelListEditorTable myTable;
     private JTextField signalNameFilterText;
     private JCheckBox signalVisibilityFilter;
@@ -61,12 +62,13 @@ public class ChannelSelectorDialog extends JDialog {
     private JTextField tGroupOffset; 
     boolean signalDataIsUpdated = false;
 
-  ChannelSelectorDialog(JFrame parent, DataCache_FileBase _file, DataChannelList _colArray)
+  ChannelSelectorDialog(JFrame parent, DataCache_FileBase _file, DataChannelList _colArray, DataVisualizerLayoutFileLoader dvlf)
   {
     super(parent, Dialog.ModalityType.APPLICATION_MODAL);
     file = _file;
     colArray = _colArray;
     colArrayLocal = colArray.copy();
+    this.dvlf = dvlf;
     this.setTitle("Select signals to be displayed");
     
     myTable = new ChannelListEditorTable(this, file, colArray);
@@ -283,8 +285,14 @@ public class ChannelSelectorDialog extends JDialog {
 
     protected void configureDataSource() {
         dbg.println(9, "ChannelSelectorDialog.configureDataSource");
+        //this.setVisible(false);
         JDialog dlg = file.getDataSourceConfigDlg(this);
         dlg.setVisible(true);
+    }
+
+    public void dataSourceCanConfigDlgOkHandler() {
+        //this.setVisible(true);
+        // TODO: not yet implemented
     }
 
     final void updateButtons() {
@@ -498,6 +506,7 @@ public class ChannelSelectorDialog extends JDialog {
     public void updateSelectedGroupName(String groupName) {
         jcSignalGroup.setSelectedItem(groupName);
     }
+
 
     JLabel lSignalName;
     JPanel jpSignalColor;

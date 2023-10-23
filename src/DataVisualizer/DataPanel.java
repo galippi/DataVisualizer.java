@@ -347,7 +347,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
       switch(event.getActionCommand())
       {
         case "Manage signals":
-          ChannelSelectorDialog csd = new ChannelSelectorDialog(getMainFrame(), dataFile, dataChannelList);
+          ChannelSelectorDialog csd = new ChannelSelectorDialog(getMainFrame(), dataFile, dataChannelList, parent.dvlf);
           //csd.addActionListener(this);
           csd.setVisible(true);
           break;
