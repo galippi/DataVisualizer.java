@@ -205,7 +205,7 @@ public class DataVisualizerLayoutFileLoader {
         }
     }
 
-    public static void saveLayoutFile(String filename, Vector<DataChannelListProvider> dataPanels, boolean cursorsMoveTogether)
+    public static void saveLayoutFile(String filename, Vector<DataChannelListProvider> dataPanels, boolean cursorsMoveTogether, DataVisualizerLayoutFileLoader dvlfAdditional)
     {
         JSONObject json = new JSONObject();
         //json.put("numOfWindows", dataPanels.size());
@@ -234,6 +234,7 @@ public class DataVisualizerLayoutFileLoader {
         }
         json.put("windows", windows);
         json.put("pointIndexMin", 0);
+        json.put("CanChannels", dvlfAdditional.jsonObject.get("CanChannels"));
         try {
             json.put("pointIndexMax", dataPanels.get(0).getDataChannelList().file.getLength());
             json.put("CursorsMoveTogether", cursorsMoveTogether);

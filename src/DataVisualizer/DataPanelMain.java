@@ -201,7 +201,7 @@ public class DataPanelMain extends javax.swing.JPanel implements ActionListener 
         for (DataPanelContainer dataPanel : dataPanels)
             dataPanelsLocal.add(dataPanel);
         cursorsTogether = parent.m_ViewCursorModeTogether.getState();
-        DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal, cursorsTogether);
+        DataVisualizerLayoutFileLoader.saveLayoutFile(file.getName(), dataPanelsLocal, cursorsTogether, dvlf);
         //dvlf.saveLayoutFile(file.getName());
     }
 
