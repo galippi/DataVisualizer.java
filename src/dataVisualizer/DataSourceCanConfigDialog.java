@@ -74,7 +74,7 @@ class DbcData {
 }
 
 public class DataSourceCanConfigDialog extends JDialog {
-    private JComboBox signalSourceSelectorCb;
+    private JComboBox<String> signalSourceSelectorCb;
 
     public DataSourceCanConfigDialog(Object o) {
 

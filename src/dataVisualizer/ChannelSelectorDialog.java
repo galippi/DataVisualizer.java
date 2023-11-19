@@ -104,7 +104,8 @@ public class ChannelSelectorDialog extends JDialog {
         {
             signalVisibilityFilterIsChanged();
         }
-     });  
+     });
+
     JButton bOk = new JButton("OK");
     bOk.setHorizontalAlignment(SwingConstants.LEFT);
     bOk.addActionListener(new ActionListener() {
