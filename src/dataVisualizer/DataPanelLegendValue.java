@@ -55,12 +55,6 @@ public class DataPanelLegendValue extends DataPanelLegendBase
         }
     }
 
-    @Override
-    public void setDataCursor(int hPos) {
-        dbg.println(9, "DataPanelLegendValue.setDataCursor hPos="+hPos);
-        updateSignalValues(hPos);
-    }
-
     int hPosLast = -1;
     private void updateSignalValues(int hPos)
     {
