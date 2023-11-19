@@ -1,11 +1,7 @@
 @echo off
 cls
 
-set JAR_FILE=DataVisualizer.jar
-
-set JAVA=C:\Program Files (x86)\Java\jdk1.7.0_11
-set CYGWIN=C:\Programok\cygwin
-::set CYGWIN=C:\KBApps\DevEnv\Cygwin\V2_3_1
+@call config.bat
 
 @set PATH=%CYGWIN%\bin\;%PATH%
 
@@ -14,7 +10,7 @@ set CYGWIN=C:\Programok\cygwin
 
 :: updating source list
 del /f /Q javafiles
-%CYGWIN%\bin\bash.exe -i -c "find src -iname '*.java' ! -name DataVisualizerLayoutFile_test.java ! -name ScaleTest.java >javafiles"
+%CYGWIN%\bin\bash.exe -i -c "find src -iname '*.java' ! -name DataVisualizerLayoutFile_test.java ! -name PythonStructUnitTest.java ! -name ScaleTest.java >javafiles"
 mkdir bin
 del /f /q /s *.class
 ::"C:\Program Files (x86)\Java\jdk1.7.0_11\bin\javac" -Werror -d bin -cp patzh-to-jar;path-to-jar2 @javafiles
