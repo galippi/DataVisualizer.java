@@ -101,7 +101,7 @@ public class DataSourceCanConfigDialog extends JDialog {
         JLabel l = new JLabel("lll");
         String s[] = new String[] {"Raw signals only", "Logic signals only", "Both signals"};
         signalSourceSelectorCb = new JComboBox<String>(s);
-        signalSourceSelectorCb.setSelectedIndex(0);
+        signalSourceSelectorCb.setSelectedIndex(dvlf.getDbcSignalMode());
 
 
         DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode("Channels");
@@ -277,7 +277,7 @@ public class DataSourceCanConfigDialog extends JDialog {
             }
             map.put(Integer.valueOf(chIdx), dbcs);
         }
-        dvlf.setDbc(map);
+        dvlf.setDbc(map, signalSourceSelectorCb.getSelectedIndex());
         if (parentDlg != null)
             parentDlg.dataSourceCanConfigDlgOkHandler();
     }

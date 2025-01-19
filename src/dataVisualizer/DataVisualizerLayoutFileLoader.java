@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -16,6 +17,7 @@ import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_FileBase;
 import lippiWare.utils.FileNameExtension;
 import lippiWare.utils.dbg;
+import measData.dbc.DbcFile;
 
 public class DataVisualizerLayoutFileLoader {
     Status status = Status.Loading;
@@ -100,7 +102,7 @@ public class DataVisualizerLayoutFileLoader {
         return new DataChannelList(dcf, dcl, horizontalAxleChannelName, piMin, piMax);
     }
 
-    public void setDbc(TreeMap<Integer, Vector<String>> map) {
+    public void setDbc(TreeMap<Integer, Vector<String>> map, int signalMode) {
         //JSONArray channels = new JSONArray();
         JSONObject channels = new JSONObject();
         for (Map.Entry<Integer, Vector<String>>
@@ -121,6 +123,7 @@ public class DataVisualizerLayoutFileLoader {
             channels.put(chName, o);
         }
         jsonObject.put("CanChannels", channels);
+        jsonObject.put("CanChannelsSignalMode", signalMode);
     }
 
     public String getDbcName(int chIdx, int fileIdx)
@@ -137,6 +140,37 @@ public class DataVisualizerLayoutFileLoader {
         }
     }
 
+    public int getDbcSignalMode() {
+        try {
+            return jsonObject.getInt("CanChannelsSignalMode");
+        }catch (Exception e)
+        {
+            return 0;
+        }
+    }
+
+    public TreeMap<Integer, Vector<String>> getDbcNames() {
+        TreeMap<Integer, Vector<String>> result = new TreeMap<>();
+        try {
+            JSONObject channels = jsonObject.getJSONObject("CanChannels");
+            //Iterator<String> channelIndexes = channels.keys();
+            channels.keys().forEachRemaining(key -> {
+                Vector<String> dbcArray = new Vector<String>();
+                JSONObject channel = channels.getJSONObject(key);
+                JSONArray dbcs = channel.getJSONArray("dbcs");
+                for(int fileIdx = 0; fileIdx < dbcs.length(); fileIdx++) {
+                    JSONObject dbc = dbcs.getJSONObject(fileIdx);
+                    dbcArray.add(dbc.getString("name"));
+                }
+                result.put(Integer.parseInt(key), dbcArray);
+            });
+            return result;
+        }catch (Exception e)
+        {
+            return null;
+        }
+    }
+
     public String getDbcName_(int chIdx, int fileIdx)
     {
         try {
@@ -146,6 +180,42 @@ public class DataVisualizerLayoutFileLoader {
             return dbc.getString("name");
         }catch (Exception e)
         {
+            return null;
+        }
+    }
+
+    public DbcFile getDbcFile(int chIdx, int fileIdx) {
+        JSONObject dbc = null;
+        try {
+            JSONObject channels = jsonObject.getJSONObject("CanChannels");
+            JSONObject channel = channels.getJSONObject("" + chIdx);
+            JSONArray dbcs = channel.getJSONArray("dbcs");
+            dbc = dbcs.getJSONObject(fileIdx);
+            try {
+                DbcFile dbcFile = (DbcFile)dbc.get("dbc");
+                return dbcFile;
+            }catch (Exception e) {
+            }
+            try {
+                String dbcError = dbc.getString("dbcError");
+                dbg.println(11, "DBC file error (" + chIdx + ", " + fileIdx + "): " + dbcError);
+                return null;
+            }catch (Exception e) {
+            }
+            String dbcName = dbc.getString("name");
+            try {
+                DbcFile dbcFile = new DbcFile(dbcName);
+                dbc.put("dbc", dbcFile);
+                return dbcFile;
+            }catch (Exception e) {
+                dbc.put("dbcError", e.toString());
+                return null;
+            }
+        }catch (Exception e)
+        {
+            dbg.println(2, "DBC file error (" + chIdx + ", " + fileIdx + "): " + e.toString());
+            if (dbc != null)
+                dbc.put("dbcError", new JSONObject(e.toString()));
             return null;
         }
     }
@@ -255,4 +325,8 @@ public class DataVisualizerLayoutFileLoader {
     }
 
     public boolean cursorsMoveTogether;
+
+    public static final int SignalModeRaw     = 0;
+    public static final int SignalModeLogical = 1;
+    public static final int SignalModeBoth    = 2;
 }

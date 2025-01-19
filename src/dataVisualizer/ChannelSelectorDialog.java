@@ -291,7 +291,16 @@ public class ChannelSelectorDialog extends JDialog {
     }
 
     public void dataSourceCanConfigDlgOkHandler() {
-        // TODO: not yet implemented
+        dbg.println(9, "ChannelSelectorDialog.dataSourceCanConfigDlgOkHandler");
+
+        myTable.clearSelection();
+        if (signalDataIsUpdated)
+        {
+            updateLocalColArray();
+            signalDataIsUpdated = false;
+        }
+        file.updateChannelList(dvlf);
+        fillRowData();
     }
 
     final void updateButtons() {
@@ -505,7 +514,6 @@ public class ChannelSelectorDialog extends JDialog {
     public void updateSelectedGroupName(String groupName) {
         jcSignalGroup.setSelectedItem(groupName);
     }
-
 
     JLabel lSignalName;
     JPanel jpSignalColor;
