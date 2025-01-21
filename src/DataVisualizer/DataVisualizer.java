@@ -9,29 +9,8 @@ public class DataVisualizer
     public static void main(String[] args)
     {
         dbg.set(DataVisualizerPrefs.get("Debug level", 1));
-        /* Set the Nimbus look and feel */
-          //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-          /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-           * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-           */
-          try {
-              for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                  if ("Nimbus".equals(info.getName())) {
-                      javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                      break;
-                  }
-              }
-          } catch (ClassNotFoundException ex) {
-              java.util.logging.Logger.getLogger(DataVisualizer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-          } catch (InstantiationException ex) {
-              java.util.logging.Logger.getLogger(DataVisualizer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-          } catch (IllegalAccessException ex) {
-              java.util.logging.Logger.getLogger(DataVisualizer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-          } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-              java.util.logging.Logger.getLogger(DataVisualizer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-          }
-          //</editor-fold>
-          //</editor-fold>
+
+        setLookAndFeel(null);
 
           /* Create and display the form */
           java.awt.EventQueue.invokeLater(new Runnable() {
@@ -49,6 +28,35 @@ public class DataVisualizer
               });
               }
           });
+    }
+
+    static void setLookAndFeel(String uiManagerName) {
+        final String uiManagerKey = "UIManager";
+        if (uiManagerName != null) {
+            DataVisualizerPrefs.put(uiManagerKey, uiManagerName);
+        }else {
+            uiManagerName = DataVisualizerPrefs.get(uiManagerKey, "Nimbus");
+        }
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        boolean found = false;
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if (uiManagerName.equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    found = true;
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(DataVisualizer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            dbg.println(2, "DataVisualizer.setLookAndFeel exception name=" + uiManagerName + " ex=" + ex.toString());
+        }
+        if (!found)
+            dbg.println(3, "DataVisualizer.setLookAndFeel unable to set UIManager name=" + uiManagerName);
     }
 
     public static Component getMainFrame() {
