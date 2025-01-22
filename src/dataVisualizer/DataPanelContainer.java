@@ -18,7 +18,7 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
         super(new BorderLayout());
         windowIdx = windowIdxMax;
         windowIdxMax++;
-        dataPanelLegend = new DataPanelLegend(parent, file, dcl);
+        dataPanelLegend = new DataPanelLegendContainer(parent, file, dcl);
         //dataPanelLegend = new DataPanelLegendValue(parent, file, dcl);
         if (!file.isPointBasedFile())
             dataPanel = new DataPanelTimeBased(this, parent, file, dcl);
@@ -64,10 +64,10 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
     @Override
     public void paintComponent(java.awt.Graphics g) {
         super.paintComponent(g);
-        dbg.println(9, "DataPanelContainer - paintComponent");
-        //java.awt.Graphics2D g2 = (java.awt.Graphics2D)g;
-        if (dbg.get(9))
+        if (dbg.get(19))
         {
+            dbg.println(19, "DataPanelContainer - paintComponent");
+            //java.awt.Graphics2D g2 = (java.awt.Graphics2D)g;
             g.setColor(Color.GREEN);
             g.fillRect(0, 0, getWidth(), getHeight());
             //g2.setBackground(Color.GREEN);

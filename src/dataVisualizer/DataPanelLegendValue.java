@@ -1,5 +1,7 @@
 package dataVisualizer;
 
+import java.awt.Dimension;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -25,6 +27,7 @@ public class DataPanelLegendValue extends DataPanelLegendBase
     public DataPanelLegendValue(DataPanelMain parent, DataCache_FileBase file, DataChannelList dcl)
     {
         super(parent, file, dcl);
+        this.setMinimumSize(new Dimension(100, 100));
 
         //create table with data
         table = new JTable(new DefaultTableModel(1, 3));
@@ -40,6 +43,8 @@ public class DataPanelLegendValue extends DataPanelLegendBase
         }
         fillSignalList();
 
+        //table.setMinimumSize(new Dimension(100, 100));
+
         //add the table to the frame
         add(new JScrollPane(table));
     }
@@ -54,6 +59,12 @@ public class DataPanelLegendValue extends DataPanelLegendBase
             table.setValueAt("value "+i, i, colValue);
         }
     }
+
+    //@Override
+    //public void setDataCursor(int hPos) {
+    //    dbg.println(9, "DataPanelLegendValue.setDataCursor hPos="+hPos);
+    //    updateSignalValues(hPos);
+    //}
 
     int hPosLast = -1;
     private void updateSignalValues(int hPos)
@@ -89,6 +100,11 @@ public class DataPanelLegendValue extends DataPanelLegendBase
         fillSignalList();
         if (hPosLast >= 0)
             updateSignalValues(hPosLast);
+    }
+
+    @Override
+    public void setDataCursor(double hPos) {
+        updateSignalValues((int)hPos);
     }
 
     private static final long serialVersionUID = -1531090392973265388L;

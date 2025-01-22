@@ -1,6 +1,7 @@
 package dataVisualizer;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.geom.AffineTransform;
 
 import dataCache.DataCache_FileBase;
@@ -12,6 +13,7 @@ public class DataPanelLegend extends DataPanelLegendBase
     public DataPanelLegend(DataPanelMain parent, DataCache_FileBase file, DataChannelList dcl)
     {
         super(parent, file, dcl);
+        this.setMinimumSize(new Dimension(100, 100));
     }
 
     int diagHeight = 1;
