@@ -294,7 +294,8 @@ public class ChannelSelectorDialog extends JDialog {
         dbg.println(9, "ChannelSelectorDialog.dataSourceCanConfigDlgOkHandler");
 
         myTable.clearSelection();
-        if (signalDataIsUpdated)
+        //file.updateChannelList(dvlf);
+        if (true)
         {
             updateLocalColArray();
             signalDataIsUpdated = false;
@@ -351,7 +352,8 @@ public class ChannelSelectorDialog extends JDialog {
             rowCount = colArrayFiltered.size();
         model.setRowCount(rowCount);
         int rowIdx = 0;
-        for (int i = 0; i < file.getChannelNumber(); i++)
+        int chNum = file.getChannelNumber();
+        for (int i = 0; i < chNum; i++)
         {
             String chName = file.getChannel(i).getName();
             if ((colArrayFiltered == null) || (colArrayFiltered.get(chName) != null))
@@ -443,7 +445,7 @@ public class ChannelSelectorDialog extends JDialog {
 
     private void updateColArray(DataChannelList colArray)
     {
-        //colArray.clear();
+        colArray.clear();
         for (int i = 0; i < myTable.getRowCount(); i++)
         {
             String chName = myTable.getSignalName(i);

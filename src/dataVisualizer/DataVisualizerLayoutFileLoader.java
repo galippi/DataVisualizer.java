@@ -192,9 +192,12 @@ public class DataVisualizerLayoutFileLoader {
             JSONArray dbcs = channel.getJSONArray("dbcs");
             dbc = dbcs.getJSONObject(fileIdx);
             try {
-                DbcFile dbcFile = (DbcFile)dbc.get("dbc");
+                //DbcFile dbcFile = (DbcFile)dbc.get("name");
+                String dbcName = (String)dbc.get("name");
+                DbcFile dbcFile = new DbcFile(dbcName);
                 return dbcFile;
             }catch (Exception e) {
+                dbg.println(3, "DataVisualizerLayoutFileLoader.getDbcFile(" + chIdx + ", " + fileIdx + ") exception=" + e.toString());
             }
             try {
                 String dbcError = dbc.getString("dbcError");
@@ -305,6 +308,7 @@ public class DataVisualizerLayoutFileLoader {
         json.put("windows", windows);
         json.put("pointIndexMin", 0);
         json.put("CanChannels", dvlfAdditional.jsonObject.get("CanChannels"));
+        json.put("CanChannelsSignalMode", dvlfAdditional.jsonObject.getInt("CanChannelsSignalMode"));
         try {
             json.put("pointIndexMax", dataPanels.get(0).getDataChannelList().file.getLength());
             json.put("CursorsMoveTogether", cursorsMoveTogether);
