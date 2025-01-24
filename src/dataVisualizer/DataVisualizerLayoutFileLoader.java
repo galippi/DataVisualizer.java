@@ -307,8 +307,16 @@ public class DataVisualizerLayoutFileLoader {
         }
         json.put("windows", windows);
         json.put("pointIndexMin", 0);
-        json.put("CanChannels", dvlfAdditional.jsonObject.get("CanChannels"));
-        json.put("CanChannelsSignalMode", dvlfAdditional.jsonObject.getInt("CanChannelsSignalMode"));
+        try {
+            json.put("CanChannels", dvlfAdditional.jsonObject.get("CanChannels"));
+        } catch (Exception e) {
+            dbg.dprintf(3, "DataVisualizerLayoutFileLoader.saveLayoutFile CanChannels exception e=%s!\n", e.toString());
+        }
+        try {
+            json.put("CanChannelsSignalMode", dvlfAdditional.jsonObject.getInt("CanChannelsSignalMode"));
+        } catch (Exception e) {
+            dbg.dprintf(3, "DataVisualizerLayoutFileLoader.saveLayoutFile CanChannelsSignalMode exception e=%s!\n", e.toString());
+        }
         try {
             json.put("pointIndexMax", dataPanels.get(0).getDataChannelList().file.getLength());
             json.put("CursorsMoveTogether", cursorsMoveTogether);
