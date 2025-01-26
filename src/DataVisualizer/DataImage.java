@@ -34,7 +34,7 @@ public class DataImage extends threadImage
     }
 
     public int getY(DataChannelGroup dcg, double val) {
-        return diagHeight - (int)(((val - dcg.offset) * dcg.factor) * diagHeight + 0.5);
+        return diagHeight - hScaleHeight- (int)(((val - dcg.offset) * dcg.factor) * diagHeight + 0.5);
     }
 
     public int getY(DataChannelListItem dcli, double val) {
@@ -68,7 +68,7 @@ public class DataImage extends threadImage
             }
         }
         {
-            diagHeight = imgHeight - hScaleHeight;
+            diagHeight = imgHeight - hScaleHeight - vOffset;
             hOffset = 0;
             diagramWidth = imgWidth - hOffset;
             if (dbg.get(19))
@@ -183,7 +183,7 @@ public class DataImage extends threadImage
                             DataPointBase pt = dclip.getPoint(idxMin);
                             int x0 = (int)((pt.t - tMin) * diagramWidth / dt) + hOffset;
                             int y0 = getY(dcg, pt.getDouble());
-                            g.drawOval(x0 - 1, y0 - 1, 3, 3);
+                            if (x0 > -5) g.drawOval(x0 - 1, y0 - 1, 3, 3); // Todo:
                             idxMin++;
                             while(idxMin <= idxMax) {
                                 pt = dclip.getPoint(idxMin);
@@ -208,7 +208,8 @@ public class DataImage extends threadImage
     }
     DataCache_FileBase file;
     DataChannelList dcl;
-    int hOffset = 0;
+    int hOffset = 10;
+    int vOffset = 20;
     int diagramWidth = 1;
     final int hScaleHeight = 16;
     int diagHeight = 0;

@@ -84,7 +84,7 @@ public class DataPanelLegendValue extends DataPanelLegendBase
         {
             String value;
             try {
-                value = ""+dataChannelList.get(i).ch.getDouble(hPos);
+                value = ""+dataChannelList.get(i).ch.getDoubleGlobal(hPos);
             } catch (Exception e) {
                 dbg.println(1, "DataPanelLegendValue.updateSignalValue.getDouble("+i+") Exception ch="+dataChannelList.getChName(i)+" hPos="+hPos+" e="+e.toString());
                 value = "";
