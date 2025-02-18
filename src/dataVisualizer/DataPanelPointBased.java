@@ -73,31 +73,38 @@ public class DataPanelPointBased extends DataPanel {
                   for (int i = 0; i < dataChannelList.size(); i++)
                   {
                       DataChannelListItem dcli = dataChannelList.get(i);
-                      double val = dcli.getDoubleGlobal((int)(cursors[0].hPos + 0.5));
-                      String unit = dcli.ch.getUnit();
-                      if (!unit.isEmpty())
-                          unit = " " + unit;
-                      String valStr = " ";
-                      if ((Math.abs(val - (int)val) < 1e-12) && (Math.abs(val) < 1000000))
-                          valStr = valStr + (int)val;
-                      else
-                          valStr = valStr + Sprintf.sprintf("%4.2f", val);
-                      valStr = valStr + unit + " ";
-                      g.setColor(dcli.color);
-                      java.awt.FontMetrics metrics = g.getFontMetrics();
-                      int fontHgt = metrics.getHeight();
-                      int textWidth = metrics.stringWidth(valStr);
-                      int xVal = x - (textWidth / 2);
-                      if (xVal < 0)
-                          xVal = 0;
-                      else if (xVal > (getWidth() - textWidth))
-                          xVal = (getWidth() - textWidth);
-                      int yVal = dataImage.getY(dcli, val) + (fontHgt / 2);
-                      if (yVal > (getHeight() - 10))
-                          yVal = getHeight() - 10;
-                      g.clearRect(xVal, yVal - fontHgt, textWidth, fontHgt);
-                      g.drawRect(xVal, yVal - fontHgt, textWidth + 1, fontHgt);
-                      g.drawString(valStr, xVal + 1, yVal - 2);
+                      try {
+                          double val = dcli.ch.getDoubleGlobal((int)(cursors[0].hPos + 0.5));
+                          String unit = dcli.ch.getUnit();
+                          if (!unit.isEmpty())
+                              unit = " " + unit;
+                          String valStr = " ";
+                          if ((Math.abs(val - (int)val) < 1e-12) && (Math.abs(val) < 1000000))
+                              valStr = valStr + (int)val;
+                          else
+                              valStr = valStr + Sprintf.sprintf("%4.2f", val);
+                          valStr = valStr + unit + " ";
+                          java.awt.FontMetrics metrics = g.getFontMetrics();
+                          int fontHgt = metrics.getHeight();
+                          int textWidth = metrics.stringWidth(valStr);
+                          int xVal = x - (textWidth / 2);
+                          if (xVal < 0)
+                              xVal = 0;
+                          else if (xVal > (getWidth() - textWidth))
+                              xVal = (getWidth() - textWidth);
+                          int yVal = dataImage.getY(dcli, val) + (fontHgt / 2);
+                          if (yVal > (getHeight() - 10))
+                              yVal = getHeight() - 10;
+                          //g.clearRect(xVal, yVal - fontHgt, textWidth, fontHgt);
+                          Color contrastColor = getContrastColor(dcli.color, parent.bgColor);
+                          g.setColor(contrastColor);
+                          g.fillRect(xVal, yVal - fontHgt, textWidth, fontHgt);
+                          g.setColor(dcli.color);
+                          g.drawRect(xVal, yVal - fontHgt, textWidth + 1, fontHgt);
+                          g.drawString(valStr, xVal + 1, yVal - 2);
+                      }catch(Exception e) {
+                          dbg.println(9, "DataPanelPointBased paint cursor exception e=" + e.toString());
+                      }
                   }
               }
           }else
