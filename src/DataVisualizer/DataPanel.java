@@ -243,23 +243,12 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                             }
                         }else
                         {
-                            //int idx = getNearPoint(x, cursorDistance);
-                            //if (idx >= 0) {
-                            if (false) {
-                                zoomCursors[0].xPos = x;
-                                zoomCursors[1].xPos = x;
-                                cursorLast = cursors[0];
-                                cursorLast.xPos = x;
-                                cursorLast.hPos = dataImage.getHPos(x);
-                                repaint();
-                            }else {
-                                zoomCursors[0].xPos = x;
-                                zoomCursors[1].xPos = x;
-                                cursorLast = zoomCursors[1];
-                                // invalidate data cursor
-                                cursors[0].hPos = -1;
-                                repaint();
-                            }
+                            zoomCursors[0].xPos = x;
+                            zoomCursors[1].xPos = x;
+                            cursorLast = zoomCursors[1];
+                            // invalidate data cursor
+                            cursors[0].hPos = -1;
+                            repaint();
                         }
                     }else {
                         
