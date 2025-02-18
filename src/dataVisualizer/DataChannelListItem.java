@@ -42,6 +42,15 @@ public class DataChannelListItem {
         }
     }
 
+    public double getDoubleGlobal(int hIdx) {
+        try {
+            return ch.getDoubleGlobal(hIdx);
+        } catch (Exception e) {
+            dbg.println(1, "Exception: DataChannelListItem.getDoubleGlobal("+ch.getName()+","+hIdx+") e="+e.toString());
+            return 0;
+        }
+    }
+
     public double getDouble(double hIdx) {
         return getDouble((int)(hIdx + 0.5));
     }

@@ -113,6 +113,10 @@ public class DataChannelList {
         return true;
     }
 
+    /**
+     * Get the index of the first displayed point
+     * @return Index of the first displayed point
+     */
     public double getDataPointIndexMin() {
         return pointIndexMin;
     }

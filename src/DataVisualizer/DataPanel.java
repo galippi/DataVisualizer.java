@@ -183,9 +183,30 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
 //      
 //  }
 
+    int getNearPoint(int x, int cursorDistance) {
+        double pointIdxDouble = dataImage.getHPos(x);
+        int pointIdxInt = (int)pointIdxDouble;
+        if (pointIdxInt < 0)
+            pointIdxInt = 0;
+        try {
+            double v0 = dataChannelList.horizontalAxle.getDoubleLocal(pointIdxInt);
+            int xPos = dataImage.getHPos(v0);
+            if (Math.abs(xPos - x) <= cursorDistance)
+                return pointIdxInt;
+            double v1 = dataChannelList.horizontalAxle.getDoubleLocal(pointIdxInt + 1);
+            xPos = dataImage.getHPos(v1);
+            if (Math.abs(xPos - x) <= cursorDistance)
+                return pointIdxInt + 1;
+            return -1;
+        }catch(Exception e) {
+            dbg.println(9, "isNearPoint exception e=" + e.toString());
+            return -1;
+        }
+    }
+
     public void mouseHandler(MouseEvent e) {
         dbg.println(19, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
-        final int cursorDistance = 10;
+        int cursorDistance = 10;
         final int x = e.getX();
         switch (e.getID())
         {
@@ -194,36 +215,54 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                 dbg.println(19, "DataPanel.mouseHandler "+e.toString()+" x=" + e.getX() + " y=" + e.getY() + " button=" + e.getButton());
                 if (e.getButton() == MouseEvent.BUTTON1)
                 {
-                    cursorLast = null;
-                    for (int i = 0; i < cursors.length; i++)
-                    {
-                        if (cursors[i].xPos >= 0)
+                    if (dataChannelList.horizontalAxle.isStrictMonotonic()) {
+                        cursorLast = null;
+                        for (int i = 0; i < cursors.length; i++)
                         {
-                            int dx = x - cursors[i].xPos;
-                            if (dx < 0)
-                                dx = -dx;
-                            double h0 = dataImage.getHPos(x);
-                            double h1 = cursors[i].hPos;
-                            if ((dx < cursorDistance) || (Math.abs(h1 - h0) < 2))
-                                cursorLast = cursors[i];
+                            if ((cursors[i].xPos >= 0) && (cursors[i].hPos >= 0))
+                            {
+                                int dx = x - cursors[i].xPos;
+                                if (dx < 0)
+                                    dx = -dx;
+                                //double t0 = dataImage.getPointIdx(x);
+                                //double t1 = cursors[i].t;
+                                if ((dx < cursorDistance) )// || (Math.abs(h1 - h0) < 2))
+                                {
+                                    cursorLast = cursors[i];
+                                    cursorDistance = dx;
+                                }
+                            }
                         }
-                    }
-                    if (cursorLast != null)
-                    {
-                        if (x >= dataImage.hOffset)
+                        if (cursorLast != null)
                         {
-                            cursorLast.xPos = x;
-                            cursorLast.hPos = dataImage.getHPos(x);
-                            repaint();
+                            if (x >= dataImage.hOffset)
+                            {
+                                cursorLast.xPos = x;
+                                cursorLast.hPos = dataImage.getHPos(x);
+                                repaint();
+                            }
+                        }else
+                        {
+                            //int idx = getNearPoint(x, cursorDistance);
+                            //if (idx >= 0) {
+                            if (false) {
+                                zoomCursors[0].xPos = x;
+                                zoomCursors[1].xPos = x;
+                                cursorLast = cursors[0];
+                                cursorLast.xPos = x;
+                                cursorLast.hPos = dataImage.getHPos(x);
+                                repaint();
+                            }else {
+                                zoomCursors[0].xPos = x;
+                                zoomCursors[1].xPos = x;
+                                cursorLast = zoomCursors[1];
+                                // invalidate data cursor
+                                cursors[0].hPos = -1;
+                                repaint();
+                            }
                         }
-                    }else
-                    {
-                        zoomCursors[0].xPos = x;
-                        zoomCursors[1].xPos = x;
-                        cursorLast = zoomCursors[1];
-                        // invalidate data cursor
-                        cursors[0].hPos = -1;
-                        repaint();
+                    }else {
+                        
                     }
                 }else
                 if (e.getButton() == MouseEvent.BUTTON3)
@@ -259,9 +298,15 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                         dx = -dx;
                     if (dx < cursorDistance)
                     { // set the reading cursor
-                        cursors[0].xPos = x;
-                        cursors[0].hPos = dataImage.getHPos(x);
-                        parent.setDataCursor(getWindowIdx(), 0, x, cursors[0].hPos);
+                        int idx = getNearPoint(x, cursorDistance);
+                        if (idx >= 0) {
+                            cursors[0].xPos = x;
+                            cursors[0].hPos = dataImage.getHPos(x);
+                            parent.setDataCursor(getWindowIdx(), 0, x, cursors[0].hPos);
+                        }else {
+                            cursors[0].hPos = -1;
+                            parent.setDataCursor(getWindowIdx(), 0, -1, -1);
+                        }
                     }else
                     { // zoom the window
                         int hMax = -1;
@@ -285,7 +330,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
                         double hPosMinNew = dataImage.getHPos(zoomCursors[0].xPos);
                         double hPosMaxNew = dataImage.getHPos(zoomCursors[1].xPos);
                         double dH = hPosMaxNew - hPosMinNew;
-                        if (dH < 20)
+                        if ((dH < (dataChannelList.file.isPointBasedFile() ? 2 : 20)))
                         {
                             cursorLast = null;
                             zoomCursors[0].xPos = -9999;
@@ -326,7 +371,10 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
     void setDataCursor(int cursorIdx, int x)
     {
         cursors[cursorIdx].xPos = x;
-        cursors[cursorIdx].hPos = dataImage.getHPos(x);
+        if (x >= 0)
+            cursors[cursorIdx].hPos = dataImage.getHPos(x);
+        else
+            cursors[cursorIdx].hPos = -1;
         repaint();
     }
 
