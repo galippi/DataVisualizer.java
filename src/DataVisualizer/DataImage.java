@@ -58,12 +58,14 @@ public class DataImage extends threadImage
                     return idx + (hVal + h0) / (h0 - h_1);
                 }
             }catch(Exception e) {
-                String msg = "DataImage.getHPos calculation error!";
+                String msg = "DataImage.getHPos calculation error! e=" + e.toString();
                 dbg.println(1, msg);
                 System.out.println(msg);
-                System.exit(1);
+                //System.exit(1);
+                //throw new Error(msg);
+                return -1;
             }
-            throw new Error("???");
+            //throw new Error("DataImage.getHPos - Not yet implemented case!");
             //return 0;
         }else {
             return ((xPos - hOffset) * hNum / diagramWidth) + dcl.pointIndexMin;

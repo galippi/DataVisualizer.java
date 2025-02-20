@@ -184,11 +184,11 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
 //  }
 
     int getNearPoint(int x, int cursorDistance) {
-        double pointIdxDouble = dataImage.getHPos(x);
-        int pointIdxInt = (int)pointIdxDouble;
-        if (pointIdxInt < 0)
-            pointIdxInt = 0;
         try {
+            double pointIdxDouble = dataImage.getHPos(x);
+            int pointIdxInt = (int)pointIdxDouble;
+            if (pointIdxInt < 0)
+                pointIdxInt = 0;
             double v0 = dataChannelList.horizontalAxle.getDoubleLocal(pointIdxInt);
             int xPos = dataImage.getHPos(v0);
             if (Math.abs(xPos - x) <= cursorDistance)
