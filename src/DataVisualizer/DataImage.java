@@ -42,10 +42,10 @@ public class DataImage extends threadImage
             }
             double hVal = (xPos - hOffset) * deltaHorizontalVal / imgWidth + tMin;
             int idx = chHor.getPointIdx(hVal);
-            if (idx < 0)
-                return -0.99;
-            if (idx >= hNum)
-                return hNum - 0.01;
+            if (idx < dcl.pointIndexMin)
+                return dcl.pointIndexMin - 0.99;
+            if (idx >= dcl.pointIndexMax)
+                return dcl.pointIndexMax - 0.01;
             try {
                 double h0 = chHor.getDoubleLocal(idx);
                 if (h0 < hVal) {
