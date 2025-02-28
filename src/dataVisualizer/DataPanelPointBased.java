@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_ChannelBasePointBased;
+import dataCache.DataCache_Channel_CAN_Base;
 import dataCache.DataCache_FileBase;
 import dataCache.DataPointBase;
 import dataCache.DataPointDouble;
@@ -84,16 +85,16 @@ public class DataPanelPointBased extends DataPanel {
                               //val = dcli.ch.getDoubleGlobal(ptIdx, tPt, dt);
                               val = dcli.ch.getDoubleGlobal(ptIdx);
                           }catch (Exception e) {
-                              DataPointDouble result = null;
+                              DataPointBase result = null;
                               int idxLess = dcli.ch.getIdxLess(ptIdx);
                               if (idxLess >= 0) {
-                                  DataPointDouble ptLess = (DataPointDouble)dcli.ch.getPointGlobal(idxLess);
+                                  DataPointBase ptLess = (DataPointBase)dcli.ch.getPointGlobal(idxLess);
                                   if (Math.abs(ptLess.t - tPt) < dt)
                                       result = ptLess;
                               }
                               int idxGreater = dcli.ch.getIdxGreater(ptIdx);
                               if (idxGreater >= 0) {
-                                  DataPointDouble ptGreater = (DataPointDouble)dcli.ch.getPointGlobal(idxGreater);
+                                  DataPointBase ptGreater = (DataPointBase)dcli.ch.getPointGlobal(idxGreater);
                                   if (Math.abs(ptGreater.t - tPt) < dt) {
                                       if (result == null)
                                           result = ptGreater;
