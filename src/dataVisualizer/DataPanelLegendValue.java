@@ -56,7 +56,7 @@ public class DataPanelLegendValue extends DataPanelLegendBase
         {
             table.setValueAt(dataChannelList.getChName(i), i, colSignalName);
             table.setValueAt(dataChannelList.get(i).ch.getUnit(), i, colUnit);
-            table.setValueAt("value "+i, i, colValue);
+            table.setValueAt("", i, colValue);
         }
     }
 
