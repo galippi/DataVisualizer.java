@@ -88,13 +88,13 @@ public class DataPanelPointBased extends DataPanel {
                               DataPointBase result = null;
                               int idxLess = dcli.ch.getIdxLess(ptIdx);
                               if (idxLess >= 0) {
-                                  DataPointBase ptLess = (DataPointBase)dcli.ch.getPointGlobal(idxLess);
+                                  DataPointBase ptLess = dcli.ch.getPointGlobal(idxLess);
                                   if (Math.abs(ptLess.t - tPt) < dt)
                                       result = ptLess;
                               }
                               int idxGreater = dcli.ch.getIdxGreater(ptIdx);
                               if (idxGreater >= 0) {
-                                  DataPointBase ptGreater = (DataPointBase)dcli.ch.getPointGlobal(idxGreater);
+                                  DataPointBase ptGreater = dcli.ch.getPointGlobal(idxGreater);
                                   if (Math.abs(ptGreater.t - tPt) < dt) {
                                       if (result == null)
                                           result = ptGreater;
@@ -116,6 +116,7 @@ public class DataPanelPointBased extends DataPanel {
                               valStr = valStr + (int)val;
                           else
                               valStr = valStr + Sprintf.sprintf("%4.2f", val);
+                          dpc.setLegendValue(i, valStr);
                           valStr = valStr + unit + " ";
                           java.awt.FontMetrics metrics = g.getFontMetrics();
                           int fontHgt = metrics.getHeight();
@@ -137,6 +138,7 @@ public class DataPanelPointBased extends DataPanel {
                           g.drawString(valStr, xVal + 1, yVal - 2);
                       }catch(Exception e) {
                           dbg.println(9, "DataPanelPointBased paint cursor exception e=" + e.toString());
+                          dpc.setLegendValue(i, "");
                       }
                   }
               }

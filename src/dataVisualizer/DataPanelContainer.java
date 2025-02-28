@@ -77,6 +77,10 @@ public class DataPanelContainer extends javax.swing.JPanel implements DataChanne
         }
     }
 
+    public void setLegendValue(int i, String valStr) {
+        dataPanelLegend.setLegendValue(i, valStr);
+    }
+
     DataPanelLegendBase dataPanelLegend;
     DataPanel dataPanel;
     JSplitPane splitPane;

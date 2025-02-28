@@ -28,6 +28,11 @@ public class DataPanelLegendContainer extends DataPanelLegendBase {
         value.setDataCursor(cursorIdx);
     }
 
+    @Override
+    public void setLegendValue(int i, String valStr) {
+        value.setLegendValue(i, valStr);
+    }
+
     DataPanelLegendBase legend;
     DataPanelLegendBase value;
 

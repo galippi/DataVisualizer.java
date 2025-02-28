@@ -27,4 +27,8 @@ public abstract class DataPanelLegendBase extends JPanel implements DataChannelL
     }
 
     private static final long serialVersionUID = 5780266995631515871L;
+
+    public void setLegendValue(int i, String valStr) {
+        throw new Error("DataPanelLegendBase.setLegendValue Not yet implemented!");
+    }
 }

@@ -104,7 +104,13 @@ public class DataPanelLegendValue extends DataPanelLegendBase
 
     @Override
     public void setDataCursor(double hPos) {
-        updateSignalValues((int)hPos);
+        if (hPos < 0)
+            updateSignalValues((int)hPos);
+    }
+
+    @Override
+    public void setLegendValue(int i, String valStr) {
+        table.setValueAt(valStr, i, colValue);
     }
 
     private static final long serialVersionUID = -1531090392973265388L;
