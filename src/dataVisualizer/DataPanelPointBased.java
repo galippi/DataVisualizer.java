@@ -5,6 +5,8 @@ import java.awt.Color;
 import dataCache.DataCache_ChannelBase;
 import dataCache.DataCache_ChannelBasePointBased;
 import dataCache.DataCache_FileBase;
+import dataCache.DataPointBase;
+import dataCache.DataPointDouble;
 import lippiWare.utils.Sprintf;
 import lippiWare.utils.dbg;
 
@@ -68,13 +70,43 @@ public class DataPanelPointBased extends DataPanel {
               int x = (int)(((tPt - hPosData.tMin) * wi) / dt);
               g.drawLine(x, 0, x, getHeight());
               cursors[0].xPos = x;
+              dt = dt * 50 / (wi);
               if (dataChannelList.size() <= DataVisualizerPrefs.getDataCursorMaxChannel())
               { // displaying signal value
                   for (int i = 0; i < dataChannelList.size(); i++)
                   {
                       DataChannelListItem dcli = dataChannelList.get(i);
                       try {
-                          double val = dcli.ch.getDoubleGlobal((int)(cursors[0].hPos + 0.5));
+                          double val;
+                          try {
+                              //double val = dcli.ch.getDoubleGlobal((int)(cursors[0].hPos + 0.5));
+                              // Todo: find the closest point, throw an exception, if they would be too far
+                              //val = dcli.ch.getDoubleGlobal(ptIdx, tPt, dt);
+                              val = dcli.ch.getDoubleGlobal(ptIdx);
+                          }catch (Exception e) {
+                              DataPointDouble result = null;
+                              int idxLess = dcli.ch.getIdxLess(ptIdx);
+                              if (idxLess >= 0) {
+                                  DataPointDouble ptLess = (DataPointDouble)dcli.ch.getPointGlobal(idxLess);
+                                  if (Math.abs(ptLess.t - tPt) < dt)
+                                      result = ptLess;
+                              }
+                              int idxGreater = dcli.ch.getIdxGreater(ptIdx);
+                              if (idxGreater >= 0) {
+                                  DataPointDouble ptGreater = (DataPointDouble)dcli.ch.getPointGlobal(idxGreater);
+                                  if (Math.abs(ptGreater.t - tPt) < dt) {
+                                      if (result == null)
+                                          result = ptGreater;
+                                      else
+                                          if (Math.abs(ptGreater.t - tPt) < Math.abs(result.t - tPt))
+                                                  result = ptGreater;
+                                  }
+                              }
+                              if (result == null)
+                                  throw new Exception("No close point is found");
+                              else
+                                  val = result.getDouble();
+                          }
                           String unit = dcli.ch.getUnit();
                           if (!unit.isEmpty())
                               unit = " " + unit;
