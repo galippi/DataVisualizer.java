@@ -112,8 +112,17 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         add(popup);
         }
 
+    long t_lastZoom = 0;
+    int zoomLastDir = 0;
+
     public void mouseWheelMovedHandler(MouseWheelEvent e) {
         dbg.println(19, "DataPanel.mouseWheelMovedHandler="+e.getWheelRotation() + " x=" + e.getX() + " y=" + e.getY());
+        long t = System.nanoTime();
+        final long t_zoomInhibit = 500_000_000; // 500ms
+        if (((t - t_lastZoom) < t_zoomInhibit) && (zoomLastDir * e.getWheelRotation() < 0))
+            return;
+        t_lastZoom = t;
+        zoomLastDir = e.getWheelRotation();
         int xPosMiddle = e.getX();
         double hPosMiddle = dataImage.getHPos(xPosMiddle);
         double hPosMin = dataImage.dcl.pointIndexMin;
