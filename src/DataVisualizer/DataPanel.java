@@ -119,6 +119,7 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         double hPosMin = dataImage.dcl.pointIndexMin;
         double hPosMax = dataImage.dcl.pointIndexMax;
         double dH = (hPosMax - hPosMin);
+        double zoomPosCorrection = xPosMiddle / (double)dataImage.diagramWidth;
         int hMax = -1;
         try
         {
@@ -134,8 +135,9 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         { // zoom in
             //if (dH < 250)
             //    return; // over zoomed -> do nothing
-            hPosMinNew = hPosMiddle - (dH / 4);
-            hPosMaxNew = hPosMiddle + (dH / 4);
+            final double zoomLevel = 0.5;
+            hPosMinNew = hPosMiddle - (dH * zoomLevel * zoomPosCorrection);
+            hPosMaxNew = hPosMiddle + (dH * zoomLevel * (1 - zoomPosCorrection));
             if (hPosMinNew < 0)
             {
                 hPosMaxNew = hPosMaxNew + (-hPosMinNew);
@@ -154,8 +156,9 @@ public class DataPanel extends javax.swing.JPanel implements ActionListener, Dat
         }else
         { // zoom out
             final double zoomOutLimit = DataVisualizerPrefs.getZoomOutLimit();
-            hPosMinNew = hPosMiddle - dH;
-            hPosMaxNew = hPosMiddle + dH;
+            final double zoomLevel = 2;
+            hPosMinNew = hPosMiddle - (dH * zoomLevel * zoomPosCorrection);
+            hPosMaxNew = hPosMiddle + (dH * zoomLevel * (1 - zoomPosCorrection));
             if (hPosMinNew < -zoomOutLimit)
             {
                 hPosMinNew = -zoomOutLimit;
